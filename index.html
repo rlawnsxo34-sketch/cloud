@@ -1,0 +1,963 @@
+html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>구름이의 사계절 성장 기록관 | 준삐♥와솔태 패밀리 아카이브</title>
+
+    <!-- 스마트폰 홈 화면 앱(PWA Standalone) 및 구름이 아이콘 설정 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="구름이 성장앨범">
+    <meta name="application-name" content="구름이 성장앨범">
+    <meta name="theme-color" content="#f7f4f0">
+    <link id="apple-touch-icon-link" rel="apple-touch-icon" sizes="512x512" href="">
+    <link id="favicon-link" rel="icon" type="image/png" href="">
+    <link id="pwa-manifest-link" rel="manifest" href="">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+
+    <!-- 폰트 및 트랜지션 효과 설정 -->
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Serif+KR:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f7f4f0;
+            margin: 0;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            padding-left: env(safe-area-inset-left, 0px);
+            padding-right: env(safe-area-inset-right, 0px);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-serif-kr { font-family: 'Noto Serif KR', serif; }
+        .font-gowun { font-family: 'Gowun Dodum', sans-serif; }
+        .keep-all { word-break: keep-all; overflow-wrap: break-word; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        .animate-float {
+            animation: floatSlow 3.5s ease-in-out infinite;
+        }
+        
+        .hidden-step { display: none !important; }
+        
+        /* 스크롤바 숨기기 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-[#efeae4] min-h-screen flex items-center justify-center p-0 sm:p-4 md:p-6 relative">
+
+    <!-- 메인 컨테이너 -->
+    <div class="w-full max-w-6xl bg-white sm:rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col min-h-screen sm:min-h-[780px] border-0 sm:border border-stone-200/80 relative">
+        
+        <!-- 상단 헤더 및 네비게이션 -->
+        <header class="px-4 sm:px-8 py-3.5 sm:py-4 flex flex-col lg:flex-row justify-between items-center border-b border-stone-100 bg-white/95 backdrop-blur-md z-20 sticky top-0 gap-3">
+            <!-- 좌측 브랜드 로고 영역 (구름이 + 준삐와솔태) -->
+            <div class="flex items-center justify-between w-full lg:w-auto">
+                <button type="button" onclick="confirmHeaderHome()" class="flex items-center gap-3 text-left group focus:outline-none">
+                    <div class="relative flex items-center">
+                        <img id="header-logo-gureum" data-logo="gureum" src="" alt="구름 로고" class="h-10 sm:h-11 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-105">
+                        <img id="header-logo-parents" data-logo="parents" src="" alt="준삐와솔태 로고" class="h-8 sm:h-9 w-auto object-contain -ml-2 mt-1 drop-shadow-sm transition-transform group-hover:scale-105">
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-serif-kr font-bold text-stone-800 text-base sm:text-lg tracking-tight">구름이의 성장 기록관</span>
+                            <span class="hidden sm:inline-block text-[11px] font-gowun px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60">준삐♥와솔태</span>
+                        </div>
+                        <p class="text-[11px] text-stone-400 font-gowun">계절마다 자라나는 우리 아이 사진 액자 스튜디오</p>
+                    </div>
+                </button>
+
+                <!-- 모바일용 앱 설치 & 초기화 버튼 -->
+                <div class="flex items-center gap-1.5">
+                    <button type="button" id="btn-pwa-install" onclick="handleInstallAppClick()" class="px-2.5 py-1.5 rounded-full text-xs font-gowun bg-amber-50 text-amber-900 border border-amber-200/80 hover:bg-amber-100 transition-colors flex items-center gap-1 shadow-sm">
+                        <i data-lucide="smartphone" class="w-3.5 h-3.5 text-amber-700"></i>
+                        <span>앱 설치</span>
+                    </button>
+                    <button type="button" onclick="openModal('reset')" class="lg:hidden px-2.5 py-1.5 rounded-full text-xs font-gowun text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-colors flex items-center gap-1">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 처음으로
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 우측 단계 네비게이션 -->
+            <nav class="flex items-center gap-1.5 sm:gap-2.5 text-[11px] sm:text-xs font-medium text-stone-400 w-full lg:w-auto overflow-x-auto no-scrollbar justify-center lg:justify-end py-0.5">
+                <button type="button" onclick="handleNavClick(1)" id="nav-step-1" class="px-2.5 py-1 rounded-full transition-all duration-300 text-stone-800 bg-stone-100 font-bold whitespace-nowrap">1. 계절 테마</button>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-40 flex-shrink-0"></i>
+                <button type="button" onclick="handleNavClick(2)" id="nav-step-2" class="px-2.5 py-1 rounded-full transition-all duration-300 whitespace-nowrap">2. 성장 프레임</button>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-40 flex-shrink-0"></i>
+                <button type="button" onclick="handleNavClick(3)" id="nav-step-3" class="px-2.5 py-1 rounded-full transition-all duration-300 whitespace-nowrap">3. 사진 담기</button>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-40 flex-shrink-0"></i>
+                <button type="button" onclick="handleNavClick(4)" id="nav-step-4" class="px-2.5 py-1 rounded-full transition-all duration-300 whitespace-nowrap">4. 문구·배경 및 완성</button>
+            </nav>
+        </header>
+
+        <!-- 콘텐츠 영역 -->
+        <main class="flex-1 p-5 sm:p-8 md:p-10 flex flex-col items-center justify-center relative bg-[#faf8f5] overflow-y-auto">
+            
+            <!-- STEP 1: 계절 감성 테마 선택 -->
+            <section id="step-1" class="w-full text-center animate-fade-up max-w-5xl my-auto">
+                <!-- 상단 패밀리 엠블럼 배지 -->
+                <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white shadow-sm border border-stone-200/70 mb-5 sm:mb-6">
+                    <img data-logo="gureum" src="" alt="구름이" class="h-9 sm:h-11 w-auto object-contain animate-float">
+                    <div class="text-left">
+                        <div class="text-[11px] font-gowun text-amber-700 font-bold tracking-wide">JUNPPI ♥ SOLTAE · BABY GUREUM</div>
+                        <div class="text-xs sm:text-sm font-serif-kr text-stone-700 font-semibold">준삐와 솔태가 기록하는 구름이의 사계절</div>
+                    </div>
+                    <img data-logo="parents" src="" alt="준삐와솔태" class="h-9 sm:h-11 w-auto object-contain">
+                </div>
+
+                <h1 class="text-2xl sm:text-4xl lg:text-[42px] font-serif-kr mb-3 sm:mb-4 text-stone-800 keep-all leading-tight font-semibold">
+                    구름이가 자라난 순간,<br class="hidden sm:block"/> 어떤 계절의 온도로 담아볼까요?
+                </h1>
+                <p class="text-stone-500 mb-6 sm:mb-9 text-xs sm:text-base font-gowun keep-all px-4 max-w-2xl mx-auto">
+                    아이의 사진과 가장 잘 어울리는 계절 감성 테마를 선택해 주세요. 계절별 파스텔 배경과 맞춤 색상이 적용됩니다.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5" id="season-buttons"></div>
+            </section>
+
+            <!-- STEP 2: 프레임 레이아웃 선택 -->
+            <section id="step-2" class="hidden-step w-full text-center animate-fade-up flex-col items-center my-auto">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-stone-200 text-xs font-gowun text-stone-600 mb-3 shadow-sm">
+                    <img data-logo="gureum" src="" alt="구름" class="h-5 w-auto object-contain">
+                    <span id="step2-season-badge">선택한 계절 테마</span>
+                </div>
+                <h2 id="step2-title" class="text-2xl sm:text-4xl font-serif-kr mb-2.5 sm:mb-3.5 keep-all text-stone-800 font-semibold">성장 프레임 및 출력 방향 선택</h2>
+                <p class="text-stone-500 mb-6 sm:mb-9 text-xs sm:text-base font-gowun keep-all px-4">
+                    한 장의 베스트 컷부터 백일·돌·현재를 비교하는 다중 컷까지 원하는 구성을 골라주세요. (CP1500 인화 규격 지원)
+                </p>
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5 w-full max-w-4xl mx-auto" id="layout-buttons"></div>
+                <button type="button" onclick="setStep(1)" class="mt-6 sm:mt-9 px-5 py-2.5 text-stone-600 hover:text-stone-900 font-gowun text-sm transition-colors active:scale-95 bg-white rounded-full border border-stone-200 shadow-sm">
+                    ← 계절 테마 다시 고르기
+                </button>
+            </section>
+
+            <!-- STEP 3: 구름이 사진 업로드 -->
+            <section id="step-3" class="hidden-step w-full text-center animate-fade-up flex-col items-center my-auto">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-stone-200 text-xs font-gowun text-stone-600 mb-3 shadow-sm">
+                    <img data-logo="gureum" src="" alt="구름" class="h-5 w-auto object-contain">
+                    <span id="step3-layout-badge">프레임 정보</span>
+                </div>
+                <h2 id="step3-title" class="text-2xl sm:text-4xl font-serif-kr mb-2.5 sm:mb-3.5 keep-all text-stone-800 font-semibold">구름이의 성장 사진 담기</h2>
+                <p id="upload-instruction-text" class="text-stone-500 mb-6 sm:mb-8 text-xs sm:text-base font-gowun keep-all px-4">
+                    선택하신 프레임에 맞게 사진을 선택해주세요.
+                </p>
+                
+                <!-- 비어있을 때 업로드 박스 -->
+                <div id="upload-box-empty" onclick="handleAddPhotoClick()" class="cursor-pointer w-full max-w-[440px] aspect-[4/3] sm:aspect-square rounded-3xl border-2 border-dashed flex items-center justify-center relative overflow-hidden transition-all duration-300 hover:shadow-xl group bg-white mx-auto shadow-sm">
+                    <div id="upload-bg-tint" class="absolute inset-0 opacity-[0.04]"></div>
+                    <div class="flex flex-col items-center gap-3 sm:gap-4 p-5 sm:p-8 transition-transform duration-500 group-hover:scale-105 relative z-10 pointer-events-none">
+                        <div class="relative">
+                            <div id="upload-icon-bg" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center shadow-sm bg-stone-50">
+                                <i data-lucide="image-plus" id="upload-icon" class="w-7 h-7 sm:w-8 sm:h-8 text-stone-600" stroke-width="1.5"></i>
+                            </div>
+                            <img data-logo="gureum" src="" alt="구름" class="w-9 h-9 object-contain absolute -bottom-1 -right-2 drop-shadow">
+                        </div>
+                        <div class="text-stone-800 font-serif-kr text-lg sm:text-xl font-semibold">터치하여 구름이 사진 불러오기</div>
+                        <div class="text-stone-500 font-gowun text-xs sm:text-sm tracking-wide bg-stone-100 px-3.5 py-1.5 rounded-full">
+                            한 번에 여러 장 선택 가능 · 스마트폰 고화질 자동 최적화
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 예시 사진으로 빠른 체험 버튼 -->
+                <div id="sample-photo-bar" class="mt-4 flex items-center justify-center">
+                    <button type="button" onclick="fillSamplePhotos()" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-gowun bg-amber-50/90 hover:bg-amber-100 text-amber-900 border border-amber-200/80 transition-all shadow-sm active:scale-95">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-amber-600"></i>
+                        <span>사진 없이 먼저 테스트해 볼래요 (구름이 일러스트 예시 채우기)</span>
+                    </button>
+                </div>
+
+                <!-- 사진 선택 후 그리드 UI -->
+                <div id="photo-selection-ui" class="hidden w-full max-w-2xl mx-auto flex-col items-center">
+                    <p class="text-xs text-stone-400 font-gowun mb-3">◀ ▶ 버튼으로 사진이 들어갈 순서를 자유롭게 바꿀 수 있어요.</p>
+                    <div id="photo-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 w-full mb-7"></div>
+                    <div class="flex flex-col sm:flex-row gap-3 w-full max-w-md mx-auto">
+                        <button type="button" id="btn-next-step4" onclick="initStep4()" style="display:none;" class="flex-1 py-4 px-6 rounded-2xl font-serif-kr text-base sm:text-lg text-white font-semibold transition-all active:scale-95 shadow-md hover:shadow-lg justify-center items-center gap-2">
+                            <i data-lucide="wand-2" class="w-5 h-5"></i>
+                            <span>문구·배경 꾸미고 액자 완성하기</span>
+                        </button>
+                    </div>
+                </div>
+
+                <input type="file" id="photo-input" accept="image/*" multiple class="hidden" />
+                
+                <button type="button" onclick="setStep(2)" id="btn-back-step3" class="mt-6 sm:mt-8 px-5 py-2.5 text-stone-600 hover:text-stone-900 font-gowun text-sm transition-colors active:scale-95 bg-white rounded-full border border-stone-200 shadow-sm">
+                    ← 프레임 다시 선택하기
+                </button>
+            </section>
+
+            <!-- STEP 4: 맞춤 문구 · 배경 테마 · 로고 스탬프 설정 및 결과 미리보기 -->
+            <section id="step-4" class="hidden-step w-full animate-fade-up flex-col lg:flex-row gap-7 lg:gap-10 items-center lg:items-start justify-center max-w-6xl my-auto">
+                
+                <!-- 왼쪽: 캔버스 미리보기 렌더링 영역 -->
+                <div class="w-full lg:w-[50%] flex-shrink-0 relative flex flex-col items-center">
+                    <div class="w-full flex items-center justify-between mb-2.5 px-1">
+                        <span class="text-xs font-gowun text-stone-500 flex items-center gap-1.5">
+                            <i data-lucide="printer" class="w-3.5 h-3.5"></i> 캐논 셀피 CP1500 엽서 규격 (300dpi)
+                        </span>
+                        <button type="button" onclick="setStep(3)" class="text-xs font-gowun text-stone-600 hover:text-stone-900 underline underline-offset-2">
+                            사진 다시 고르기
+                        </button>
+                    </div>
+
+                    <div class="relative w-full flex justify-center items-center p-3 sm:p-5 bg-stone-200/50 rounded-2xl border border-stone-200/80 shadow-inner">
+                        <div id="preview-loading" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm rounded-2xl hidden">
+                            <div class="w-11 h-11 border-4 border-stone-200 border-t-stone-800 rounded-full animate-spin"></div>
+                            <div class="text-stone-700 font-serif-kr text-base mt-3">구름이 성장 액자 그리는 중...</div>
+                        </div>
+                        
+                        <img id="final-image" src="" alt="미리보기 성장 앨범 액자" class="w-full h-auto max-h-[64vh] object-contain block relative z-10 drop-shadow-[0_15px_25px_rgba(0,0,0,0.15)] rounded-sm" />
+                    </div>
+                </div>
+
+                <!-- 오른쪽: 맞춤 텍스트 · 로고 · 배경 컨트롤 패널 -->
+                <div class="w-full lg:w-[50%] flex flex-col gap-5 text-left bg-white p-5 sm:p-6 rounded-3xl border border-stone-200/90 shadow-sm">
+                    
+                    <!-- 1. 맞춤 텍스트 입력 섹션 -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2.5">
+                            <h3 class="text-base sm:text-lg font-serif-kr font-bold text-stone-800 flex items-center gap-2">
+                                <i data-lucide="pen-tool" class="w-4 h-4 text-amber-600"></i>
+                                <span>1. 액자 맞춤 문구 입력</span>
+                            </h3>
+                            <button type="button" onclick="resetCustomTextToSeasonDefault()" class="text-xs font-gowun text-stone-400 hover:text-stone-700 transition-colors">
+                                기본 문구로 초기화
+                            </button>
+                        </div>
+
+                        <!-- 빠른 제목 프리셋 칩 -->
+                        <div class="flex flex-wrap gap-1.5 mb-3" id="title-preset-chips">
+                            <button type="button" onclick="applyTitlePreset('구름이의 자라나는 시간')" class="px-2.5 py-1 rounded-full text-xs font-gowun bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-600 transition-colors">☁️ 구름이의 자라나는 시간</button>
+                            <button type="button" onclick="applyTitlePreset('준삐와 솔태의 보물, 구름이')" class="px-2.5 py-1 rounded-full text-xs font-gowun bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-600 transition-colors">💛 준삐와 솔태의 보물, 구름이</button>
+                            <button type="button" onclick="applyTitlePreset('무럭무럭 자라나는 우리 아기')" class="px-2.5 py-1 rounded-full text-xs font-gowun bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-600 transition-colors">🌱 무럭무럭 자라나는 우리 아기</button>
+                            <button type="button" onclick="applyTitlePreset('사랑으로 피어난 구름이의 계절')" class="px-2.5 py-1 rounded-full text-xs font-gowun bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-600 transition-colors">🌸 사랑으로 피어난 구름이의 계절</button>
+                        </div>
+
+                        <div class="space-y-2.5">
+                            <!-- 메인 타이틀 -->
+                            <div>
+                                <label for="input-custom-title" class="block text-xs font-gowun text-stone-500 mb-1">메인 제목 (액자 큰 글씨)</label>
+                                <input type="text" id="input-custom-title" maxlength="24" placeholder="예: 구름이의 자라나는 시간"
+                                    class="w-full px-3.5 py-2 rounded-xl border border-stone-200 text-sm font-serif-kr text-stone-800 focus:outline-none focus:border-stone-500 transition-colors">
+                            </div>
+
+                            <!-- 성장 시기 / 날짜 및 탄생월 선택 (2열) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                <div>
+                                    <label for="input-custom-milestone" class="block text-xs font-gowun text-stone-500 mb-1">성장 기록 · 촬영일 (가운데 배지)</label>
+                                    <input type="text" id="input-custom-milestone" maxlength="30" placeholder="예: 2026.10 · 생후 D+100의 기록"
+                                        class="w-full px-3.5 py-2 rounded-xl border border-stone-200 text-xs sm:text-sm font-gowun text-stone-700 focus:outline-none focus:border-stone-500 transition-colors">
+                                </div>
+                                <div>
+                                    <label for="select-blessing-month" class="block text-xs font-gowun text-stone-500 mb-1">하단 월별 축복 문구</label>
+                                    <select id="select-blessing-month" class="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs sm:text-sm font-gowun text-stone-700 bg-white focus:outline-none focus:border-stone-500 transition-colors">
+                                        <option value="1">1월 · 새해 첫 별처럼 빛나는 아이</option>
+                                        <option value="2">2월 · 봄을 부르는 따스한 햇살</option>
+                                        <option value="3">3월 · 새싹처럼 맑고 싱그러운 에너지</option>
+                                        <option value="4">4월 · 꽃길만 걸을 사랑스러운 걸음</option>
+                                        <option value="5">5월 · 온 세상이 축복하는 푸른 오월</option>
+                                        <option value="6">6월 · 품 넓은 나무처럼 자라날 마음</option>
+                                        <option value="7">7월 · 여름 햇살보다 눈부신 미소</option>
+                                        <option value="8">8월 · 밤하늘 은하수처럼 반짝이는 꿈</option>
+                                        <option value="9">9월 · 달콤한 열매처럼 찾아온 기적</option>
+                                        <option value="10">10월 · 가을 햇살처럼 깊고 따뜻한 사랑</option>
+                                        <option value="11">11월 · 포근한 구름처럼 온화한 성품</option>
+                                        <option value="12">12월 · 추운 겨울도 녹이는 우리의 행복</option>
+                                        <option value="none">표시 안 함 (깔끔하게 비우기)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 부모님 한 줄 메시지 -->
+                            <div>
+                                <label for="input-custom-desc" class="block text-xs font-gowun text-stone-500 mb-1">부모님 한 줄 편지 (서브 문구)</label>
+                                <input type="text" id="input-custom-desc" maxlength="45" placeholder="아이에게 남기고 싶은 따뜻한 한 줄 문구를 적어보세요"
+                                    class="w-full px-3.5 py-2 rounded-xl border border-stone-200 text-xs sm:text-sm font-gowun text-stone-700 focus:outline-none focus:border-stone-500 transition-colors">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-stone-100">
+
+                    <!-- 2. 하단 패밀리 로고 스탬프 선택 -->
+                    <div>
+                        <h3 class="text-base sm:text-lg font-serif-kr font-bold text-stone-800 flex items-center gap-2 mb-2.5">
+                            <i data-lucide="award" class="w-4 h-4 text-amber-600"></i>
+                            <span>2. 하단 패밀리 로고 스탬프</span>
+                        </h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="logo-mode-buttons">
+                            <button type="button" onclick="setLogoMode('both')" data-mode="both" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-xl border-2 border-stone-800 bg-stone-50 transition-all">
+                                <div class="flex items-center justify-center h-8 mb-1">
+                                    <img data-logo="gureum" src="" alt="구름" class="h-7 w-auto object-contain">
+                                    <img data-logo="parents" src="" alt="준삐와솔태" class="h-6 w-auto object-contain -ml-1">
+                                </div>
+                                <span class="text-[11px] font-gowun font-bold text-stone-800">구름 + 준삐와솔태</span>
+                            </button>
+                            <button type="button" onclick="setLogoMode('gureum')" data-mode="gureum" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
+                                <div class="flex items-center justify-center h-8 mb-1">
+                                    <img data-logo="gureum" src="" alt="구름" class="h-7 w-auto object-contain">
+                                </div>
+                                <span class="text-[11px] font-gowun font-bold text-stone-700">구름이 단독</span>
+                            </button>
+                            <button type="button" onclick="setLogoMode('parents')" data-mode="parents" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
+                                <div class="flex items-center justify-center h-8 mb-1">
+                                    <img data-logo="parents" src="" alt="준삐와솔태" class="h-7 w-auto object-contain">
+                                </div>
+                                <span class="text-[11px] font-gowun font-bold text-stone-700">준삐♥와솔태</span>
+                            </button>
+                            <button type="button" onclick="setLogoMode('text')" data-mode="text" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
+                                <div class="flex items-center justify-center h-8 mb-1 text-stone-500 font-serif-kr text-xs font-bold">
+                                    ABC
+                                </div>
+                                <span class="text-[11px] font-gowun font-bold text-stone-700">영문 레터링만</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <hr class="border-stone-100">
+
+                    <!-- 3. 계절 배경 테마 선택 -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-base sm:text-lg font-serif-kr font-bold text-stone-800 flex items-center gap-2">
+                                <i data-lucide="palette" class="w-4 h-4 text-amber-600"></i>
+                                <span>3. 액자 배경 아트워크</span>
+                            </h3>
+                            <span class="text-[11px] font-gowun text-stone-400">계절 기본 3종 + 내 배경 사진</span>
+                        </div>
+
+                        <!-- 커스텀 배경 이미지 업로드용 Input (숨김) -->
+                        <input type="file" id="custom-bg-input" accept="image/*" class="hidden" />
+
+                        <!-- 배경 선택 버튼 컨테이너 -->
+                        <div id="bg-theme-buttons" class="grid grid-cols-4 gap-2.5 w-full">
+                            <!-- JS에서 동적 렌더링 -->
+                        </div>
+                    </div>
+
+                    <!-- 다운로드 및 재시작 버튼 -->
+                    <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
+                        <button type="button" id="download-btn" onclick="openModal('download')" class="flex-1 flex items-center justify-center gap-2.5 py-4 px-5 rounded-2xl font-serif-kr text-base sm:text-lg font-semibold text-white transition-all duration-300 active:scale-95 hover:shadow-lg shadow-md">
+                            <i data-lucide="download" class="w-5 h-5"></i> 고화질 성장 액자 저장
+                        </button>
+                        <button type="button" onclick="openModal('reset')" class="sm:w-auto flex items-center justify-center gap-1.5 py-4 px-4 rounded-2xl font-gowun text-xs sm:text-sm bg-stone-100 text-stone-600 hover:bg-stone-200 transition-colors active:scale-95">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4 opacity-70"></i> 처음부터
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- 커스텀 팝업 (모달) -->
+    <div id="custom-modal" class="hidden fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-5 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-[1.75rem] w-full max-w-sm overflow-hidden shadow-2xl transform transition-all animate-fade-up border border-stone-100">
+            <div class="p-7 text-center">
+                <div id="modal-icon-container" class="w-16 h-16 rounded-full bg-amber-50 mx-auto flex items-center justify-center mb-4"></div>
+                <h3 id="modal-title" class="text-xl font-serif-kr text-stone-800 mb-2.5 font-bold">안내</h3>
+                <p id="modal-desc" class="text-stone-500 font-gowun text-sm leading-relaxed keep-all"></p>
+            </div>
+            <div class="flex border-t border-stone-100 bg-stone-50/60">
+                <button type="button" id="modal-cancel-btn" onclick="closeModal()" class="flex-1 py-3.5 text-stone-500 font-gowun text-base hover:bg-stone-100 transition-colors active:bg-stone-200">취소</button>
+                <button type="button" id="modal-confirm-btn" onclick="handleModalConfirm()" class="flex-1 py-3.5 text-amber-800 font-bold font-gowun text-base border-l border-stone-100 hover:bg-white transition-colors active:bg-stone-50">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 이전 작업 복원용 토스트 알림창 -->
+    <div id="restore-toast" class="hidden fixed bottom-5 left-5 right-5 sm:left-auto sm:right-6 sm:w-96 bg-stone-900 text-white rounded-2xl p-4 shadow-2xl z-[150] animate-fade-up flex flex-col gap-3 border border-white/10">
+        <div class="flex items-start gap-3">
+            <img data-logo="gureum" src="" alt="구름" class="w-10 h-10 object-contain flex-shrink-0">
+            <div class="flex-1">
+                <h4 class="font-bold text-sm font-serif-kr">이전에 만들던 구름이 액자가 있어요</h4>
+                <p class="text-xs text-stone-300 font-gowun mt-1">마지막으로 작업하던 사진과 문구 설정을 그대로 불러올까요?</p>
+            </div>
+        </div>
+        <div class="flex gap-2 justify-end">
+            <button type="button" onclick="clearSavedState()" class="px-3 py-1.5 text-xs text-stone-400 hover:text-white transition-colors font-gowun">새로 만들기</button>
+            <button type="button" onclick="restoreAppState()" class="px-4 py-1.5 text-xs bg-amber-400 text-stone-950 rounded-lg font-bold hover:bg-amber-300 transition-colors font-gowun">이어서 꾸미기</button>
+        </div>
+    </div>
+
+    <!-- 숨겨진 패밀리 로고 원본 요소 (Canvas 렌더링 소스용) -->
+    <div class="hidden">
+        <img id="asset-logo-gureum" src="data:image/png;base64,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" alt="구름 로고 에셋">
+        <img id="asset-logo-parents" src="data:image/png;base64,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" alt="준삐와솔태 로고 에셋">
+    </div>
+
+    <!-- JavaScript 로직 -->
+    <script>
+        // 1~12월 탄생·성장 축복 문구 (기존 월별 나무를 아이 성장 테마로 재해석)
+        const MONTHLY_BLESSINGS = {
+            1: "1월의 축복 | 새해를 여는 첫 별처럼 언제나 환하게 빛나길",
+            2: "2월의 축복 | 겨울 끝자락에 찾아온 봄볕처럼 따스한 아이",
+            3: "3월의 축복 | 파릇한 봄 새싹처럼 맑고 싱그럽게 자라나길",
+            4: "4월의 축복 | 활짝 피어나는 봄꽃처럼 매일매일이 꽃길이길",
+            5: "5월의 축복 | 푸른 오월의 햇살 아래 사랑만 가득 받기를",
+            6: "6월의 축복 | 시원한 나무 그늘처럼 마음 넓은 사람으로 자라길",
+            7: "7월의 축복 | 한여름 햇살보다 눈부신 미소를 간직하길",
+            8: "8월의 축복 | 여름밤 은하수처럼 반짝이는 꿈을 꾸는 아이",
+            9: "9월의 축복 | 달콤한 가을 열매처럼 우리에게 찾아온 기적",
+            10: "10월의 축복 | 깊어가는 가을 하늘처럼 높고 푸른 마음을 품길",
+            11: "11월의 축복 | 포근한 구름처럼 세상을 따뜻하게 안아주길",
+            12: "12월의 축복 | 하얀 겨울 눈꽃처럼 순수하고 포근한 우리의 행복"
+        };
+
+        // 사계절 감성 테마 데이터 (배경 이미지는 초기화 시 고해상도 캔버스 아트워크로 자동 생성됨)
+        const SEASON_DATA = {
+            spring: { 
+                id: 'spring',
+                name: '봄, 설레는 시작',
+                subTitle: 'Spring Blossom',
+                textColor: '#9c4f66',
+                accent: '#eab8c8',
+                icon: 'flower-2',
+                fallbackColor: '#fff9fb',
+                defaultTitle: '구름이의 따스한 봄날',
+                defaultMilestone: '봄볕 아래 피어난 웃음 · 우리의 첫 계절',
+                desc: '따스한 봄 햇살처럼 포근하게 피어난 우리 구름이의 설레는 순간',
+                bgLabels: ['벚꽃 흩날리는 봄', '봄 햇살 보케', '코랄 파스텔'],
+                bgOptions: []
+            },
+            summer: { 
+                id: 'summer',
+                name: '여름, 푸른 성장',
+                subTitle: 'Summer Breeze',
+                textColor: '#36634d',
+                accent: '#8fc5a5',
+                icon: 'sun',
+                fallbackColor: '#f6fcf8',
+                defaultTitle: '구름이의 싱그러운 여름',
+                defaultMilestone: '초록빛 성장 기록 · 씩씩하게 자라는 날',
+                desc: '싱그러운 초록 잎사귀처럼 매일매일 씩씩하게 자라나는 여름날의 기록',
+                bgLabels: ['초록 숲 나뭇잎', '반짝이는 윤슬', '세이지 가든'],
+                bgOptions: []
+            },
+            autumn: { 
+                id: 'autumn',
+                name: '가을, 깊어지는 사랑',
+                subTitle: 'Autumn Harvest',
+                textColor: '#824b35',
+                accent: '#deb086',
+                icon: 'leaf',
+                fallbackColor: '#fdfaf6',
+                defaultTitle: '구름이의 포근한 가을',
+                defaultMilestone: '가을 햇살 가득한 날 · 한 뼘 더 자란 오늘',
+                desc: '깊어가는 가을 햇살 아래 한 뼘 더 자란 구름이의 따뜻한 미소',
+                bgLabels: ['단풍 물든 산책로', '황금빛 노을', '밀크티 베이지'],
+                bgOptions: []
+            },
+            winter: { 
+                id: 'winter',
+                name: '겨울, 포근한 기적',
+                subTitle: 'Winter Starlight',
+                textColor: '#435a70',
+                accent: '#9fb9d4',
+                icon: 'snowflake',
+                fallbackColor: '#f7fafe',
+                defaultTitle: '구름이의 포근한 겨울',
+                defaultMilestone: '별빛 내리는 겨울 · 품 안에 안긴 기적',
+                desc: '하얀 눈꽃과 별빛처럼 맑고 포근하게 품어온 우리 가족의 겨울 이야기',
+                bgLabels: ['첫눈 내리는 날', '별빛 겨울밤', '코지 코튼 화이트'],
+                bgOptions: []
+            }
+        };
+
+        // 성장 앨범 특화 프레임 레이아웃
+        const LAYOUT_DATA = [
+            { id: '1-portrait', count: 1, name: '1장 (세로 베스트컷)', sub: '단독 프로필 · 전신', orientation: 'portrait', icon: '<div class="w-[62%] h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15 mx-auto"></div>' },
+            { id: '1-landscape', count: 1, name: '1장 (가로 와이드컷)', sub: '가족사진 · 넓은 풍경', orientation: 'landscape', icon: '<div class="w-full h-[62%] bg-amber-200/70 rounded shadow-sm border border-amber-900/15 my-auto"></div>' },
+            { id: '2-horizontal', count: 2, name: '2장 (상하 성장 비교)', sub: '그때와 지금 (Before & After)', orientation: 'portrait', icon: '<div class="flex flex-col gap-[3px] w-full h-full"><div class="w-full h-1/2 bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-full h-1/2 bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div>' },
+            { id: '2-vertical', count: 2, name: '2장 (좌우 나란히)', sub: '짝꿍 컷 · 표정 변화', orientation: 'portrait', icon: '<div class="flex gap-[3px] w-full h-full"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div>' },
+            { id: '3-top', count: 3, name: '3장 (세 걸음 성장기)', sub: '메인 1컷 + 서브 2컷', orientation: 'portrait', icon: '<div class="flex flex-col gap-[3px] w-full h-full"><div class="w-full h-1/2 bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="flex gap-[3px] w-full h-1/2"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div></div>' },
+            { id: '4-grid', count: 4, name: '4장 (구름이 성장 네컷)', sub: '4단계 성장 · 표정 모음', orientation: 'portrait', icon: '<div class="flex flex-col gap-[3px] w-full h-full"><div class="flex gap-[3px] w-full h-1/2"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div><div class="flex gap-[3px] w-full h-1/2"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div></div>' }
+        ];
+
+        const STORAGE_KEY = 'gureum_growth_album_v1';
+
+        let currentStep = 1;
+        let currentSeason = null;
+        let selectedLayout = null;
+        let selectedPhotos = []; 
+        let hasPromptedUpload = false; 
+        
+        let selectedBgUrl = null;
+        let customUploadedBgSrc = null; 
+        let generatedImageUrl = null;
+        let modalPendingAction = null; 
+        let isGenerating = false;
+        let renderDebounceTimer = null;
+
+        // 사용자 맞춤 텍스트 & 스탬프 상태
+        let customTitleText = '구름이의 자라나는 시간';
+        let customMilestoneText = '2026. 10 · 사랑으로 자라는 날들';
+        let customDescText = '';
+        let selectedBlessingMonth = String(new Date().getMonth() + 1);
+        let selectedLogoMode = 'both'; // 'both' | 'gureum' | 'parents' | 'text'
+
+        // 계절별 감성 수채화/보케 배경 아트워크 12종 생성기 (외부 이미지 깨짐 없이 고화질 자체 생성)
+        function createSeasonalArtworkDataUrl(seasonId, variantIndex) {
+            const c = document.createElement('canvas');
+            c.width = 600;
+            c.height = 900;
+            const ctx = c.getContext('2d');
+
+            const palettes = {
+                spring: [
+                    ['#ffeef3', '#ffd6e4', '#fff5eb', '#f7b2c4'],
+                    ['#fff6e9', '#ffdfcf', '#fde2e8', '#f5c0a9'],
+                    ['#fdf4f5', '#f9dce0', '#f4e8ff', '#e8b4bc']
+                ],
+                summer: [
+                    ['#e9f7ef', '#c9ebd7', '#f2fbf5', '#82c29d'],
+                    ['#e6f6f8', '#c4e9f0', '#effaf6', '#7ac1cf'],
+                    ['#f1f8ec', '#d9ebd0', '#fafdf7', '#9bc48b']
+                ],
+                autumn: [
+                    ['#fdf3ea', '#f5d5b8', '#faeadf', '#d99568'],
+                    ['#fcf4e6', '#f2dca8', '#f9e5cd', '#cfa055'],
+                    ['#f8efe8', '#e6cfc0', '#f5e8de', '#b8947c']
+                ],
+                winter: [
+                    ['#edf3fa', '#d0e1f5', '#f5f8fc', '#94b4d8'],
+                    ['#e9eef7', '#cbd6ec', '#f4f6fb', '#8398c4'],
+                    ['#f4f6f9', '#e1e7f0', '#ffffff', '#b0bfd4']
+                ]
+            };
+
+            const pal = palettes[seasonId][variantIndex % 3];
+            const grad = ctx.createLinearGradient(0, 0, c.width, c.height);
+            grad.addColorStop(0, pal[0]);
+            grad.addColorStop(0.5, pal[1]);
+            grad.addColorStop(1, pal[2]);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, c.width, c.height);
+
+            // 부드러운 파스텔 보케(빛망울) 효과
+            let seed = (seasonId.charCodeAt(0) * 31) + (variantIndex * 97);
+            const rand = () => {
+                seed = (seed * 1664525 + 1013904223) % 4294967296;
+                return seed / 4294967296;
+            };
+
+            for (let i = 0; i < 26; i++) {
+                const x = rand() * c.width;
+                const y = rand() * c.height;
+                const r = 25 + rand() * 95;
+                const radial = ctx.createRadialGradient(x, y, 2, x, y, r);
+                radial.addColorStop(0, i % 2 === 0 ? 'rgba(255,255,255,0.55)' : pal[3] + '55');
+                radial.addColorStop(1, 'rgba(255,255,255,0)');
+                ctx.fillStyle = radial;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 계절별 포인트 모티프 (벚꽃잎, 나뭇잎, 단풍/열매, 눈꽃/별빛)
+            ctx.save();
+            for (let i = 0; i < 22; i++) {
+                const x = rand() * c.width;
+                const y = rand() * c.height;
+                const size = 8 + rand() * 14;
+                const angle = rand() * Math.PI * 2;
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+
+                if (seasonId === 'spring') {
+                    // 벚꽃 꽃잎
+                    ctx.fillStyle = i % 2 === 0 ? 'rgba(244, 162, 184, 0.45)' : 'rgba(255, 255, 255, 0.65)';
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(-size, -size, -size * 0.5, -size * 1.8, 0, -size * 1.3);
+                    ctx.bezierCurveTo(size * 0.5, -size * 1.8, size, -size, 0, 0);
+                    ctx.fill();
+                } else if (seasonId === 'summer') {
+                    // 싱그러운 잎사귀
+                    ctx.fillStyle = i % 2 === 0 ? 'rgba(110, 178, 138, 0.35)' : 'rgba(255, 255, 255, 0.5)';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, size * 0.55, size * 1.1, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (seasonId === 'autumn') {
+                    // 따뜻한 가을 낙엽 & 황금빛 열매
+                    ctx.fillStyle = i % 2 === 0 ? 'rgba(210, 132, 78, 0.38)' : 'rgba(235, 180, 95, 0.42)';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, size * 0.65, size, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    // 겨울 눈송이와 작은 별빛
+                    ctx.fillStyle = i % 3 === 0 ? 'rgba(255, 215, 120, 0.6)' : 'rgba(255, 255, 255, 0.8)';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, size * 0.38, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+            ctx.restore();
+
+            return c.toDataURL('image/jpeg', 0.9);
+        }
+
+        function initSeasonalBackgrounds() {
+            Object.keys(SEASON_DATA).forEach(seasonId => {
+                const s = SEASON_DATA[seasonId];
+                s.bgOptions = [
+                    createSeasonalArtworkDataUrl(seasonId, 0),
+                    createSeasonalArtworkDataUrl(seasonId, 1),
+                    createSeasonalArtworkDataUrl(seasonId, 2)
+                ];
+                s.thumbnail = s.bgOptions[0];
+            });
+        }
+
+        // 예시 사진 생성기 (사용자가 사진 업로드 전에도 바로 체험 가능하도록 귀여운 구름이 성장 일러스트 카드 생성)
+        function createSampleBabyPhoto(index, season) {
+            const c = document.createElement('canvas');
+            c.width = 800;
+            c.height = 800;
+            const ctx = c.getContext('2d');
+
+            const bgColors = [
+                ['#fff3e6', '#fde0c8'],
+                ['#f3f8f2', '#d7ead4'],
+                ['#f2f5fb', '#d9e3f4'],
+                ['#fdf2f6', '#f7d6e2']
+            ];
+            const pair = bgColors[index % bgColors.length];
+            const grad = ctx.createLinearGradient(0, 0, 800, 800);
+            grad.addColorStop(0, pair[0]);
+            grad.addColorStop(1, pair[1]);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 800, 800);
+
+            // 부드러운 원형 후광
+            ctx.fillStyle = 'rgba(255,255,255,0.65)';
+            ctx.beginPath();
+            ctx.arc(400, 380, 230, 0, Math.PI * 2);
+            ctx.fill();
+
+            const gureumImg = document.getElementById('asset-logo-gureum');
+            const parentsImg = document.getElementById('asset-logo-parents');
+            const imgToDraw = (index % 2 === 1 && parentsImg && parentsImg.complete) ? parentsImg : gureumImg;
+
+            if (imgToDraw && imgToDraw.complete && imgToDraw.naturalWidth > 0) {
+                const targetW = 340;
+                const targetH = targetW * (imgToDraw.naturalHeight / imgToDraw.naturalWidth);
+                ctx.drawImage(imgToDraw, 400 - targetW / 2, 340 - targetH / 2, targetW, targetH);
+            }
+
+            const labels = [
+                '생후 D+50 · 포근한 미소',
+                '생후 D+100 · 준삐♥와솔태와 함께',
+                '생후 D+200 · 호기심 가득한 눈망울',
+                '생후 D+365 · 첫 번째 생일 축하해'
+            ];
+            ctx.fillStyle = season ? season.textColor : '#6b5b52';
+            ctx.font = '600 32px "Noto Serif KR", serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(labels[index % labels.length], 400, 650);
+
+            ctx.fillStyle = '#8c7f77';
+            ctx.font = '24px "Gowun Dodum", sans-serif';
+            ctx.fillText('예시 이미지 (내 사진으로 교체 가능)', 400, 700);
+
+            return c.toDataURL('image/jpeg', 0.88);
+        }
+
+        async function fillSamplePhotos() {
+            if (!selectedLayout) return;
+            const count = selectedLayout.count;
+            selectedPhotos = [];
+            for (let i = 0; i < count; i++) {
+                selectedPhotos.push(createSampleBabyPhoto(i, currentSeason));
+            }
+            updatePhotoSelectionUI();
+        }
+
+        // 스마트폰 메모리 보호를 위한 이미지 다운샘플링 (최대 1200px)
+        function downsampleImage(base64Str, maxSide = 1200) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxSide || height > maxSide) {
+                        if (width > height) {
+                            height = Math.round((height * maxSide) / width);
+                            width = maxSide;
+                        } else {
+                            width = Math.round((width * maxSide) / height);
+                            height = maxSide;
+                        }
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.86));
+                };
+                img.onerror = () => resolve(base64Str);
+                img.src = base64Str;
+            });
+        }
+
+        function saveAppState() {
+            const state = {
+                step: currentStep,
+                seasonId: currentSeason ? currentSeason.id : null,
+                layoutId: selectedLayout ? selectedLayout.id : null,
+                photos: selectedPhotos,
+                customBg: customUploadedBgSrc,
+                customTitleText,
+                customMilestoneText,
+                customDescText,
+                selectedBlessingMonth,
+                selectedLogoMode
+            };
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (e) {
+                console.warn("용량 한도 초과로 백업을 생략합니다.");
+            }
+        }
+
+        function checkBackup() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.photos && parsed.photos.length > 0 && parsed.seasonId && parsed.layoutId) {
+                        document.getElementById('restore-toast').classList.remove('hidden');
+                    }
+                }
+            } catch(e) {}
+        }
+
+        function restoreAppState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const state = JSON.parse(saved);
+                    currentSeason = SEASON_DATA[state.seasonId] || SEASON_DATA.spring;
+                    selectedLayout = LAYOUT_DATA.find(l => l.id === state.layoutId) || LAYOUT_DATA[0];
+                    selectedPhotos = state.photos || [];
+                    customUploadedBgSrc = state.customBg || null;
+                    customTitleText = state.customTitleText || currentSeason.defaultTitle;
+                    customMilestoneText = state.customMilestoneText || currentSeason.defaultMilestone;
+                    customDescText = state.customDescText || currentSeason.desc;
+                    selectedBlessingMonth = state.selectedBlessingMonth || String(new Date().getMonth() + 1);
+                    selectedLogoMode = state.selectedLogoMode || 'both';
+                    selectedBgUrl = customUploadedBgSrc || currentSeason.bgOptions[0];
+
+                    applySeasonThemeToUI();
+                    syncCustomInputsFromState();
+                    updatePhotoSelectionUI();
+                    setStep(state.step || 3);
+                    if (state.step === 4) {
+                        initStep4();
+                    }
+                }
+            } catch (e) {
+                showCustomAlert("복원 실패", "이전 작업을 복원하는 도중 문제가 발생했습니다.");
+            }
+            document.getElementById('restore-toast').classList.add('hidden');
+        }
+
+        function clearSavedState() {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+            } catch(e) {}
+            document.getElementById('restore-toast').classList.add('hidden');
+        }
+
+        function handleNavClick(targetStep) {
+            if (targetStep === 1) {
+                setStep(1);
+            } else if (targetStep === 2) {
+                if (!currentSeason) {
+                    showCustomAlert("계절 테마 선택", "먼저 구름이 사진에 어울리는 계절 테마를 선택해 주세요.");
+                    return;
+                }
+                setStep(2);
+            } else if (targetStep === 3) {
+                if (!currentSeason || !selectedLayout) {
+                    showCustomAlert("프레임 선택 필요", "계절 테마와 성장 프레임을 먼저 선택해 주세요.");
+                    return;
+                }
+                setStep(3);
+            } else if (targetStep === 4) {
+                if (!currentSeason || !selectedLayout || selectedPhotos.length < selectedLayout.count) {
+                    showCustomAlert("사진을 모두 담아주세요", "선택한 프레임의 사진 개수를 모두 채우면 완성 단계로 이동할 수 있어요.");
+                    return;
+                }
+                initStep4();
+            }
+        }
+
+        function confirmHeaderHome() {
+            if (selectedPhotos.length > 0) {
+                openModal('reset');
+            } else {
+                setStep(1);
+            }
+        }
+
+        function setStep(step) {
+            currentStep = step;
+            [1, 2, 3, 4].forEach(s => {
+                const el = document.getElementById(`step-${s}`);
+                const nav = document.getElementById(`nav-step-${s}`);
+                if (el) {
+                    if (s === step) {
+                        el.classList.remove('hidden-step');
+                        if (s > 1) el.classList.add('flex');
+                    } else {
+                        el.classList.add('hidden-step');
+                        if (s > 1) el.classList.remove('flex');
+                    }
+                }
+                if (nav) {
+                    if (s === step) {
+                        nav.classList.add('text-stone-900', 'bg-stone-100', 'font-bold');
+                    } else {
+                        nav.classList.remove('text-stone-900', 'bg-stone-100', 'font-bold');
+                    }
+                }
+            });
+            saveAppState();
+        }
+
+        function applySeasonThemeToUI() {
+            if (!currentSeason) return;
+            document.getElementById('step2-title').style.color = currentSeason.textColor;
+            document.getElementById('step2-season-badge').innerText = `${currentSeason.name} 테마`;
+            document.getElementById('step3-title').style.color = currentSeason.textColor;
+            document.getElementById('upload-box-empty').style.borderColor = currentSeason.accent;
+            document.getElementById('upload-bg-tint').style.backgroundColor = currentSeason.textColor;
+            document.getElementById('upload-icon-bg').style.backgroundColor = currentSeason.fallbackColor;
+            document.getElementById('upload-icon').style.color = currentSeason.textColor;
+
+            if (selectedLayout) {
+                document.getElementById('step3-layout-badge').innerText = `${currentSeason.name.split(',')[0]} · ${selectedLayout.name}`;
+                document.getElementById('upload-instruction-text').innerText = `선택하신 [${selectedLayout.name}] 프레임에 맞춰 구름이의 사진 ${selectedLayout.count}장을 담아주세요.`;
+            }
+        }
+
+        // STEP 1에서 계절 선택 시
+        function handleSeasonSelect(seasonId) {
+            currentSeason = SEASON_DATA[seasonId];
+            customTitleText = currentSeason.defaultTitle;
+            customMilestoneText = currentSeason.defaultMilestone;
+            customDescText = currentSeason.desc;
+            selectedBgUrl = currentSeason.bgOptions[0];
+
+            applySeasonThemeToUI();
+            syncCustomInputsFromState();
+            setStep(2);
+        }
+
+        // STEP 2에서 레이아웃 선택 시
+        function handleLayoutSelect(layoutId) {
+            selectedLayout = LAYOUT_DATA.find(l => l.id === layoutId);
+            applySeasonThemeToUI();
+            resetFileInput();
+            selectedPhotos = []; 
+            customUploadedBgSrc = null; 
+            updatePhotoSelectionUI();
+            setStep(3);
+        }
+
+        function syncCustomInputsFromState() {
+            const titleIn = document.getElementById('input-custom-title');
+            const mileIn = document.getElementById('input-custom-milestone');
+            const descIn = document.getElementById('input-custom-desc');
+            const monthSel = document.getElementById('select-blessing-month');
+
+            if (titleIn) titleIn.value = customTitleText;
+            if (mileIn) mileIn.value = customMilestoneText;
+            if (descIn) descIn.value = customDescText;
+            if (monthSel) monthSel.value = selectedBlessingMonth;
+
+            updateLogoModeButtonsUI();
+        }
+
+        function resetCustomTextToSeasonDefault() {
+            if (!currentSeason) return;
+            customTitleText = currentSeason.defaultTitle;
+            customMilestoneText = currentSeason.defaultMilestone;
+            customDescText = currentSeason.desc;
+            selectedBlessingMonth = String(new Date().getMonth() + 1);
+            syncCustomInputsFromState();
+            triggerDebouncedPreview();
+        }
+
+        function applyTitlePreset(presetText) {
+            customTitleText = presetText;
+            const titleIn = document.getElementById('input-custom-title');
+            if (titleIn) titleIn.value = presetText;
+            triggerDebouncedPreview();
+        }
+
+        function setLogoMode(mode) {
+            selectedLogoMode = mode;
+            updateLogoModeButtonsUI();
+            updatePreviewFrame(selectedBgUrl || currentSeason.bgOptions[0]);
+        }
+
+        function updateLogoModeButtonsUI() {
+            document.querySelectorAll('.logo-mode-btn').forEach(btn => {
+                const m = btn.getAttribute('data-mode');
+                if (m === selectedLogoMode) {
+                    btn.classList.add('border-stone-800', 'bg-stone-50', 'shadow-sm');
+                    btn.classList.remove('border-stone-200', 'bg-white');
+                } else {
+                    btn.classList.remove('border-stone-800', 'bg-stone-50', 'shadow-sm');
+                    btn.classList.add('border-stone-200', 'bg-white');
+                }
+            });
+        }
+
+        function triggerDebouncedPreview() {
+            if (renderDebounceTimer) clearTimeout(renderDebounceTimer);
+            renderDebounceTimer = setTimeout(() => {
+                if (currentStep === 4 && currentSeason) {
+                    updatePreviewFrame(selectedBgUrl || currentSeason.bgOptions[0]);
+                }
+            }, 220);
+        }
+
+        function initStep4() {
+            if (!currentSeason) currentSeason = SEASON_DATA.spring;
+            document.getElementById('download-btn').style.backgroundColor = currentSeason.textColor;
+            syncCustomInputsFromState();
+            setStep(4);
+            const targetBg = selectedBgUrl || currentSeason.bgOptions[0];
+            updatePreviewFrame(targetBg);
+        }
+
+        function renderBgButtons() {
+            const bgContainer = document.getElementById('bg-theme-
