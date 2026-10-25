@@ -1,0 +1,19 @@
+{
+  "name": "구름이의 사계절 성장 기록관",
+  "short_name": "구름이 성장앨범",
+  "description": "준삐♥와솔태가 기록하는 구름이의 사계절 성장 사진 액자 스튜디오",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f4f0",
+  "theme_color": "#f7f4f0",
+  "icons": [
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
