@@ -3,28 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>구름이의 사계절 성장 기록관 | 준삐♥와솔태 패밀리 아카이브</title>
+    <title>구름이 사진 | 준삐♥와솔태 </title>
 
-    <!-- 스마트폰 홈 화면 앱(PWA Standalone) 및 구름이 아이콘 설정 -->
+    <!-- 스마트폰 전체화면 앱(PWA Fullscreen / Standalone) 및 구름이 아이콘 설정 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="구름이 성장앨범">
     <meta name="application-name" content="구름이 성장앨범">
     <meta name="theme-color" content="#f7f4f0">
     <link id="apple-touch-icon-link" rel="apple-touch-icon" sizes="512x512" href="">
     <link id="favicon-link" rel="icon" type="image/png" href="">
-    <link id="pwa-manifest-link" rel="manifest" href="">
+    <link id="pwa-manifest-link" rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%EA%B5%AC%EB%A6%84%EC%9D%B4%EC%9D%98%20%EC%82%AC%EA%B3%84%EC%A0%88%20%EC%84%B1%EC%9E%A5%20%EA%B8%B0%EB%A1%9D%EA%B4%80%22%2C%22short_name%22%3A%22%EA%B5%AC%EB%A6%84%EC%9D%B4%20%EC%84%B1%EC%9E%A5%EC%95%A8%EB%B2%94%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22fullscreen%22%2C%22display_override%22%3A%5B%22fullscreen%22%2C%22standalone%22%2C%22minimal-ui%22%5D%2C%22orientation%22%3A%22portrait%22%2C%22background_color%22%3A%22%23f7f4f0%22%2C%22theme_color%22%3A%22%23f7f4f0%22%7D'>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 
-    <!-- 폰트 및 트랜지션 효과 설정 -->
+    <!-- 폰트 크기 확대 및 트랜지션 효과 설정 -->
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Serif+KR:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Serif+KR:wght@400;600;700&display=swap');
+
+        /* 전체적인 앱 기본 글씨 크기 확대 (모바일 17.5px, 태블릿/PC 18.5px 기준) */
+        html {
+            font-size: 17.5px;
+        }
+        @media (min-width: 640px) {
+            html {
+                font-size: 18.5px;
+            }
+        }
 
         body {
             font-family: 'Pretendard', sans-serif;
@@ -67,47 +77,49 @@
 <body class="bg-[#efeae4] min-h-screen flex items-center justify-center p-0 sm:p-4 md:p-6 relative">
 
     <!-- 메인 컨테이너 -->
-    <div class="w-full max-w-6xl bg-white sm:rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col min-h-screen sm:min-h-[780px] border-0 sm:border border-stone-200/80 relative">
+    <div class="w-full max-w-6xl bg-white sm:rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col min-h-screen sm:min-h-[800px] border-0 sm:border border-stone-200/80 relative">
         
         <!-- 상단 헤더 및 네비게이션 -->
         <header class="px-4 sm:px-8 py-3.5 sm:py-4 flex flex-col lg:flex-row justify-between items-center border-b border-stone-100 bg-white/95 backdrop-blur-md z-20 sticky top-0 gap-3">
             <!-- 좌측 브랜드 로고 영역 (구름이 + 준삐와솔태) -->
-            <div class="flex items-center justify-between w-full lg:w-auto">
+            <div class="flex items-center justify-between w-full lg:w-auto gap-2">
                 <button type="button" onclick="confirmHeaderHome()" class="flex items-center gap-3 text-left group focus:outline-none">
-                    <div class="relative flex items-center">
-                        <img id="header-logo-gureum" data-logo="gureum" src="" alt="구름 로고" class="h-10 sm:h-11 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-105">
-                        <img id="header-logo-parents" data-logo="parents" src="" alt="준삐와솔태 로고" class="h-8 sm:h-9 w-auto object-contain -ml-2 mt-1 drop-shadow-sm transition-transform group-hover:scale-105">
+                    <div class="relative flex items-center flex-shrink-0">
+                        <img id="header-logo-gureum" data-logo="gureum" src="" alt="구름 로고" class="h-11 sm:h-12 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-105">
+                        <img id="header-logo-parents" data-logo="parents" src="" alt="준삐와솔태 로고" class="h-9 sm:h-10 w-auto object-contain -ml-2 mt-1 drop-shadow-sm transition-transform group-hover:scale-105">
                     </div>
                     <div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="font-serif-kr font-bold text-stone-800 text-base sm:text-lg tracking-tight">구름이의 성장 기록관</span>
-                            <span class="hidden sm:inline-block text-[11px] font-gowun px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60">준삐♥와솔태</span>
+                        <div class="flex items-center gap-2">
+                            <span class="font-serif-kr font-bold text-stone-800 text-lg sm:text-xl tracking-tight">구름이의 성장 기록관</span>
+                            <span class="hidden sm:inline-block text-xs font-gowun px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold">준삐♥와솔태</span>
                         </div>
-                        <p class="text-[11px] text-stone-400 font-gowun">계절마다 자라나는 우리 아이 사진 액자 스튜디오</p>
+                        <p class="text-xs sm:text-sm text-stone-500 font-gowun">계절마다 자라나는 우리 아이 사진 액자</p>
                     </div>
                 </button>
 
-                <!-- 모바일용 앱 설치 & 초기화 버튼 -->
-                <div class="flex items-center gap-1.5">
-                    <button type="button" id="btn-pwa-install" onclick="handleInstallAppClick()" class="px-2.5 py-1.5 rounded-full text-xs font-gowun bg-amber-50 text-amber-900 border border-amber-200/80 hover:bg-amber-100 transition-colors flex items-center gap-1 shadow-sm">
-                        <i data-lucide="smartphone" class="w-3.5 h-3.5 text-amber-700"></i>
-                        <span>앱 설치</span>
+                <!-- 우측 상단: 주소창 숨기기(전체화면) & 앱 설치 안내 버튼 -->
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                    <button type="button" id="btn-fullscreen-toggle" onclick="toggleFullscreenMode()" class="px-3 py-2 rounded-full text-xs sm:text-sm font-gowun font-bold bg-stone-800 text-white hover:bg-stone-700 transition-colors flex items-center gap-1.5 shadow-sm">
+                        <i data-lucide="maximize-2" class="w-4 h-4"></i>
+                        <span id="fullscreen-btn-label">주소창 숨김</span>
                     </button>
-                    <button type="button" onclick="openModal('reset')" class="lg:hidden px-2.5 py-1.5 rounded-full text-xs font-gowun text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-colors flex items-center gap-1">
-                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 처음으로
+                <button id="btn-reset-top" onclick="confirmHeaderHome()" class="hidden items-center gap-1 text-xs sm:text-sm text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-full transition-colors font-medium"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i><span>처음으로</span></button>
+                    <button type="button" id="btn-pwa-install" onclick="handleInstallAppClick()" class="px-3 py-2 rounded-full text-xs sm:text-sm font-gowun font-bold bg-amber-50 text-amber-900 border border-amber-200/80 hover:bg-amber-100 transition-colors flex items-center gap-1 shadow-sm">
+                        <i data-lucide="smartphone" class="w-4 h-4 text-amber-700"></i>
+                        <span>앱 설치</span>
                     </button>
                 </div>
             </div>
             
-            <!-- 우측 단계 네비게이션 -->
-            <nav class="flex items-center gap-1.5 sm:gap-2.5 text-[11px] sm:text-xs font-medium text-stone-400 w-full lg:w-auto overflow-x-auto no-scrollbar justify-center lg:justify-end py-0.5">
-                <button type="button" onclick="handleNavClick(1)" id="nav-step-1" class="px-2.5 py-1 rounded-full transition-all duration-300 text-stone-800 bg-stone-100 font-bold whitespace-nowrap">1. 계절 테마</button>
-                <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-40 flex-shrink-0"></i>
-                <button type="button" onclick="handleNavClick(2)" id="nav-step-2" class="px-2.5 py-1 rounded-full transition-all duration-300 whitespace-nowrap">2. 성장 프레임</button>
-                <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-40 flex-shrink-0"></i>
-                <button type="button" onclick="handleNavClick(3)" id="nav-step-3" class="px-2.5 py-1 rounded-full transition-all duration-300 whitespace-nowrap">3. 사진 담기</button>
-                <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-40 flex-shrink-0"></i>
-                <button type="button" onclick="handleNavClick(4)" id="nav-step-4" class="px-2.5 py-1 rounded-full transition-all duration-300 whitespace-nowrap">4. 문구·배경 및 완성</button>
+            <!-- 우측 단계 네비게이션 (글씨 크기 확대) -->
+            <nav class="flex items-center gap-1.5 sm:gap-2.5 text-sm sm:text-base font-medium text-stone-400 w-full lg:w-auto overflow-x-auto no-scrollbar justify-center lg:justify-end py-1">
+                <button type="button" onclick="handleNavClick(1)" id="nav-step-1" class="px-3 py-1.5 rounded-full transition-all duration-300 text-stone-800 bg-stone-100 font-bold whitespace-nowrap">1. 계절 테마</button>
+                <i data-lucide="chevron-right" class="w-4 h-4 opacity-40 flex-shrink-0"></i>
+                <button type="button" onclick="handleNavClick(2)" id="nav-step-2" class="px-3 py-1.5 rounded-full transition-all duration-300 whitespace-nowrap">2. 성장 프레임</button>
+                <i data-lucide="chevron-right" class="w-4 h-4 opacity-40 flex-shrink-0"></i>
+                <button type="button" onclick="handleNavClick(3)" id="nav-step-3" class="px-3 py-1.5 rounded-full transition-all duration-300 whitespace-nowrap">3. 사진 담기</button>
+                <i data-lucide="chevron-right" class="w-4 h-4 opacity-40 flex-shrink-0"></i>
+                <button type="button" onclick="handleNavClick(4)" id="nav-step-4" class="px-3 py-1.5 rounded-full transition-all duration-300 whitespace-nowrap">4. 문구·배경 및 완성</button>
             </nav>
         </header>
 
@@ -117,72 +129,72 @@
             <!-- STEP 1: 계절 감성 테마 선택 -->
             <section id="step-1" class="w-full text-center animate-fade-up max-w-5xl my-auto">
                 <!-- 상단 패밀리 엠블럼 배지 -->
-                <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white shadow-sm border border-stone-200/70 mb-5 sm:mb-6">
-                    <img data-logo="gureum" src="" alt="구름이" class="h-9 sm:h-11 w-auto object-contain animate-float">
+                <div class="inline-flex items-center gap-3.5 px-5 py-2.5 rounded-full bg-white shadow-sm border border-stone-200/70 mb-6">
+                    <img data-logo="gureum" src="" alt="구름이" class="h-10 sm:h-12 w-auto object-contain animate-float">
                     <div class="text-left">
-                        <div class="text-[11px] font-gowun text-amber-700 font-bold tracking-wide">JUNPPI ♥ SOLTAE · BABY GUREUM</div>
-                        <div class="text-xs sm:text-sm font-serif-kr text-stone-700 font-semibold">준삐와 솔태가 기록하는 구름이의 사계절</div>
+                        <div class="text-xs sm:text-sm font-gowun text-amber-700 font-bold tracking-wide">JUNPPI ♥ SOLTAE · BABY GUREUM</div>
+                        <div class="text-sm sm:text-base font-serif-kr text-stone-800 font-bold">준삐와 솔태가 기록하는 구름이의 사계절</div>
                     </div>
-                    <img data-logo="parents" src="" alt="준삐와솔태" class="h-9 sm:h-11 w-auto object-contain">
+                    <img data-logo="parents" src="" alt="준삐와솔태" class="h-10 sm:h-12 w-auto object-contain">
                 </div>
 
-                <h1 class="text-2xl sm:text-4xl lg:text-[42px] font-serif-kr mb-3 sm:mb-4 text-stone-800 keep-all leading-tight font-semibold">
+                <h1 class="text-2xl sm:text-4xl lg:text-[44px] font-serif-kr mb-3.5 sm:mb-5 text-stone-800 keep-all leading-tight font-bold">
                     구름이가 자라난 순간,<br class="hidden sm:block"/> 어떤 계절의 온도로 담아볼까요?
                 </h1>
-                <p class="text-stone-500 mb-6 sm:mb-9 text-xs sm:text-base font-gowun keep-all px-4 max-w-2xl mx-auto">
-                    아이의 사진과 가장 잘 어울리는 계절 감성 테마를 선택해 주세요. 계절별 파스텔 배경과 맞춤 색상이 적용됩니다.
+                <p class="text-stone-600 mb-7 sm:mb-9 text-base sm:text-lg font-gowun keep-all px-3 max-w-2xl mx-auto">
+                    아이의 사진과 가장 잘 어울리는 계절 감성 테마를 선택해 주세요. 계절별 배경 사진과 맞춤 색상이 적용됩니다.
                 </p>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5" id="season-buttons"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5" id="season-buttons"></div>
             </section>
 
             <!-- STEP 2: 프레임 레이아웃 선택 -->
             <section id="step-2" class="hidden-step w-full text-center animate-fade-up flex-col items-center my-auto">
-                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-stone-200 text-xs font-gowun text-stone-600 mb-3 shadow-sm">
-                    <img data-logo="gureum" src="" alt="구름" class="h-5 w-auto object-contain">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-stone-200 text-sm sm:text-base font-gowun text-stone-700 mb-3.5 shadow-sm font-bold">
+                    <img data-logo="gureum" src="" alt="구름" class="h-6 w-auto object-contain">
                     <span id="step2-season-badge">선택한 계절 테마</span>
                 </div>
-                <h2 id="step2-title" class="text-2xl sm:text-4xl font-serif-kr mb-2.5 sm:mb-3.5 keep-all text-stone-800 font-semibold">성장 프레임 및 출력 방향 선택</h2>
-                <p class="text-stone-500 mb-6 sm:mb-9 text-xs sm:text-base font-gowun keep-all px-4">
+                <h2 id="step2-title" class="text-2xl sm:text-4xl font-serif-kr mb-3 sm:mb-4 keep-all text-stone-800 font-bold">성장 프레임 및 출력 방향 선택</h2>
+                <p class="text-stone-600 mb-7 sm:mb-9 text-base sm:text-lg font-gowun keep-all px-4">
                     한 장의 베스트 컷부터 백일·돌·현재를 비교하는 다중 컷까지 원하는 구성을 골라주세요. (CP1500 인화 규격 지원)
                 </p>
-                <div class="grid grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5 w-full max-w-4xl mx-auto" id="layout-buttons"></div>
-                <button type="button" onclick="setStep(1)" class="mt-6 sm:mt-9 px-5 py-2.5 text-stone-600 hover:text-stone-900 font-gowun text-sm transition-colors active:scale-95 bg-white rounded-full border border-stone-200 shadow-sm">
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 w-full max-w-4xl mx-auto" id="layout-buttons"></div>
+                <button type="button" onclick="setStep(1)" class="mt-7 sm:mt-9 px-6 py-3 text-stone-700 hover:text-stone-950 font-gowun text-base sm:text-lg font-bold transition-colors active:scale-95 bg-white rounded-full border border-stone-300 shadow-sm">
                     ← 계절 테마 다시 고르기
                 </button>
             </section>
 
             <!-- STEP 3: 구름이 사진 업로드 -->
             <section id="step-3" class="hidden-step w-full text-center animate-fade-up flex-col items-center my-auto">
-                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-stone-200 text-xs font-gowun text-stone-600 mb-3 shadow-sm">
-                    <img data-logo="gureum" src="" alt="구름" class="h-5 w-auto object-contain">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-stone-200 text-sm sm:text-base font-gowun text-stone-700 mb-3.5 shadow-sm font-bold">
+                    <img data-logo="gureum" src="" alt="구름" class="h-6 w-auto object-contain">
                     <span id="step3-layout-badge">프레임 정보</span>
                 </div>
-                <h2 id="step3-title" class="text-2xl sm:text-4xl font-serif-kr mb-2.5 sm:mb-3.5 keep-all text-stone-800 font-semibold">구름이의 성장 사진 담기</h2>
-                <p id="upload-instruction-text" class="text-stone-500 mb-6 sm:mb-8 text-xs sm:text-base font-gowun keep-all px-4">
+                <h2 id="step3-title" class="text-2xl sm:text-4xl font-serif-kr mb-3 sm:mb-4 keep-all text-stone-800 font-bold">구름이의 성장 사진 담기</h2>
+                <p id="upload-instruction-text" class="text-stone-600 mb-6 sm:mb-8 text-base sm:text-lg font-gowun keep-all px-4">
                     선택하신 프레임에 맞게 사진을 선택해주세요.
                 </p>
                 
                 <!-- 비어있을 때 업로드 박스 -->
-                <div id="upload-box-empty" onclick="handleAddPhotoClick()" class="cursor-pointer w-full max-w-[440px] aspect-[4/3] sm:aspect-square rounded-3xl border-2 border-dashed flex items-center justify-center relative overflow-hidden transition-all duration-300 hover:shadow-xl group bg-white mx-auto shadow-sm">
+                <div id="upload-box-empty" onclick="handleAddPhotoClick()" class="cursor-pointer w-full max-w-[460px] aspect-[4/3] sm:aspect-square rounded-3xl border-2 border-dashed flex items-center justify-center relative overflow-hidden transition-all duration-300 hover:shadow-xl group bg-white mx-auto shadow-sm">
                     <div id="upload-bg-tint" class="absolute inset-0 opacity-[0.04]"></div>
-                    <div class="flex flex-col items-center gap-3 sm:gap-4 p-5 sm:p-8 transition-transform duration-500 group-hover:scale-105 relative z-10 pointer-events-none">
+                    <div class="flex flex-col items-center gap-4 p-6 sm:p-8 transition-transform duration-500 group-hover:scale-105 relative z-10 pointer-events-none">
                         <div class="relative">
-                            <div id="upload-icon-bg" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center shadow-sm bg-stone-50">
-                                <i data-lucide="image-plus" id="upload-icon" class="w-7 h-7 sm:w-8 sm:h-8 text-stone-600" stroke-width="1.5"></i>
+                            <div id="upload-icon-bg" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center shadow-sm bg-stone-50">
+                                <i data-lucide="image-plus" id="upload-icon" class="w-9 h-9 sm:w-10 sm:h-10 text-stone-600" stroke-width="1.5"></i>
                             </div>
-                            <img data-logo="gureum" src="" alt="구름" class="w-9 h-9 object-contain absolute -bottom-1 -right-2 drop-shadow">
+                            <img data-logo="gureum" src="" alt="구름" class="w-10 h-10 object-contain absolute -bottom-1 -right-2 drop-shadow">
                         </div>
-                        <div class="text-stone-800 font-serif-kr text-lg sm:text-xl font-semibold">터치하여 구름이 사진 불러오기</div>
-                        <div class="text-stone-500 font-gowun text-xs sm:text-sm tracking-wide bg-stone-100 px-3.5 py-1.5 rounded-full">
-                            한 번에 여러 장 선택 가능 · 스마트폰 고화질 자동 최적화
+                        <div class="text-stone-800 font-serif-kr text-xl sm:text-2xl font-bold">터치하여 구름이 사진 불러오기</div>
+                        <div class="text-stone-600 font-gowun text-sm sm:text-base tracking-wide bg-stone-100 px-4 py-2 rounded-full">
+                            한 번에 여러 장 선택 가능 · 고화질 자동 최적화
                         </div>
                     </div>
                 </div>
 
                 <!-- 예시 사진으로 빠른 체험 버튼 -->
-                <div id="sample-photo-bar" class="mt-4 flex items-center justify-center">
-                    <button type="button" onclick="fillSamplePhotos()" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-gowun bg-amber-50/90 hover:bg-amber-100 text-amber-900 border border-amber-200/80 transition-all shadow-sm active:scale-95">
+                <div id="sample-photo-bar" class="mt-5 flex items-center justify-center">
+                    <button type="button" onclick="fillSamplePhotos()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm sm:text-base font-gowun font-bold bg-amber-50/90 hover:bg-amber-100 text-amber-900 border border-amber-200/80 transition-all shadow-sm active:scale-95">
                         <i data-lucide="sparkles" class="w-4 h-4 text-amber-600"></i>
                         <span>사진 없이 먼저 테스트해 볼래요 (구름이 일러스트 예시 채우기)</span>
                     </button>
@@ -190,11 +202,11 @@
 
                 <!-- 사진 선택 후 그리드 UI -->
                 <div id="photo-selection-ui" class="hidden w-full max-w-2xl mx-auto flex-col items-center">
-                    <p class="text-xs text-stone-400 font-gowun mb-3">◀ ▶ 버튼으로 사진이 들어갈 순서를 자유롭게 바꿀 수 있어요.</p>
-                    <div id="photo-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 w-full mb-7"></div>
+                    <p class="text-sm sm:text-base text-stone-500 font-gowun mb-3.5">◀ ▶ 버튼으로 사진이 들어갈 순서를 자유롭게 바꿀 수 있어요.</p>
+                    <div id="photo-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full mb-7"></div>
                     <div class="flex flex-col sm:flex-row gap-3 w-full max-w-md mx-auto">
-                        <button type="button" id="btn-next-step4" onclick="initStep4()" style="display:none;" class="flex-1 py-4 px-6 rounded-2xl font-serif-kr text-base sm:text-lg text-white font-semibold transition-all active:scale-95 shadow-md hover:shadow-lg justify-center items-center gap-2">
-                            <i data-lucide="wand-2" class="w-5 h-5"></i>
+                        <button type="button" id="btn-next-step4" onclick="initStep4()" style="display:none;" class="flex-1 py-4 px-6 rounded-2xl font-serif-kr text-lg sm:text-xl text-white font-bold transition-all active:scale-95 shadow-md hover:shadow-lg justify-center items-center gap-2">
+                            <i data-lucide="wand-2" class="w-6 h-6"></i>
                             <span>문구·배경 꾸미고 액자 완성하기</span>
                         </button>
                     </div>
@@ -202,167 +214,239 @@
 
                 <input type="file" id="photo-input" accept="image/*" multiple class="hidden" />
                 
-                <button type="button" onclick="setStep(2)" id="btn-back-step3" class="mt-6 sm:mt-8 px-5 py-2.5 text-stone-600 hover:text-stone-900 font-gowun text-sm transition-colors active:scale-95 bg-white rounded-full border border-stone-200 shadow-sm">
+                <button type="button" onclick="setStep(2)" id="btn-back-step3" class="mt-7 sm:mt-8 px-6 py-3 text-stone-700 hover:text-stone-950 font-gowun text-base sm:text-lg font-bold transition-colors active:scale-95 bg-white rounded-full border border-stone-300 shadow-sm">
                     ← 프레임 다시 선택하기
                 </button>
             </section>
 
             <!-- STEP 4: 맞춤 문구 · 배경 테마 · 로고 스탬프 설정 및 결과 미리보기 -->
-            <section id="step-4" class="hidden-step w-full animate-fade-up flex-col lg:flex-row gap-7 lg:gap-10 items-center lg:items-start justify-center max-w-6xl my-auto">
+            <section id="step-4" class="hidden-step w-full animate-fade-up flex-col lg:flex-row gap-6 lg:gap-9 items-center lg:items-start justify-center max-w-6xl my-auto">
                 
                 <!-- 왼쪽: 캔버스 미리보기 렌더링 영역 -->
-                <div class="w-full lg:w-[50%] flex-shrink-0 relative flex flex-col items-center">
+                <div class="w-full lg:w-[48%] flex-shrink-0 relative flex flex-col items-center lg:sticky lg:top-20">
                     <div class="w-full flex items-center justify-between mb-2.5 px-1">
-                        <span class="text-xs font-gowun text-stone-500 flex items-center gap-1.5">
-                            <i data-lucide="printer" class="w-3.5 h-3.5"></i> 캐논 셀피 CP1500 엽서 규격 (300dpi)
+                        <span class="text-sm sm:text-base font-gowun font-bold text-stone-600 flex items-center gap-1.5">
+                            <i data-lucide="printer" class="w-4 h-4"></i> CP1500 엽서 규격 (300dpi)
                         </span>
-                        <button type="button" onclick="setStep(3)" class="text-xs font-gowun text-stone-600 hover:text-stone-900 underline underline-offset-2">
-                            사진 다시 고르기
-                        </button>
+                        <div class="flex items-center gap-3">
+                            <button type="button" onclick="openPreviewZoomModal()" class="text-sm sm:text-base font-gowun font-bold text-amber-800 hover:text-amber-950 flex items-center gap-1 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+                                <i data-lucide="zoom-in" class="w-4 h-4"></i> 크게 보기
+                            </button>
+                            <button type="button" onclick="setStep(3)" class="text-sm sm:text-base font-gowun font-bold text-stone-600 hover:text-stone-900 underline underline-offset-2">
+                                사진 다시 고르기
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="relative w-full flex justify-center items-center p-3 sm:p-5 bg-stone-200/50 rounded-2xl border border-stone-200/80 shadow-inner">
-                        <div id="preview-loading" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm rounded-2xl hidden">
-                            <div class="w-11 h-11 border-4 border-stone-200 border-t-stone-800 rounded-full animate-spin"></div>
-                            <div class="text-stone-700 font-serif-kr text-base mt-3">구름이 성장 액자 그리는 중...</div>
+                    <div class="relative w-full flex justify-center items-center p-3 sm:p-5 bg-stone-200/60 rounded-3xl border border-stone-200/90 shadow-inner">
+                        <div id="preview-loading" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm rounded-3xl hidden">
+                            <div class="w-12 h-12 border-4 border-stone-200 border-t-stone-800 rounded-full animate-spin"></div>
+                            <div class="text-stone-800 font-serif-kr text-lg font-bold mt-3">구름이 성장 액자 그리는 중...</div>
                         </div>
                         
-                        <img id="final-image" src="" alt="미리보기 성장 앨범 액자" class="w-full h-auto max-h-[64vh] object-contain block relative z-10 drop-shadow-[0_15px_25px_rgba(0,0,0,0.15)] rounded-sm" />
+                        <img id="final-image" onclick="openPreviewZoomModal()" src="" alt="미리보기 성장 앨범 액자" title="클릭하여 크게 보기" class="cursor-pointer w-full h-auto max-h-[62vh] lg:max-h-[68vh] object-contain block relative z-10 drop-shadow-[0_15px_25px_rgba(0,0,0,0.16)] rounded-sm" />
                     </div>
                 </div>
 
-                <!-- 오른쪽: 맞춤 텍스트 · 로고 · 배경 컨트롤 패널 -->
-                <div class="w-full lg:w-[50%] flex flex-col gap-5 text-left bg-white p-5 sm:p-6 rounded-3xl border border-stone-200/90 shadow-sm">
+                <!-- 오른쪽: 접기/펼치기 가능한 맞춤 텍스트 · 로고 · 배경 컨트롤 패널 -->
+                <div class="w-full lg:w-[52%] flex flex-col gap-4 text-left">
                     
-                    <!-- 1. 맞춤 텍스트 입력 섹션 -->
-                    <div>
-                        <div class="flex items-center justify-between mb-2.5">
-                            <h3 class="text-base sm:text-lg font-serif-kr font-bold text-stone-800 flex items-center gap-2">
-                                <i data-lucide="pen-tool" class="w-4 h-4 text-amber-600"></i>
-                                <span>1. 액자 맞춤 문구 입력</span>
-                            </h3>
-                            <button type="button" onclick="resetCustomTextToSeasonDefault()" class="text-xs font-gowun text-stone-400 hover:text-stone-700 transition-colors">
-                                기본 문구로 초기화
+                    <!-- 상단 일괄 접기/펼치기 컨트롤 바 -->
+                    <div class="flex items-center justify-between bg-white px-4 py-3 rounded-2xl border border-stone-200/90 shadow-sm">
+                        <span class="text-sm sm:text-base font-gowun font-bold text-stone-700 flex items-center gap-2">
+                            <i data-lucide="sliders-horizontal" class="w-4 h-4 text-amber-600"></i>
+                            <span>액자 상세 꾸미기 (항목별 접기 가능)</span>
+                        </span>
+                        <button type="button" id="btn-fold-all" onclick="toggleAllSectionsFold()" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-gowun font-bold bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors flex items-center gap-1">
+                            <i data-lucide="chevrons-up" id="icon-fold-all" class="w-4 h-4"></i>
+                            <span id="label-fold-all">모두 접기</span>
+                        </button>
+                    </div>
+
+                    <!-- 1. 맞춤 텍스트 입력 섹션 (접기/펼치기 지원 + 개별 표시 안 함 버튼) -->
+                    <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm overflow-hidden">
+                        <div class="flex items-center justify-between px-5 py-4 bg-stone-50/70 border-b border-stone-100 cursor-pointer select-none" onclick="toggleSectionFold('text')">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="pen-tool" class="w-5 h-5 text-amber-600"></i>
+                                <h3 class="text-lg sm:text-xl font-serif-kr font-bold text-stone-800">1. 액자 맞춤 문구</h3>
+                                <span id="badge-summary-text" class="text-xs font-gowun px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold">표시 중</span>
+                            </div>
+                            <button type="button" class="px-3 py-1 rounded-xl text-xs sm:text-sm font-gowun font-bold bg-white border border-stone-200 text-stone-600 hover:bg-stone-100 flex items-center gap-1">
+                                <span id="fold-label-text">접기</span>
+                                <i data-lucide="chevron-up" id="fold-icon-text" class="w-4 h-4"></i>
                             </button>
                         </div>
 
-                        <!-- 빠른 제목 프리셋 칩 -->
-                        <div class="flex flex-wrap gap-1.5 mb-3" id="title-preset-chips">
-                            <button type="button" onclick="applyTitlePreset('구름이의 자라나는 시간')" class="px-2.5 py-1 rounded-full text-xs font-gowun bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-600 transition-colors">☁️ 구름이의 자라나는 시간</button>
-                            <button type="button" onclick="applyTitlePreset('준삐와 솔태의 보물, 구름이')" class="px-2.5 py-1 rounded-full text-xs font-gowun bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-600 transition-colors">💛 준삐와 솔태의 보물, 구름이</button>
-                            <button type="button" onclick="applyTitlePreset('무럭무럭 자라나는 우리 아기')" class="px-2.5 py-1 rounded-full text-xs font-gowun bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-600 transition-colors">🌱 무럭무럭 자라나는 우리 아기</button>
-                            <button type="button" onclick="applyTitlePreset('사랑으로 피어난 구름이의 계절')" class="px-2.5 py-1 rounded-full text-xs font-gowun bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-600 transition-colors">🌸 사랑으로 피어난 구름이의 계절</button>
-                        </div>
+                        <div id="section-body-text" class="p-5 space-y-4">
+                            <!-- 문구 전체 켜기/끄기 및 초기화 버튼 -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-stone-100">
+                                <button type="button" id="btn-toggle-all-text" onclick="toggleAllCustomTexts()" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-300 bg-white hover:bg-stone-100 text-stone-700 transition-colors flex items-center gap-1.5">
+                                    <i data-lucide="eye-off" class="w-4 h-4"></i>
+                                    <span id="label-toggle-all-text">문구 전체 표시 안 함 (사진만 크게)</span>
+                                </button>
+                                <button type="button" onclick="resetCustomTextToSeasonDefault()" class="text-xs sm:text-sm font-gowun font-bold text-stone-500 hover:text-stone-800 underline underline-offset-2">
+                                    기본 문구로 초기화
+                                </button>
+                            </div>
 
-                        <div class="space-y-2.5">
-                            <!-- 메인 타이틀 -->
-                            <div>
-                                <label for="input-custom-title" class="block text-xs font-gowun text-stone-500 mb-1">메인 제목 (액자 큰 글씨)</label>
+                            <!-- 빠른 제목 프리셋 칩 -->
+                            <div class="flex flex-wrap gap-2" id="title-preset-chips">
+                                <button type="button" onclick="applyTitlePreset('구름이의 자라나는 시간')" class="px-3 py-1.5 rounded-full text-xs sm:text-sm font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors">☁️ 구름이의 자라나는 시간</button>
+                                <button type="button" onclick="applyTitlePreset('준삐와 솔태의 보물, 구름이')" class="px-3 py-1.5 rounded-full text-xs sm:text-sm font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors">💛 준삐와 솔태의 보물, 구름이</button>
+                                <button type="button" onclick="applyTitlePreset('무럭무럭 자라나는 우리 아기')" class="px-3 py-1.5 rounded-full text-xs sm:text-sm font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors">🌱 무럭무럭 자라나는 우리 아기</button>
+                                <button type="button" onclick="applyTitlePreset('사랑으로 피어난 구름이의 계절')" class="px-3 py-1.5 rounded-full text-xs sm:text-sm font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors">🌸 사랑으로 피어난 구름이의 계절</button>
+                            </div>
+
+                            <!-- (1) 메인 타이틀 + 표시 안 함 버튼 -->
+                            <div class="bg-stone-50/70 p-3.5 rounded-2xl border border-stone-200/70">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="input-custom-title" class="text-sm sm:text-base font-gowun font-bold text-stone-700">메인 제목 (액자 큰 글씨)</label>
+                                    <button type="button" id="btn-toggle-title" onclick="toggleTextPart('title')" class="px-3 py-1 rounded-full text-xs sm:text-sm font-gowun font-bold transition-all border">
+                                        표시 안 함
+                                    </button>
+                                </div>
                                 <input type="text" id="input-custom-title" maxlength="24" placeholder="예: 구름이의 자라나는 시간"
-                                    class="w-full px-3.5 py-2 rounded-xl border border-stone-200 text-sm font-serif-kr text-stone-800 focus:outline-none focus:border-stone-500 transition-colors">
+                                    class="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-white text-base sm:text-lg font-serif-kr text-stone-800 focus:outline-none focus:border-stone-600 transition-colors">
                             </div>
 
-                            <!-- 성장 시기 / 날짜 및 탄생월 선택 (2열) -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                                <div>
-                                    <label for="input-custom-milestone" class="block text-xs font-gowun text-stone-500 mb-1">성장 기록 · 촬영일 (가운데 배지)</label>
-                                    <input type="text" id="input-custom-milestone" maxlength="30" placeholder="예: 2026.10 · 생후 D+100의 기록"
-                                        class="w-full px-3.5 py-2 rounded-xl border border-stone-200 text-xs sm:text-sm font-gowun text-stone-700 focus:outline-none focus:border-stone-500 transition-colors">
+                            <!-- (2) 성장 기록 · 촬영일 + 표시 안 함 버튼 -->
+                            <div class="bg-stone-50/70 p-3.5 rounded-2xl border border-stone-200/70">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="input-custom-milestone" class="text-sm sm:text-base font-gowun font-bold text-stone-700">성장 기록 · 촬영일 (가운데 배지)</label>
+                                    <button type="button" id="btn-toggle-milestone" onclick="toggleTextPart('milestone')" class="px-3 py-1 rounded-full text-xs sm:text-sm font-gowun font-bold transition-all border">
+                                        표시 안 함
+                                    </button>
                                 </div>
-                                <div>
-                                    <label for="select-blessing-month" class="block text-xs font-gowun text-stone-500 mb-1">하단 월별 축복 문구</label>
-                                    <select id="select-blessing-month" class="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs sm:text-sm font-gowun text-stone-700 bg-white focus:outline-none focus:border-stone-500 transition-colors">
-                                        <option value="1">1월 · 새해 첫 별처럼 빛나는 아이</option>
-                                        <option value="2">2월 · 봄을 부르는 따스한 햇살</option>
-                                        <option value="3">3월 · 새싹처럼 맑고 싱그러운 에너지</option>
-                                        <option value="4">4월 · 꽃길만 걸을 사랑스러운 걸음</option>
-                                        <option value="5">5월 · 온 세상이 축복하는 푸른 오월</option>
-                                        <option value="6">6월 · 품 넓은 나무처럼 자라날 마음</option>
-                                        <option value="7">7월 · 여름 햇살보다 눈부신 미소</option>
-                                        <option value="8">8월 · 밤하늘 은하수처럼 반짝이는 꿈</option>
-                                        <option value="9">9월 · 달콤한 열매처럼 찾아온 기적</option>
-                                        <option value="10">10월 · 가을 햇살처럼 깊고 따뜻한 사랑</option>
-                                        <option value="11">11월 · 포근한 구름처럼 온화한 성품</option>
-                                        <option value="12">12월 · 추운 겨울도 녹이는 우리의 행복</option>
-                                        <option value="none">표시 안 함 (깔끔하게 비우기)</option>
-                                    </select>
-                                </div>
+                                <input type="text" id="input-custom-milestone" maxlength="30" placeholder="예: 2026.10 · 생후 D+100의 기록"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-white text-sm sm:text-base font-gowun text-stone-800 focus:outline-none focus:border-stone-600 transition-colors">
                             </div>
 
-                            <!-- 부모님 한 줄 메시지 -->
-                            <div>
-                                <label for="input-custom-desc" class="block text-xs font-gowun text-stone-500 mb-1">부모님 한 줄 편지 (서브 문구)</label>
+                            <!-- (3) 부모님 한 줄 메시지 + 표시 안 함 버튼 -->
+                            <div class="bg-stone-50/70 p-3.5 rounded-2xl border border-stone-200/70">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="input-custom-desc" class="text-sm sm:text-base font-gowun font-bold text-stone-700">부모님 한 줄 편지 (서브 문구)</label>
+                                    <button type="button" id="btn-toggle-desc" onclick="toggleTextPart('desc')" class="px-3 py-1 rounded-full text-xs sm:text-sm font-gowun font-bold transition-all border">
+                                        표시 안 함
+                                    </button>
+                                </div>
                                 <input type="text" id="input-custom-desc" maxlength="45" placeholder="아이에게 남기고 싶은 따뜻한 한 줄 문구를 적어보세요"
-                                    class="w-full px-3.5 py-2 rounded-xl border border-stone-200 text-xs sm:text-sm font-gowun text-stone-700 focus:outline-none focus:border-stone-500 transition-colors">
+                                    class="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-white text-sm sm:text-base font-gowun text-stone-800 focus:outline-none focus:border-stone-600 transition-colors">
+                            </div>
+
+                            <!-- (4) 하단 월별 축복 문구 + 표시 안 함 버튼 -->
+                            <div class="bg-stone-50/70 p-3.5 rounded-2xl border border-stone-200/70">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="select-blessing-month" class="text-sm sm:text-base font-gowun font-bold text-stone-700">하단 월별 축복 문구</label>
+                                    <button type="button" id="btn-toggle-blessing" onclick="toggleTextPart('blessing')" class="px-3 py-1 rounded-full text-xs sm:text-sm font-gowun font-bold transition-all border">
+                                        표시 안 함
+                                    </button>
+                                </div>
+                                <select id="select-blessing-month" class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm sm:text-base font-gowun text-stone-800 bg-white focus:outline-none focus:border-stone-600 transition-colors">
+                                    <option value="1">1월 · 새해 첫 별처럼 빛나는 아이</option>
+                                    <option value="2">2월 · 봄을 부르는 따스한 햇살</option>
+                                    <option value="3">3월 · 새싹처럼 맑고 싱그러운 에너지</option>
+                                    <option value="4">4월 · 꽃길만 걸을 사랑스러운 걸음</option>
+                                    <option value="5">5월 · 온 세상이 축복하는 푸른 오월</option>
+                                    <option value="6">6월 · 품 넓은 나무처럼 자라날 마음</option>
+                                    <option value="7">7월 · 여름 햇살보다 눈부신 미소</option>
+                                    <option value="8">8월 · 밤하늘 은하수처럼 반짝이는 꿈</option>
+                                    <option value="9">9월 · 달콤한 열매처럼 찾아온 기적</option>
+                                    <option value="10">10월 · 가을 햇살처럼 깊고 따뜻한 사랑</option>
+                                    <option value="11">11월 · 포근한 구름처럼 온화한 성품</option>
+                                    <option value="12">12월 · 추운 겨울도 녹이는 우리의 행복</option>
+                                    <option value="none">표시 안 함 (깔끔하게 비우기)</option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <hr class="border-stone-100">
+                    <!-- 2. 하단 패밀리 로고 스탬프 선택 (접기/펼치기 지원 + 표시 안 함 버튼) -->
+                    <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm overflow-hidden">
+                        <div class="flex items-center justify-between px-5 py-4 bg-stone-50/70 border-b border-stone-100 cursor-pointer select-none" onclick="toggleSectionFold('logo')">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="award" class="w-5 h-5 text-amber-600"></i>
+                                <h3 class="text-lg sm:text-xl font-serif-kr font-bold text-stone-800">2. 패밀리 로고 스탬프</h3>
+                                <span id="badge-summary-logo" class="text-xs font-gowun px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold">구름 + 준삐와솔태</span>
+                            </div>
+                            <button type="button" class="px-3 py-1 rounded-xl text-xs sm:text-sm font-gowun font-bold bg-white border border-stone-200 text-stone-600 hover:bg-stone-100 flex items-center gap-1">
+                                <span id="fold-label-logo">접기</span>
+                                <i data-lucide="chevron-up" id="fold-icon-logo" class="w-4 h-4"></i>
+                            </button>
+                        </div>
 
-                    <!-- 2. 하단 패밀리 로고 스탬프 선택 -->
-                    <div>
-                        <h3 class="text-base sm:text-lg font-serif-kr font-bold text-stone-800 flex items-center gap-2 mb-2.5">
-                            <i data-lucide="award" class="w-4 h-4 text-amber-600"></i>
-                            <span>2. 하단 패밀리 로고 스탬프</span>
-                        </h3>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="logo-mode-buttons">
-                            <button type="button" onclick="setLogoMode('both')" data-mode="both" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-xl border-2 border-stone-800 bg-stone-50 transition-all">
-                                <div class="flex items-center justify-center h-8 mb-1">
-                                    <img data-logo="gureum" src="" alt="구름" class="h-7 w-auto object-contain">
-                                    <img data-logo="parents" src="" alt="준삐와솔태" class="h-6 w-auto object-contain -ml-1">
-                                </div>
-                                <span class="text-[11px] font-gowun font-bold text-stone-800">구름 + 준삐와솔태</span>
-                            </button>
-                            <button type="button" onclick="setLogoMode('gureum')" data-mode="gureum" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
-                                <div class="flex items-center justify-center h-8 mb-1">
-                                    <img data-logo="gureum" src="" alt="구름" class="h-7 w-auto object-contain">
-                                </div>
-                                <span class="text-[11px] font-gowun font-bold text-stone-700">구름이 단독</span>
-                            </button>
-                            <button type="button" onclick="setLogoMode('parents')" data-mode="parents" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
-                                <div class="flex items-center justify-center h-8 mb-1">
-                                    <img data-logo="parents" src="" alt="준삐와솔태" class="h-7 w-auto object-contain">
-                                </div>
-                                <span class="text-[11px] font-gowun font-bold text-stone-700">준삐♥와솔태</span>
-                            </button>
-                            <button type="button" onclick="setLogoMode('text')" data-mode="text" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
-                                <div class="flex items-center justify-center h-8 mb-1 text-stone-500 font-serif-kr text-xs font-bold">
-                                    ABC
-                                </div>
-                                <span class="text-[11px] font-gowun font-bold text-stone-700">영문 레터링만</span>
-                            </button>
+                        <div id="section-body-logo" class="p-5">
+                            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5" id="logo-mode-buttons">
+                                <button type="button" onclick="setLogoMode('both')" data-mode="both" class="logo-mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-stone-800 bg-stone-50 transition-all">
+                                    <div class="flex items-center justify-center h-9 mb-1">
+                                        <img data-logo="gureum" src="" alt="구름" class="h-8 w-auto object-contain">
+                                        <img data-logo="parents" src="" alt="준삐와솔태" class="h-7 w-auto object-contain -ml-1">
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-gowun font-bold text-stone-800">구름 + 준삐와솔태</span>
+                                </button>
+                                <button type="button" onclick="setLogoMode('gureum')" data-mode="gureum" class="logo-mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
+                                    <div class="flex items-center justify-center h-9 mb-1">
+                                        <img data-logo="gureum" src="" alt="구름" class="h-8 w-auto object-contain">
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-gowun font-bold text-stone-700">구름이 단독</span>
+                                </button>
+                                <button type="button" onclick="setLogoMode('parents')" data-mode="parents" class="logo-mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
+                                    <div class="flex items-center justify-center h-9 mb-1">
+                                        <img data-logo="parents" src="" alt="준삐와솔태" class="h-8 w-auto object-contain">
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-gowun font-bold text-stone-700">준삐♥와솔태</span>
+                                </button>
+                                <button type="button" onclick="setLogoMode('text')" data-mode="text" class="logo-mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
+                                    <div class="flex items-center justify-center h-9 mb-1 text-stone-600 font-serif-kr text-sm font-bold">
+                                        ABC
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-gowun font-bold text-stone-700">영문 레터링만</span>
+                                </button>
+                                <button type="button" onclick="setLogoMode('none')" data-mode="none" class="logo-mode-btn col-span-2 sm:col-span-1 flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
+                                    <div class="flex items-center justify-center h-9 mb-1 text-rose-500">
+                                        <i data-lucide="eye-off" class="w-5 h-5"></i>
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-gowun font-bold text-stone-700">표시 안 함</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <hr class="border-stone-100">
-
-                    <!-- 3. 계절 배경 테마 선택 -->
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-base sm:text-lg font-serif-kr font-bold text-stone-800 flex items-center gap-2">
-                                <i data-lucide="palette" class="w-4 h-4 text-amber-600"></i>
-                                <span>3. 액자 배경 아트워크</span>
-                            </h3>
-                            <span class="text-[11px] font-gowun text-stone-400">계절 기본 3종 + 내 배경 사진</span>
+                    <!-- 3. 계절 배경 테마 선택 (접기/펼치기 지원 + 배경 표시 안 함 시 사진 비율 자동 확장) -->
+                    <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm overflow-hidden">
+                        <div class="flex items-center justify-between px-5 py-4 bg-stone-50/70 border-b border-stone-100 cursor-pointer select-none" onclick="toggleSectionFold('bg')">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="palette" class="w-5 h-5 text-amber-600"></i>
+                                <h3 class="text-lg sm:text-xl font-serif-kr font-bold text-stone-800">3. 액자 배경 아트워크</h3>
+                                <span id="badge-summary-bg" class="text-xs font-gowun px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold">계절 배경</span>
+                            </div>
+                            <button type="button" class="px-3 py-1 rounded-xl text-xs sm:text-sm font-gowun font-bold bg-white border border-stone-200 text-stone-600 hover:bg-stone-100 flex items-center gap-1">
+                                <span id="fold-label-bg">접기</span>
+                                <i data-lucide="chevron-up" id="fold-icon-bg" class="w-4 h-4"></i>
+                            </button>
                         </div>
 
-                        <!-- 커스텀 배경 이미지 업로드용 Input (숨김) -->
-                        <input type="file" id="custom-bg-input" accept="image/*" class="hidden" />
+                        <div id="section-body-bg" class="p-5">
+                            <p class="text-xs sm:text-sm font-gowun text-stone-500 mb-3">
+                                💡 <b>[배경 표시 안 함]</b>을 선택하면 바깥 배경 여백만큼 <b>아이 사진 분할 영역이 자동으로 커집니다.</b>
+                            </p>
 
-                        <!-- 배경 선택 버튼 컨테이너 -->
-                        <div id="bg-theme-buttons" class="grid grid-cols-4 gap-2.5 w-full">
-                            <!-- JS에서 동적 렌더링 -->
+                            <!-- 커스텀 배경 이미지 업로드용 Input (숨김) -->
+                            <input type="file" id="custom-bg-input" accept="image/*" class="hidden" />
+
+                            <!-- 배경 선택 버튼 컨테이너 (계절 3종 + 내 배경 + 표시 안 함) -->
+                            <div id="bg-theme-buttons" class="grid grid-cols-3 sm:grid-cols-5 gap-2.5 w-full">
+                                <!-- JS에서 동적 렌더링 -->
+                            </div>
                         </div>
                     </div>
 
                     <!-- 다운로드 및 재시작 버튼 -->
-                    <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
-                        <button type="button" id="download-btn" onclick="openModal('download')" class="flex-1 flex items-center justify-center gap-2.5 py-4 px-5 rounded-2xl font-serif-kr text-base sm:text-lg font-semibold text-white transition-all duration-300 active:scale-95 hover:shadow-lg shadow-md">
-                            <i data-lucide="download" class="w-5 h-5"></i> 고화질 성장 액자 저장
+                    <div class="flex flex-col sm:flex-row gap-3 pt-1">
+                        <button type="button" id="download-btn" onclick="openModal('download')" class="flex-1 flex items-center justify-center gap-2.5 py-4 px-6 rounded-2xl font-serif-kr text-lg sm:text-xl font-bold text-white transition-all duration-300 active:scale-95 hover:shadow-lg shadow-md">
+                            <i data-lucide="download" class="w-6 h-6"></i> 고화질 성장 액자 저장
                         </button>
-                        <button type="button" onclick="openModal('reset')" class="sm:w-auto flex items-center justify-center gap-1.5 py-4 px-4 rounded-2xl font-gowun text-xs sm:text-sm bg-stone-100 text-stone-600 hover:bg-stone-200 transition-colors active:scale-95">
-                            <i data-lucide="rotate-ccw" class="w-4 h-4 opacity-70"></i> 처음부터
+                        <button type="button" onclick="openModal('reset')" class="sm:w-auto flex items-center justify-center gap-1.5 py-4 px-5 rounded-2xl font-gowun text-sm sm:text-base font-bold bg-white border border-stone-300 text-stone-700 hover:bg-stone-100 transition-colors active:scale-95">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> 처음부터
                         </button>
                     </div>
                 </div>
@@ -371,17 +455,28 @@
         </main>
     </div>
 
+    <!-- 완성 액자 크게 보기 확대 모달 -->
+    <div id="preview-zoom-modal" onclick="closePreviewZoomModal()" class="hidden fixed inset-0 bg-black/85 z-[120] flex flex-col items-center justify-center p-4 backdrop-blur-md">
+        <div class="w-full max-w-2xl flex items-center justify-between text-white mb-3 px-2" onclick="event.stopPropagation()">
+            <span class="font-serif-kr text-base sm:text-lg font-bold">구름이 성장 액자 크게 보기</span>
+            <button type="button" onclick="closePreviewZoomModal()" class="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-sm font-gowun font-bold flex items-center gap-1">
+                <i data-lucide="x" class="w-4 h-4"></i> 닫기
+            </button>
+        </div>
+        <img id="zoom-modal-image" src="" alt="확대된 성장 액자" class="max-w-full max-h-[82vh] object-contain rounded shadow-2xl" onclick="event.stopPropagation()" />
+    </div>
+
     <!-- 커스텀 팝업 (모달) -->
     <div id="custom-modal" class="hidden fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-5 backdrop-blur-sm transition-opacity">
-        <div class="bg-white rounded-[1.75rem] w-full max-w-sm overflow-hidden shadow-2xl transform transition-all animate-fade-up border border-stone-100">
-            <div class="p-7 text-center">
+        <div class="bg-white rounded-[1.75rem] w-full max-w-md overflow-hidden shadow-2xl transform transition-all animate-fade-up border border-stone-100">
+            <div class="p-6 sm:p-7 text-center">
                 <div id="modal-icon-container" class="w-16 h-16 rounded-full bg-amber-50 mx-auto flex items-center justify-center mb-4"></div>
-                <h3 id="modal-title" class="text-xl font-serif-kr text-stone-800 mb-2.5 font-bold">안내</h3>
-                <p id="modal-desc" class="text-stone-500 font-gowun text-sm leading-relaxed keep-all"></p>
+                <h3 id="modal-title" class="text-xl sm:text-2xl font-serif-kr text-stone-800 mb-3 font-bold">안내</h3>
+                <div id="modal-desc" class="text-stone-600 font-gowun text-sm sm:text-base leading-relaxed keep-all text-left whitespace-pre-line"></div>
             </div>
             <div class="flex border-t border-stone-100 bg-stone-50/60">
-                <button type="button" id="modal-cancel-btn" onclick="closeModal()" class="flex-1 py-3.5 text-stone-500 font-gowun text-base hover:bg-stone-100 transition-colors active:bg-stone-200">취소</button>
-                <button type="button" id="modal-confirm-btn" onclick="handleModalConfirm()" class="flex-1 py-3.5 text-amber-800 font-bold font-gowun text-base border-l border-stone-100 hover:bg-white transition-colors active:bg-stone-50">확인</button>
+                <button type="button" id="modal-cancel-btn" onclick="closeModal()" class="flex-1 py-4 text-stone-600 font-gowun text-base sm:text-lg font-bold hover:bg-stone-100 transition-colors active:bg-stone-200">취소</button>
+                <button type="button" id="modal-confirm-btn" onclick="handleModalConfirm()" class="flex-1 py-4 text-amber-800 font-bold font-gowun text-base sm:text-lg border-l border-stone-100 hover:bg-white transition-colors active:bg-stone-50">확인</button>
             </div>
         </div>
     </div>
@@ -389,15 +484,15 @@
     <!-- 이전 작업 복원용 토스트 알림창 -->
     <div id="restore-toast" class="hidden fixed bottom-5 left-5 right-5 sm:left-auto sm:right-6 sm:w-96 bg-stone-900 text-white rounded-2xl p-4 shadow-2xl z-[150] animate-fade-up flex flex-col gap-3 border border-white/10">
         <div class="flex items-start gap-3">
-            <img data-logo="gureum" src="" alt="구름" class="w-10 h-10 object-contain flex-shrink-0">
+            <img data-logo="gureum" src="" alt="구름" class="w-11 h-11 object-contain flex-shrink-0">
             <div class="flex-1">
-                <h4 class="font-bold text-sm font-serif-kr">이전에 만들던 구름이 액자가 있어요</h4>
-                <p class="text-xs text-stone-300 font-gowun mt-1">마지막으로 작업하던 사진과 문구 설정을 그대로 불러올까요?</p>
+                <h4 class="font-bold text-base font-serif-kr">이전에 만들던 구름이 액자가 있어요</h4>
+                <p class="text-sm text-stone-300 font-gowun mt-1">마지막으로 작업하던 사진과 문구 설정을 그대로 불러올까요?</p>
             </div>
         </div>
         <div class="flex gap-2 justify-end">
-            <button type="button" onclick="clearSavedState()" class="px-3 py-1.5 text-xs text-stone-400 hover:text-white transition-colors font-gowun">새로 만들기</button>
-            <button type="button" onclick="restoreAppState()" class="px-4 py-1.5 text-xs bg-amber-400 text-stone-950 rounded-lg font-bold hover:bg-amber-300 transition-colors font-gowun">이어서 꾸미기</button>
+            <button type="button" onclick="clearSavedState()" class="px-3.5 py-2 text-sm text-stone-400 hover:text-white transition-colors font-gowun">새로 만들기</button>
+            <button type="button" onclick="restoreAppState()" class="px-4 py-2 text-sm bg-amber-400 text-stone-950 rounded-xl font-bold hover:bg-amber-300 transition-colors font-gowun">이어서 꾸미기</button>
         </div>
     </div>
 
@@ -421,7 +516,7 @@
 
     <!-- JavaScript 로직 -->
     <script>
-        // 1~12월 탄생·성장 축복 문구 (기존 월별 나무를 아이 성장 테마로 재해석)
+        // 1~12월 탄생·성장 축복 문구
         const MONTHLY_BLESSINGS = {
             1: "1월의 축복 | 새해를 여는 첫 별처럼 언제나 환하게 빛나길",
             2: "2월의 축복 | 겨울 끝자락에 찾아온 봄볕처럼 따스한 아이",
@@ -437,7 +532,7 @@
             12: "12월의 축복 | 하얀 겨울 눈꽃처럼 순수하고 포근한 우리의 행복"
         };
 
-        // 사계절 감성 테마 데이터 (배경 이미지는 초기화 시 고해상도 캔버스 아트워크로 자동 생성됨)
+        // 사계절 감성 테마 데이터
         const SEASON_DATA = {
             spring: { 
                 id: 'spring',
@@ -507,7 +602,7 @@
             { id: '4-grid', count: 4, name: '4장 (구름이 성장 네컷)', sub: '4단계 성장 · 표정 모음', orientation: 'portrait', icon: '<div class="flex flex-col gap-[3px] w-full h-full"><div class="flex gap-[3px] w-full h-1/2"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div><div class="flex gap-[3px] w-full h-1/2"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div></div>' }
         ];
 
-        const STORAGE_KEY = 'gureum_growth_album_v1';
+        const STORAGE_KEY = 'gureum_growth_album_v2';
 
         let currentStep = 1;
         let currentSeason = null;
@@ -515,21 +610,115 @@
         let selectedPhotos = []; 
         let hasPromptedUpload = false; 
         
-        let selectedBgUrl = null;
+        let selectedBgUrl = null; // URL 문자열 또는 'none' (배경 표시 안 함)
         let customUploadedBgSrc = null; 
         let generatedImageUrl = null;
         let modalPendingAction = null; 
         let isGenerating = false;
         let renderDebounceTimer = null;
 
-        // 사용자 맞춤 텍스트 & 스탬프 상태
+        // 사용자 맞춤 텍스트 & 개별 표시 여부 상태
         let customTitleText = '구름이의 자라나는 시간';
         let customMilestoneText = '2026. 10 · 사랑으로 자라는 날들';
         let customDescText = '';
         let selectedBlessingMonth = String(new Date().getMonth() + 1);
-        let selectedLogoMode = 'both'; // 'both' | 'gureum' | 'parents' | 'text'
+        let lastActiveBlessingMonth = String(new Date().getMonth() + 1);
 
-        // 계절별 감성 수채화/보케 배경 아트워크 12종 생성기 (외부 이미지 깨짐 없이 고화질 자체 생성)
+        let showTitle = true;
+        let showMilestone = true;
+        let showDesc = true;
+        let selectedLogoMode = 'both'; // 'both' | 'gureum' | 'parents' | 'text' | 'none'
+
+        // 섹션 접기/펼치기 상태
+        const sectionFoldState = {
+            text: false,
+            logo: false,
+            bg: false
+        };
+
+        // 전체화면(주소창 숨기기) 토글 함수
+        function toggleFullscreenMode() {
+            const docEl = document.documentElement;
+            const isFull = document.fullscreenElement || document.webkitFullscreenElement;
+            if (!isFull) {
+                if (docEl.requestFullscreen) {
+                    docEl.requestFullscreen().catch(() => {
+                        openModal('install-guide');
+                    });
+                } else if (docEl.webkitRequestFullscreen) {
+                    docEl.webkitRequestFullscreen();
+                } else {
+                    openModal('install-guide');
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
+        function updateFullscreenBtnUI() {
+            const labelEl = document.getElementById('fullscreen-btn-label');
+            if (!labelEl) return;
+            const isFull = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+            labelEl.innerText = isFull ? '화면 복귀' : '주소창 숨김';
+        }
+        document.addEventListener('fullscreenchange', updateFullscreenBtnUI);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenBtnUI);
+
+        // 섹션 개별 접기/펼치기
+        function toggleSectionFold(sectionKey, forceState) {
+            if (typeof forceState === 'boolean') {
+                sectionFoldState[sectionKey] = forceState;
+            } else {
+                sectionFoldState[sectionKey] = !sectionFoldState[sectionKey];
+            }
+            const isFolded = sectionFoldState[sectionKey];
+            const bodyEl = document.getElementById(`section-body-${sectionKey}`);
+            const labelEl = document.getElementById(`fold-label-${sectionKey}`);
+            const iconEl = document.getElementById(`fold-icon-${sectionKey}`);
+
+            if (bodyEl) {
+                if (isFolded) {
+                    bodyEl.classList.add('hidden');
+                } else {
+                    bodyEl.classList.remove('hidden');
+                }
+            }
+            if (labelEl) labelEl.innerText = isFolded ? '펼치기' : '접기';
+            if (iconEl) iconEl.setAttribute('data-lucide', isFolded ? 'chevron-down' : 'chevron-up');
+
+            const allFolded = sectionFoldState.text && sectionFoldState.logo && sectionFoldState.bg;
+            const allLabel = document.getElementById('label-fold-all');
+            const allIcon = document.getElementById('icon-fold-all');
+            if (allLabel) allLabel.innerText = allFolded ? '모두 펼치기' : '모두 접기';
+            if (allIcon) allIcon.setAttribute('data-lucide', allFolded ? 'chevrons-down' : 'chevrons-up');
+
+            lucide.createIcons();
+        }
+
+        function toggleAllSectionsFold() {
+            const allFolded = sectionFoldState.text && sectionFoldState.logo && sectionFoldState.bg;
+            const target = !allFolded;
+            ['text', 'logo', 'bg'].forEach(k => toggleSectionFold(k, target));
+        }
+
+        // 미리보기 확대 모달
+        function openPreviewZoomModal() {
+            if (!generatedImageUrl) return;
+            const modal = document.getElementById('preview-zoom-modal');
+            const img = document.getElementById('zoom-modal-image');
+            img.src = generatedImageUrl;
+            modal.classList.remove('hidden');
+        }
+
+        function closePreviewZoomModal() {
+            document.getElementById('preview-zoom-modal').classList.add('hidden');
+        }
+
+        // 계절별 감성 수채화/보케 배경 아트워크 폴백 생성기
         function createSeasonalArtworkDataUrl(seasonId, variantIndex) {
             const c = document.createElement('canvas');
             c.width = 600;
@@ -566,69 +755,6 @@
             grad.addColorStop(1, pal[2]);
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, c.width, c.height);
-
-            // 부드러운 파스텔 보케(빛망울) 효과
-            let seed = (seasonId.charCodeAt(0) * 31) + (variantIndex * 97);
-            const rand = () => {
-                seed = (seed * 1664525 + 1013904223) % 4294967296;
-                return seed / 4294967296;
-            };
-
-            for (let i = 0; i < 26; i++) {
-                const x = rand() * c.width;
-                const y = rand() * c.height;
-                const r = 25 + rand() * 95;
-                const radial = ctx.createRadialGradient(x, y, 2, x, y, r);
-                radial.addColorStop(0, i % 2 === 0 ? 'rgba(255,255,255,0.55)' : pal[3] + '55');
-                radial.addColorStop(1, 'rgba(255,255,255,0)');
-                ctx.fillStyle = radial;
-                ctx.beginPath();
-                ctx.arc(x, y, r, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            // 계절별 포인트 모티프 (벚꽃잎, 나뭇잎, 단풍/열매, 눈꽃/별빛)
-            ctx.save();
-            for (let i = 0; i < 22; i++) {
-                const x = rand() * c.width;
-                const y = rand() * c.height;
-                const size = 8 + rand() * 14;
-                const angle = rand() * Math.PI * 2;
-                ctx.save();
-                ctx.translate(x, y);
-                ctx.rotate(angle);
-
-                if (seasonId === 'spring') {
-                    // 벚꽃 꽃잎
-                    ctx.fillStyle = i % 2 === 0 ? 'rgba(244, 162, 184, 0.45)' : 'rgba(255, 255, 255, 0.65)';
-                    ctx.beginPath();
-                    ctx.moveTo(0, 0);
-                    ctx.bezierCurveTo(-size, -size, -size * 0.5, -size * 1.8, 0, -size * 1.3);
-                    ctx.bezierCurveTo(size * 0.5, -size * 1.8, size, -size, 0, 0);
-                    ctx.fill();
-                } else if (seasonId === 'summer') {
-                    // 싱그러운 잎사귀
-                    ctx.fillStyle = i % 2 === 0 ? 'rgba(110, 178, 138, 0.35)' : 'rgba(255, 255, 255, 0.5)';
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, size * 0.55, size * 1.1, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                } else if (seasonId === 'autumn') {
-                    // 따뜻한 가을 낙엽 & 황금빛 열매
-                    ctx.fillStyle = i % 2 === 0 ? 'rgba(210, 132, 78, 0.38)' : 'rgba(235, 180, 95, 0.42)';
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, size * 0.65, size, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                } else {
-                    // 겨울 눈송이와 작은 별빛
-                    ctx.fillStyle = i % 3 === 0 ? 'rgba(255, 215, 120, 0.6)' : 'rgba(255, 255, 255, 0.8)';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, size * 0.38, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                ctx.restore();
-            }
-            ctx.restore();
-
             return c.toDataURL('image/jpeg', 0.9);
         }
 
@@ -646,7 +772,7 @@
             });
         }
 
-        // 예시 사진 생성기 (사용자가 사진 업로드 전에도 바로 체험 가능하도록 귀여운 구름이 성장 일러스트 카드 생성)
+        // 예시 사진 생성기
         function createSampleBabyPhoto(index, season) {
             const c = document.createElement('canvas');
             c.width = 800;
@@ -666,7 +792,6 @@
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 800, 800);
 
-            // 부드러운 원형 후광
             ctx.fillStyle = 'rgba(255,255,255,0.65)';
             ctx.beginPath();
             ctx.arc(400, 380, 230, 0, Math.PI * 2);
@@ -689,13 +814,13 @@
                 '생후 D+365 · 첫 번째 생일 축하해'
             ];
             ctx.fillStyle = season ? season.textColor : '#6b5b52';
-            ctx.font = '600 32px "Noto Serif KR", serif';
+            ctx.font = '600 34px "Noto Serif KR", serif';
             ctx.textAlign = 'center';
             ctx.fillText(labels[index % labels.length], 400, 650);
 
             ctx.fillStyle = '#8c7f77';
-            ctx.font = '24px "Gowun Dodum", sans-serif';
-            ctx.fillText('예시 이미지 (내 사진으로 교체 가능)', 400, 700);
+            ctx.font = '26px "Gowun Dodum", sans-serif';
+            ctx.fillText('예시 이미지 (내 사진으로 교체 가능)', 400, 705);
 
             return c.toDataURL('image/jpeg', 0.88);
         }
@@ -745,10 +870,14 @@
                 layoutId: selectedLayout ? selectedLayout.id : null,
                 photos: selectedPhotos,
                 customBg: customUploadedBgSrc,
+                selectedBgIsNone: selectedBgUrl === 'none',
                 customTitleText,
                 customMilestoneText,
                 customDescText,
                 selectedBlessingMonth,
+                showTitle,
+                showMilestone,
+                showDesc,
                 selectedLogoMode
             };
             try {
@@ -779,12 +908,15 @@
                     selectedLayout = LAYOUT_DATA.find(l => l.id === state.layoutId) || LAYOUT_DATA[0];
                     selectedPhotos = state.photos || [];
                     customUploadedBgSrc = state.customBg || null;
-                    customTitleText = state.customTitleText || currentSeason.defaultTitle;
-                    customMilestoneText = state.customMilestoneText || currentSeason.defaultMilestone;
-                    customDescText = state.customDescText || currentSeason.desc;
+                    customTitleText = state.customTitleText ?? currentSeason.defaultTitle;
+                    customMilestoneText = state.customMilestoneText ?? currentSeason.defaultMilestone;
+                    customDescText = state.customDescText ?? currentSeason.desc;
                     selectedBlessingMonth = state.selectedBlessingMonth || String(new Date().getMonth() + 1);
+                    showTitle = state.showTitle !== undefined ? state.showTitle : true;
+                    showMilestone = state.showMilestone !== undefined ? state.showMilestone : true;
+                    showDesc = state.showDesc !== undefined ? state.showDesc : true;
                     selectedLogoMode = state.selectedLogoMode || 'both';
-                    selectedBgUrl = customUploadedBgSrc || currentSeason.bgOptions[0];
+                    selectedBgUrl = state.selectedBgIsNone ? 'none' : (customUploadedBgSrc || currentSeason.bgOptions[0]);
 
                     applySeasonThemeToUI();
                     syncCustomInputsFromState();
@@ -886,6 +1018,9 @@
             customTitleText = currentSeason.defaultTitle;
             customMilestoneText = currentSeason.defaultMilestone;
             customDescText = currentSeason.desc;
+            showTitle = true;
+            showMilestone = true;
+            showDesc = true;
             selectedBgUrl = currentSeason.bgOptions[0];
 
             applySeasonThemeToUI();
@@ -904,6 +1039,64 @@
             setStep(3);
         }
 
+        // 맞춤 문구 개별 표시/숨김 토글
+        function toggleTextPart(part) {
+            if (part === 'title') {
+                showTitle = !showTitle;
+            } else if (part === 'milestone') {
+                showMilestone = !showMilestone;
+            } else if (part === 'desc') {
+                showDesc = !showDesc;
+            } else if (part === 'blessing') {
+                if (selectedBlessingMonth === 'none') {
+                    selectedBlessingMonth = lastActiveBlessingMonth || String(new Date().getMonth() + 1);
+                } else {
+                    lastActiveBlessingMonth = selectedBlessingMonth;
+                    selectedBlessingMonth = 'none';
+                }
+            }
+            syncCustomInputsFromState();
+            updatePreviewFrame(selectedBgUrl || currentSeason.bgOptions[0]);
+        }
+
+        // 맞춤 문구 전체 한 번에 표시 안 함 / 켜기
+        function toggleAllCustomTexts() {
+            const anyShown = showTitle || showMilestone || showDesc || (selectedBlessingMonth !== 'none');
+            if (anyShown) {
+                showTitle = false;
+                showMilestone = false;
+                showDesc = false;
+                if (selectedBlessingMonth !== 'none') lastActiveBlessingMonth = selectedBlessingMonth;
+                selectedBlessingMonth = 'none';
+            } else {
+                showTitle = true;
+                showMilestone = true;
+                showDesc = true;
+                selectedBlessingMonth = lastActiveBlessingMonth || String(new Date().getMonth() + 1);
+            }
+            syncCustomInputsFromState();
+            updatePreviewFrame(selectedBgUrl || currentSeason.bgOptions[0]);
+        }
+
+        function styleTogglePill(btnEl, isVisible, inputEl) {
+            if (!btnEl) return;
+            if (isVisible) {
+                btnEl.innerText = '표시 안 함';
+                btnEl.className = 'px-3 py-1 rounded-full text-xs sm:text-sm font-gowun font-bold transition-all border border-stone-300 bg-white text-stone-600 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200';
+                if (inputEl) {
+                    inputEl.disabled = false;
+                    inputEl.classList.remove('opacity-45', 'bg-stone-100', 'line-through');
+                }
+            } else {
+                btnEl.innerText = '✓ 표시 안 함 적용됨 (켜기)';
+                btnEl.className = 'px-3 py-1 rounded-full text-xs sm:text-sm font-gowun font-bold transition-all border border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100';
+                if (inputEl) {
+                    inputEl.disabled = true;
+                    inputEl.classList.add('opacity-45', 'bg-stone-100', 'line-through');
+                }
+            }
+        }
+
         function syncCustomInputsFromState() {
             const titleIn = document.getElementById('input-custom-title');
             const mileIn = document.getElementById('input-custom-milestone');
@@ -915,6 +1108,22 @@
             if (descIn) descIn.value = customDescText;
             if (monthSel) monthSel.value = selectedBlessingMonth;
 
+            styleTogglePill(document.getElementById('btn-toggle-title'), showTitle, titleIn);
+            styleTogglePill(document.getElementById('btn-toggle-milestone'), showMilestone, mileIn);
+            styleTogglePill(document.getElementById('btn-toggle-desc'), showDesc, descIn);
+            styleTogglePill(document.getElementById('btn-toggle-blessing'), selectedBlessingMonth !== 'none', monthSel);
+
+            const activeCount = [showTitle, showMilestone, showDesc, selectedBlessingMonth !== 'none'].filter(Boolean).length;
+            const summaryTextBadge = document.getElementById('badge-summary-text');
+            if (summaryTextBadge) {
+                summaryTextBadge.innerText = activeCount === 0 ? '전체 숨김' : `${activeCount}개 표시 중`;
+            }
+
+            const allToggleLabel = document.getElementById('label-toggle-all-text');
+            if (allToggleLabel) {
+                allToggleLabel.innerText = activeCount > 0 ? '문구 전체 표시 안 함 (사진만 크게)' : '문구 전체 다시 표시하기';
+            }
+
             updateLogoModeButtonsUI();
         }
 
@@ -924,14 +1133,17 @@
             customMilestoneText = currentSeason.defaultMilestone;
             customDescText = currentSeason.desc;
             selectedBlessingMonth = String(new Date().getMonth() + 1);
+            showTitle = true;
+            showMilestone = true;
+            showDesc = true;
             syncCustomInputsFromState();
             triggerDebouncedPreview();
         }
 
         function applyTitlePreset(presetText) {
+            showTitle = true;
             customTitleText = presetText;
-            const titleIn = document.getElementById('input-custom-title');
-            if (titleIn) titleIn.value = presetText;
+            syncCustomInputsFromState();
             triggerDebouncedPreview();
         }
 
@@ -942,13 +1154,23 @@
         }
 
         function updateLogoModeButtonsUI() {
+            const modeLabels = {
+                both: '구름+부모님',
+                gureum: '구름이 단독',
+                parents: '준삐♥와솔태',
+                text: '영문 레터링',
+                none: '표시 안 함'
+            };
+            const summaryLogo = document.getElementById('badge-summary-logo');
+            if (summaryLogo) summaryLogo.innerText = modeLabels[selectedLogoMode] || '구름+부모님';
+
             document.querySelectorAll('.logo-mode-btn').forEach(btn => {
                 const m = btn.getAttribute('data-mode');
                 if (m === selectedLogoMode) {
-                    btn.classList.add('border-stone-800', 'bg-stone-50', 'shadow-sm');
+                    btn.classList.add('border-stone-800', 'bg-stone-100', 'shadow-sm');
                     btn.classList.remove('border-stone-200', 'bg-white');
                 } else {
-                    btn.classList.remove('border-stone-800', 'bg-stone-50', 'shadow-sm');
+                    btn.classList.remove('border-stone-800', 'bg-stone-100', 'shadow-sm');
                     btn.classList.add('border-stone-200', 'bg-white');
                 }
             });
@@ -975,14 +1197,19 @@
         function renderBgButtons() {
             const bgContainer = document.getElementById('bg-theme-buttons');
             bgContainer.innerHTML = '';
+
+            const summaryBg = document.getElementById('badge-summary-bg');
+            if (summaryBg) {
+                summaryBg.innerText = selectedBgUrl === 'none' ? '배경 없음(사진 확대)' : '배경 적용됨';
+            }
             
             currentSeason.bgOptions.forEach((url, idx) => {
                 const isSelected = (selectedBgUrl === url);
                 const label = currentSeason.bgLabels[idx] || `테마 ${idx + 1}`;
                 bgContainer.innerHTML += `
-                    <button type="button" onclick="selectBgOption(${idx})" style="background-color: ${currentSeason.fallbackColor}" class="group relative rounded-xl overflow-hidden aspect-square border-2 ${isSelected ? 'border-stone-800 shadow-md ring-2 ring-stone-800/20' : 'border-stone-200'} hover:opacity-90 transition-all">
+                    <button type="button" onclick="selectBgOption(${idx})" style="background-color: ${currentSeason.fallbackColor}" class="group relative rounded-2xl overflow-hidden aspect-square border-2 ${isSelected ? 'border-stone-800 shadow-md ring-2 ring-stone-800/20' : 'border-stone-200'} hover:opacity-90 transition-all">
                         <img src="${url}" alt="${label}" class="w-full h-full object-cover">
-                        <div class="absolute inset-x-0 bottom-0 bg-black/55 backdrop-blur-[2px] text-white text-[10px] sm:text-[11px] font-gowun py-1 z-10 truncate px-1">${label}</div>
+                        <div class="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-[2px] text-white text-xs font-gowun font-bold py-1.5 z-10 truncate px-1">${label}</div>
                     </button>
                 `;
             });
@@ -990,21 +1217,32 @@
             if (customUploadedBgSrc) {
                 const isSelected = (selectedBgUrl === customUploadedBgSrc);
                 bgContainer.innerHTML += `
-                    <div class="relative rounded-xl overflow-hidden aspect-square border-2 ${isSelected ? 'border-stone-800 shadow-md ring-2 ring-stone-800/20' : 'border-stone-200'} transition-all flex flex-col group">
+                    <div class="relative rounded-2xl overflow-hidden aspect-square border-2 ${isSelected ? 'border-stone-800 shadow-md ring-2 ring-stone-800/20' : 'border-stone-200'} transition-all flex flex-col group">
                         <img src="${customUploadedBgSrc}" alt="내 배경" class="w-full h-full object-cover cursor-pointer hover:opacity-85 transition-opacity" onclick="selectCustomBg()">
-                        <button type="button" onclick="document.getElementById('custom-bg-input').click()" class="absolute inset-x-0 bottom-0 bg-amber-700/90 hover:bg-amber-800 text-white text-[10px] sm:text-[11px] font-gowun py-1 text-center cursor-pointer flex justify-center items-center gap-1 transition-colors z-10">
-                            <i data-lucide="refresh-cw" class="w-3 h-3"></i> 배경 변경
+                        <button type="button" onclick="document.getElementById('custom-bg-input').click()" class="absolute inset-x-0 bottom-0 bg-amber-700/90 hover:bg-amber-800 text-white text-xs font-gowun font-bold py-1.5 text-center cursor-pointer flex justify-center items-center gap-1 transition-colors z-10">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> 배경 변경
                         </button>
                     </div>
                 `;
             } else {
                 bgContainer.innerHTML += `
-                    <button type="button" onclick="document.getElementById('custom-bg-input').click()" class="group relative flex flex-col items-center justify-center rounded-xl overflow-hidden aspect-square border-2 border-dashed border-stone-300 bg-stone-50 hover:bg-stone-100 hover:border-stone-400 transition-all text-stone-500 p-1">
-                        <i data-lucide="image-plus" class="w-5 h-5 mb-1 text-stone-400 group-hover:text-stone-600 transition-colors"></i>
-                        <span class="text-[10px] sm:text-[11px] font-bold font-gowun keep-all text-center">내 배경 업로드</span>
+                    <button type="button" onclick="document.getElementById('custom-bg-input').click()" class="group relative flex flex-col items-center justify-center rounded-2xl overflow-hidden aspect-square border-2 border-dashed border-stone-300 bg-stone-50 hover:bg-stone-100 hover:border-stone-400 transition-all text-stone-600 p-1.5">
+                        <i data-lucide="image-plus" class="w-6 h-6 mb-1 text-stone-400 group-hover:text-stone-700 transition-colors"></i>
+                        <span class="text-xs font-bold font-gowun keep-all text-center">내 배경 추가</span>
                     </button>
                 `;
             }
+
+            // 5번째 버튼: 배경 표시 안 함 (선택 시 여백만큼 사진 비율 자동 확장)
+            const isNoneSelected = (selectedBgUrl === 'none');
+            bgContainer.innerHTML += `
+                <button type="button" onclick="selectNoBgOption()" class="group relative flex flex-col items-center justify-center rounded-2xl overflow-hidden aspect-square border-2 ${isNoneSelected ? 'border-rose-600 bg-rose-50/70 shadow-md ring-2 ring-rose-500/20' : 'border-stone-200 bg-white hover:bg-stone-50'} transition-all p-1.5">
+                    <i data-lucide="maximize" class="w-6 h-6 mb-1 ${isNoneSelected ? 'text-rose-600' : 'text-stone-500'}"></i>
+                    <span class="text-xs font-bold font-gowun keep-all text-center ${isNoneSelected ? 'text-rose-700' : 'text-stone-700'}">표시 안 함</span>
+                    <span class="text-[11px] font-gowun text-stone-400 keep-all">사진 크게 채움</span>
+                </button>
+            `;
+
             lucide.createIcons();
         }
 
@@ -1016,6 +1254,10 @@
         function selectCustomBg() {
             if (!customUploadedBgSrc) return;
             updatePreviewFrame(customUploadedBgSrc);
+        }
+
+        function selectNoBgOption() {
+            updatePreviewFrame('none');
         }
 
         function handleFreshPhotoUpload(e) {
@@ -1064,8 +1306,8 @@
                 const grid = document.getElementById('photo-grid');
                 grid.innerHTML = `
                     <div class="col-span-full py-12 flex flex-col items-center justify-center gap-4 animate-fade-up">
-                        <div class="w-10 h-10 border-4 border-stone-200 border-t-stone-800 rounded-full animate-spin"></div>
-                        <p class="text-stone-600 font-serif-kr text-base">구름이 사진을 고화질 액자 규격으로 다듬는 중...</p>
+                        <div class="w-11 h-11 border-4 border-stone-200 border-t-stone-800 rounded-full animate-spin"></div>
+                        <p class="text-stone-700 font-serif-kr text-lg font-bold">구름이 사진을 고화질 액자 규격으로 다듬는 중...</p>
                     </div>
                 `;
                 document.getElementById('photo-selection-ui').classList.remove('hidden');
@@ -1126,19 +1368,19 @@
                     grid.innerHTML += `
                         <div class="relative aspect-square rounded-2xl overflow-hidden border border-stone-200 shadow-sm group bg-white">
                             <img src="${src}" alt="선택된 사진 ${idx + 1}" class="w-full h-full object-cover" />
-                            <div class="absolute top-2 left-2 bg-stone-900/70 text-white text-[11px] font-gowun px-2 py-0.5 rounded-full backdrop-blur-sm">
+                            <div class="absolute top-2.5 left-2.5 bg-stone-900/75 text-white text-xs sm:text-sm font-gowun font-bold px-2.5 py-0.5 rounded-full backdrop-blur-sm">
                                 ${idx + 1}번 컷
                             </div>
-                            <button type="button" onclick="removePhoto(${idx})" class="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1.5 hover:bg-red-600 transition-colors backdrop-blur-sm" title="사진 삭제">
-                                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                            <button type="button" onclick="removePhoto(${idx})" class="absolute top-2.5 right-2.5 bg-black/65 text-white rounded-full p-2 hover:bg-red-600 transition-colors backdrop-blur-sm" title="사진 삭제">
+                                <i data-lucide="x" class="w-4 h-4"></i>
                             </button>
                             ${selectedPhotos.length > 1 ? `
-                            <div class="absolute bottom-2 inset-x-2 flex justify-between pointer-events-none">
-                                <button type="button" onclick="movePhotoOrder(${idx}, -1)" ${!canLeft ? 'disabled' : ''} class="pointer-events-auto p-1.5 rounded-full bg-white/90 text-stone-700 shadow hover:bg-white disabled:opacity-30 transition-opacity">
-                                    <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+                            <div class="absolute bottom-2.5 inset-x-2.5 flex justify-between pointer-events-none">
+                                <button type="button" onclick="movePhotoOrder(${idx}, -1)" ${!canLeft ? 'disabled' : ''} class="pointer-events-auto p-2 rounded-full bg-white/90 text-stone-800 shadow hover:bg-white disabled:opacity-30 transition-opacity">
+                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
                                 </button>
-                                <button type="button" onclick="movePhotoOrder(${idx}, 1)" ${!canRight ? 'disabled' : ''} class="pointer-events-auto p-1.5 rounded-full bg-white/90 text-stone-700 shadow hover:bg-white disabled:opacity-30 transition-opacity">
-                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                <button type="button" onclick="movePhotoOrder(${idx}, 1)" ${!canRight ? 'disabled' : ''} class="pointer-events-auto p-2 rounded-full bg-white/90 text-stone-800 shadow hover:bg-white disabled:opacity-30 transition-opacity">
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
                                 </button>
                             </div>
                             ` : ''}
@@ -1148,10 +1390,10 @@
                 
                 if (selectedLayout && selectedPhotos.length < selectedLayout.count) {
                     grid.innerHTML += `
-                        <button type="button" onclick="openFreshFilePicker()" class="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-stone-300 bg-white hover:bg-stone-50 transition-colors text-stone-500 shadow-sm">
-                            <i data-lucide="plus" class="w-7 h-7 mb-1.5 text-stone-400"></i>
-                            <span class="text-sm font-gowun font-bold">사진 추가</span>
-                            <span class="text-xs text-stone-400">(${selectedPhotos.length}/${selectedLayout.count})</span>
+                        <button type="button" onclick="openFreshFilePicker()" class="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-stone-300 bg-white hover:bg-stone-50 transition-colors text-stone-600 shadow-sm">
+                            <i data-lucide="plus" class="w-8 h-8 mb-1.5 text-stone-400"></i>
+                            <span class="text-base font-gowun font-bold">사진 추가</span>
+                            <span class="text-sm text-stone-400">(${selectedPhotos.length}/${selectedLayout.count})</span>
                         </button>
                     `;
                 }
@@ -1174,7 +1416,7 @@
 
         const loadImg = (src) => {
             return new Promise((resolve) => {
-                if (!src) { resolve(null); return; }
+                if (!src || src === 'none') { resolve(null); return; }
                 const img = new Image();
                 if (src.startsWith('http')) {
                     img.crossOrigin = 'anonymous';
@@ -1205,7 +1447,7 @@
             ctx.strokeRect(boxX, boxY, boxW, boxH);
         }
 
-        // 핵심: CP1500 규격 맞춤형 성장 액자 Canvas 합성
+        // 핵심: CP1500 규격 맞춤형 성장 액자 Canvas 합성 (배경 및 문구 표시 여부에 따라 사진 분할 비율 자동 확장)
         async function updatePreviewFrame(bgSrc) {
             if (isGenerating || !currentSeason || !selectedLayout) return; 
             isGenerating = true;
@@ -1218,8 +1460,9 @@
             try {
                 await document.fonts.ready;
                 
+                const isBgHidden = (selectedBgUrl === 'none');
                 const userImgs = await Promise.all(selectedPhotos.map(src => loadImg(src)));
-                const bgImg = await loadImg(selectedBgUrl);
+                const bgImg = isBgHidden ? null : await loadImg(selectedBgUrl);
                 const gureumLogoEl = document.getElementById('asset-logo-gureum');
                 const parentsLogoEl = document.getElementById('asset-logo-parents');
 
@@ -1237,8 +1480,11 @@
                 canvas.width = cw;
                 canvas.height = ch;
 
-                // 1) 배경 렌더링
-                if (bgImg) {
+                // 1) 배경 아트워크 및 화이트 매트 보더 렌더링 (배경 표시 안 함 선택 시 여백 제거하여 사진 영역 확장)
+                const matteMargin = isBgHidden ? 0 : 82;
+                const photoMargin = isBgHidden ? 42 : 56;
+
+                if (!isBgHidden && bgImg) {
                     const bgRatio = bgImg.width / bgImg.height;
                     const canvasRatio = cw / ch;
                     let bgSx, bgSy, bgSw, bgSh;
@@ -1253,35 +1499,69 @@
                     ctx.restore();
                     ctx.fillStyle = "rgba(255, 255, 255, 0.18)";
                     ctx.fillRect(0, 0, cw, ch);
+
+                    ctx.shadowColor = "rgba(0,0,0,0.16)";
+                    ctx.shadowBlur = 36;
+                    ctx.shadowOffsetY = 14;
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(matteMargin, matteMargin, cw - matteMargin * 2, ch - matteMargin * 2);
+                    ctx.shadowColor = "transparent";
+
+                    ctx.strokeStyle = currentSeason.accent + "88";
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(matteMargin + 16, matteMargin + 16, cw - matteMargin * 2 - 32, ch - matteMargin * 2 - 32);
                 } else {
-                    ctx.fillStyle = currentSeason.fallbackColor;
+                    // 배경 표시 안 함: 전체 캔버스를 화이트 카드화하여 사진 영역을 바깥 배경만큼 확장
+                    ctx.fillStyle = '#ffffff';
                     ctx.fillRect(0, 0, cw, ch);
+                    ctx.strokeStyle = currentSeason.accent + "77";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(18, 18, cw - 36, ch - 36);
                 }
 
-                // 2) 프리미엄 화이트 매트 보더 생성
-                const matteMargin = 82; 
-                ctx.shadowColor = "rgba(0,0,0,0.16)";
-                ctx.shadowBlur = 36;
-                ctx.shadowOffsetY = 14;
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(matteMargin, matteMargin, cw - matteMargin * 2, ch - matteMargin * 2);
-                ctx.shadowColor = "transparent";
+                // 2) 활성화된 하단 문구 및 로고 스탬프 항목 확인 (숨긴 항목만큼 사진 높이를 자동 확장)
+                const titleText = (customTitleText || currentSeason.defaultTitle).trim();
+                const milestoneText = (customMilestoneText || '').trim();
+                const descText = (customDescText || currentSeason.desc).trim();
+                const blessingText = (selectedBlessingMonth !== 'none' && MONTHLY_BLESSINGS[selectedBlessingMonth]) ? MONTHLY_BLESSINGS[selectedBlessingMonth] : '';
 
-                // 내측 파스텔 라인 장식
-                ctx.strokeStyle = currentSeason.accent + "88";
-                ctx.lineWidth = 2;
-                ctx.strokeRect(matteMargin + 16, matteMargin + 16, cw - matteMargin * 2 - 32, ch - matteMargin * 2 - 32);
+                const activeTitle = showTitle && Boolean(titleText);
+                const activeMilestone = showMilestone && Boolean(milestoneText);
+                const activeDesc = showDesc && Boolean(descText);
+                const activeBlessing = Boolean(blessingText);
+                const activeLogo = (selectedLogoMode !== 'none');
 
-                const photoMargin = 58; 
+                const titleSize = isLandscape ? 54 : 66;
+                const mileSize = isLandscape ? 26 : 30;
+                const bodySize = isLandscape ? 32 : 38;
+                const subSize = isLandscape ? 25 : 29;
+                const logoMaxH = isLandscape ? 78 : 104;
+
+                const stepTitleH = isLandscape ? 66 : 82;
+                const stepMileH = isLandscape ? 46 : 56;
+                const stepDescH = isLandscape ? 48 : 58;
+                const stepBlessH = isLandscape ? 42 : 52;
+                const stepLogoH = (selectedLogoMode === 'text') ? (isLandscape ? 48 : 58) : (logoMaxH + (isLandscape ? 22 : 30));
+
+                const anyBottomContent = activeTitle || activeMilestone || activeDesc || activeBlessing || activeLogo;
+                const bottomPad = isLandscape ? 24 : 34;
+
+                let bottomTextSpace = photoMargin;
+                if (anyBottomContent) {
+                    bottomTextSpace = (isLandscape ? 20 : 28) + bottomPad;
+                    if (activeTitle) bottomTextSpace += stepTitleH;
+                    if (activeMilestone) bottomTextSpace += stepMileH;
+                    if (activeDesc) bottomTextSpace += stepDescH;
+                    if (activeBlessing) bottomTextSpace += stepBlessH;
+                    if (activeLogo) bottomTextSpace += stepLogoH;
+                }
+
                 const targetX = matteMargin + photoMargin;
                 const targetY = matteMargin + photoMargin;
                 const targetW = cw - matteMargin * 2 - photoMargin * 2;
-                
-                // 하단 타이포그래피 & 로고 영역 확보
-                const bottomTextSpace = isLandscape ? 320 : 450;
                 const targetH = ch - matteMargin * 2 - photoMargin - bottomTextSpace; 
 
-                const gap = 26; 
+                const gap = isBgHidden ? 22 : 26; 
                 const layouts = [];
 
                 if (selectedLayout.id === '1-portrait' || selectedLayout.id === '1-landscape') { 
@@ -1316,93 +1596,84 @@
                     }
                 });
 
-                // 4) 하단 맞춤 타이포그래피 렌더링
-                const titleText = (customTitleText || currentSeason.defaultTitle).trim();
-                const milestoneText = (customMilestoneText || '').trim();
-                const descText = (customDescText || currentSeason.desc).trim();
-
-                const baseY = targetY + targetH;
+                // 4) 활성화된 맞춤 타이포그래피만 순차 렌더링
+                let cursorY = targetY + targetH + (isLandscape ? 16 : 22);
                 ctx.textAlign = 'center';
 
-                const titleSize = isLandscape ? 50 : 62;
-                const mileSize = isLandscape ? 23 : 27;
-                const bodySize = isLandscape ? 29 : 35;
-                const subSize = isLandscape ? 23 : 27;
+                if (activeTitle) {
+                    cursorY += (isLandscape ? 52 : 66);
+                    ctx.fillStyle = currentSeason.textColor;
+                    ctx.font = `600 ${titleSize}px "Noto Serif KR", serif`;
+                    ctx.fillText(titleText, cw / 2, cursorY);
+                    cursorY += (isLandscape ? 14 : 16);
+                }
 
-                // (a) 메인 제목
-                ctx.fillStyle = currentSeason.textColor;
-                ctx.font = `600 ${titleSize}px "Noto Serif KR", serif`;
-                ctx.fillText(titleText, cw / 2, baseY + (isLandscape ? 66 : 86));
-
-                // (b) 성장 기록 / 날짜 배지 & 구분선
-                const lineY = baseY + (isLandscape ? 102 : 134);
-                if (milestoneText) {
+                if (activeMilestone) {
+                    cursorY += (isLandscape ? 34 : 42);
                     ctx.font = `400 ${mileSize}px "Gowun Dodum", sans-serif`;
                     const textWidth = ctx.measureText(milestoneText).width;
-                    const lineHalf = Math.min(cw * 0.35, (textWidth / 2) + 80);
+                    const lineHalf = Math.min(cw * 0.36, (textWidth / 2) + 80);
 
                     ctx.strokeStyle = currentSeason.accent;
                     ctx.lineWidth = 2;
                     ctx.beginPath();
-                    ctx.moveTo(cw / 2 - lineHalf, lineY - 8);
-                    ctx.lineTo(cw / 2 - (textWidth / 2) - 18, lineY - 8);
-                    ctx.moveTo(cw / 2 + (textWidth / 2) + 18, lineY - 8);
-                    ctx.lineTo(cw / 2 + lineHalf, lineY - 8);
+                    ctx.moveTo(cw / 2 - lineHalf, cursorY - 9);
+                    ctx.lineTo(cw / 2 - (textWidth / 2) - 18, cursorY - 9);
+                    ctx.moveTo(cw / 2 + (textWidth / 2) + 18, cursorY - 9);
+                    ctx.lineTo(cw / 2 + lineHalf, cursorY - 9);
                     ctx.stroke();
 
                     ctx.fillStyle = currentSeason.textColor;
-                    ctx.fillText(milestoneText, cw / 2, lineY);
-                } else {
-                    ctx.beginPath();
-                    ctx.moveTo(cw / 2 - 50, lineY - 8);
-                    ctx.lineTo(cw / 2 + 50, lineY - 8);
-                    ctx.strokeStyle = currentSeason.accent;
-                    ctx.lineWidth = 2.5;
-                    ctx.stroke();
+                    ctx.fillText(milestoneText, cw / 2, cursorY);
+                    cursorY += (isLandscape ? 12 : 14);
                 }
 
-                // (c) 부모님 한 줄 메시지
-                ctx.font = `400 ${bodySize}px "Gowun Dodum", sans-serif`;
-                ctx.fillStyle = '#4b5563';
-                ctx.fillText(descText, cw / 2, baseY + (isLandscape ? 146 : 192));
+                if (activeDesc) {
+                    cursorY += (isLandscape ? 36 : 44);
+                    ctx.font = `400 ${bodySize}px "Gowun Dodum", sans-serif`;
+                    ctx.fillStyle = '#4b5563';
+                    ctx.fillText(descText, cw / 2, cursorY);
+                    cursorY += (isLandscape ? 12 : 14);
+                }
 
-                // (d) 월별 축복 문구
-                if (selectedBlessingMonth !== 'none' && MONTHLY_BLESSINGS[selectedBlessingMonth]) {
+                if (activeBlessing) {
+                    cursorY += (isLandscape ? 32 : 38);
                     ctx.font = `400 ${subSize}px "Gowun Dodum", sans-serif`;
                     ctx.fillStyle = '#8a8580';
-                    ctx.fillText(MONTHLY_BLESSINGS[selectedBlessingMonth], cw / 2, baseY + (isLandscape ? 184 : 240));
+                    ctx.fillText(blessingText, cw / 2, cursorY);
+                    cursorY += (isLandscape ? 10 : 14);
                 }
 
-                // 5) 하단 패밀리 로고 스탬프 (구름이 & 준삐와솔태)
-                const footerBottomY = ch - matteMargin - (isLandscape ? 22 : 34);
-                const logoMaxH = isLandscape ? 72 : 98;
+                // 5) 하단 패밀리 로고 스탬프 렌더링 ('none'이 아닐 때만 표시)
+                if (activeLogo) {
+                    const footerBottomY = ch - matteMargin - bottomPad;
+                    const hasGureum = gureumLogoEl && gureumLogoEl.complete && gureumLogoEl.naturalWidth > 0;
+                    const hasParents = parentsLogoEl && parentsLogoEl.complete && parentsLogoEl.naturalWidth > 0;
 
-                const hasGureum = gureumLogoEl && gureumLogoEl.complete && gureumLogoEl.naturalWidth > 0;
-                const hasParents = parentsLogoEl && parentsLogoEl.complete && parentsLogoEl.naturalWidth > 0;
+                    if (selectedLogoMode === 'both' && hasGureum && hasParents) {
+                        const gH = logoMaxH;
+                        const gW = gureumLogoEl.naturalWidth * (gH / gureumLogoEl.naturalHeight);
+                        const pH = logoMaxH * 0.92;
+                        const pW = parentsLogoEl.naturalWidth * (pH / parentsLogoEl.naturalHeight);
+                        const spacing = 22;
+                        const totalW = gW + spacing + pW;
+                        const startX = (cw - totalW) / 2;
 
-                if (selectedLogoMode === 'both' && hasGureum && hasParents) {
-                    const gH = logoMaxH;
-                    const gW = gureumLogoEl.naturalWidth * (gH / gureumLogoEl.naturalHeight);
-                    const pH = logoMaxH * 0.92;
-                    const pW = parentsLogoEl.naturalWidth * (pH / parentsLogoEl.naturalHeight);
-                    const spacing = 22;
-                    const totalW = gW + spacing + pW;
-                    const startX = (cw - totalW) / 2;
-
-                    ctx.drawImage(gureumLogoEl, startX, footerBottomY - gH, gW, gH);
-                    ctx.drawImage(parentsLogoEl, startX + gW + spacing, footerBottomY - pH - 2, pW, pH);
-                } else if (selectedLogoMode === 'gureum' && hasGureum) {
-                    const gH = logoMaxH * 1.05;
-                    const gW = gureumLogoEl.naturalWidth * (gH / gureumLogoEl.naturalHeight);
-                    ctx.drawImage(gureumLogoEl, cw / 2 - gW / 2, footerBottomY - gH, gW, gH);
-                } else if (selectedLogoMode === 'parents' && hasParents) {
-                    const pH = logoMaxH * 1.02;
-                    const pW = parentsLogoEl.naturalWidth * (pH / parentsLogoEl.naturalHeight);
-                    ctx.drawImage(parentsLogoEl, cw / 2 - pW / 2, footerBottomY - pH, pW, pH);
-                } else {
-                    ctx.font = '500 24px "Pretendard", sans-serif';
-                    ctx.fillStyle = '#9ca3af';
-                    ctx.fillText('GUREUM GROWTH ARCHIVE · JUNPPI ♥ SOLTAE', cw / 2, footerBottomY - 14);
+                        ctx.drawImage(gureumLogoEl, startX, footerBottomY - gH, gW, gH);
+                        ctx.drawImage(parentsLogoEl, startX + gW + spacing, footerBottomY - pH - 2, pW, pH);
+                    } else if (selectedLogoMode === 'gureum' && hasGureum) {
+                        const gH = logoMaxH * 1.05;
+                        const gW = gureumLogoEl.naturalWidth * (gH / gureumLogoEl.naturalHeight);
+                        ctx.drawImage(gureumLogoEl, cw / 2 - gW / 2, footerBottomY - gH, gW, gH);
+                    } else if (selectedLogoMode === 'parents' && hasParents) {
+                        const pH = logoMaxH * 1.02;
+                        const pW = parentsLogoEl.naturalWidth * (pH / parentsLogoEl.naturalHeight);
+                        ctx.drawImage(parentsLogoEl, cw / 2 - pW / 2, footerBottomY - pH, pW, pH);
+                    } else if (selectedLogoMode === 'text') {
+                        ctx.font = '600 26px "Pretendard", sans-serif';
+                        ctx.fillStyle = '#9ca3af';
+                        ctx.fillText('GUREUM GROWTH ARCHIVE · JUNPPI ♥ SOLTAE', cw / 2, footerBottomY - 14);
+                    }
                 }
 
                 generatedImageUrl = canvas.toDataURL('image/png', 1.0);
@@ -1425,7 +1696,41 @@
             }
         }
 
-        // 모달 제어 함수 (기존 코드에서 누락되어 있던 openModal / closeModal / handleReset 완벽 구현)
+        // 깃허브 페이지용 manifest.json 파일 다운로드 도우미 (PWABuilder 및 크롬 앱 설치 시 주소창 완전 제거용)
+        function downloadManifestFile() {
+            const iconSrc = window.generatedAppIconUrl || document.getElementById('asset-logo-gureum').src;
+            const manifestObj = {
+                name: "구름이의 사계절 성장 기록관",
+                short_name: "구름이 성장앨범",
+                description: "준삐♥와솔태가 기록하는 구름이의 사계절 성장 사진 액자 스튜디오",
+                start_url: "./index.html",
+                scope: "./",
+                display: "fullscreen",
+                display_override: ["fullscreen", "standalone", "minimal-ui"],
+                orientation: "portrait",
+                background_color: "#f7f4f0",
+                theme_color: "#f7f4f0",
+                icons: [
+                    {
+                        src: iconSrc,
+                        sizes: "512x512",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    }
+                ]
+            };
+            const blob = new Blob([JSON.stringify(manifestObj, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'manifest.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 모달 제어 함수
         function openModal(type) {
             const modal = document.getElementById('custom-modal');
             const mTitle = document.getElementById('modal-title');
@@ -1439,32 +1744,45 @@
             if (type === 'upload') {
                 mTitle.innerText = '구름이 사진 불러오기';
                 mDesc.innerText = `선택하신 [${selectedLayout ? selectedLayout.name : '성장 프레임'}] 비율에 맞춰 사진이 중앙 정렬로 예쁘게 담깁니다. 스마트폰 고해상도 사진도 끊김 없이 자동 최적화됩니다.`;
-                iconContainer.innerHTML = '<i data-lucide="camera" class="w-7 h-7 text-amber-600"></i>';
+                iconContainer.innerHTML = '<i data-lucide="camera" class="w-8 h-8 text-amber-600"></i>';
                 confirmBtn.innerText = '사진 선택하기';
-                confirmBtn.className = 'flex-1 py-3.5 text-amber-800 font-bold font-gowun text-base border-l border-stone-100 hover:bg-white transition-colors';
+                confirmBtn.className = 'flex-1 py-4 text-amber-800 font-bold font-gowun text-base sm:text-lg border-l border-stone-100 hover:bg-white transition-colors';
                 modalPendingAction = 'upload';
             } else if (type === 'download') {
                 mTitle.innerText = '고화질 성장 액자 저장';
                 mDesc.innerText = '캐논 셀피 CP1500 포토프린터 엽서 규격(300dpi) 고화질 PNG 이미지로 저장합니다. 지금 바로 앨범에 간직해 보세요!';
-                iconContainer.innerHTML = '<i data-lucide="download" class="w-7 h-7 text-emerald-600"></i>';
+                iconContainer.innerHTML = '<i data-lucide="download" class="w-8 h-8 text-emerald-600"></i>';
                 confirmBtn.innerText = '저장하기';
-                confirmBtn.className = 'flex-1 py-3.5 text-emerald-700 font-bold font-gowun text-base border-l border-stone-100 hover:bg-white transition-colors';
+                confirmBtn.className = 'flex-1 py-4 text-emerald-700 font-bold font-gowun text-base sm:text-lg border-l border-stone-100 hover:bg-white transition-colors';
                 modalPendingAction = 'download';
             } else if (type === 'reset') {
                 mTitle.innerText = '처음부터 다시 만들까요?';
                 mDesc.innerText = '현재 선택한 사진과 입력한 맞춤 문구가 초기화되고 계절 테마 선택 화면으로 돌아갑니다.';
-                iconContainer.innerHTML = '<i data-lucide="rotate-ccw" class="w-7 h-7 text-rose-500"></i>';
+                iconContainer.innerHTML = '<i data-lucide="rotate-ccw" class="w-8 h-8 text-rose-500"></i>';
                 confirmBtn.innerText = '초기화';
-                confirmBtn.className = 'flex-1 py-3.5 text-rose-600 font-bold font-gowun text-base border-l border-stone-100 hover:bg-white transition-colors';
+                confirmBtn.className = 'flex-1 py-4 text-rose-600 font-bold font-gowun text-base sm:text-lg border-l border-stone-100 hover:bg-white transition-colors';
                 modalPendingAction = 'reset';
             } else if (type === 'install-guide') {
-                mTitle.innerText = '휴대폰 홈 화면에 앱으로 설치하기';
-                mDesc.innerText = '• 아이폰(Safari): 하단 [공유(↑)] 버튼 → [홈 화면에 추가]\n• 갤럭시(Chrome/삼성인터넷): 상단 메뉴(⋮) → [홈 화면에 추가 / 앱 설치]\n\n설치하면 귀여운 구름이 아이콘이 생기고 주소창 없는 전체화면 앱으로 열립니다!';
+                mTitle.innerText = '상단 주소창 숨기기 & 앱 설치 방법';
+                mDesc.innerHTML = `
+                    <div class="space-y-3 text-sm sm:text-base">
+                        <div class="p-3 rounded-2xl bg-stone-100 border border-stone-200">
+                            <div class="font-bold text-stone-800 mb-1">방법 1. 지금 바로 주소창 숨기기 (1초 해결)</div>
+                            <p class="text-stone-600 text-xs sm:text-sm mb-2">화면 우측 상단의 <b>[주소창 숨김]</b> 버튼이나 아래 버튼을 누르면 즉시 주소창 없는 전체화면으로 전환됩니다.</p>
+                            <button type="button" onclick="closeModal(); toggleFullscreenMode();" class="w-full py-2.5 rounded-xl bg-stone-800 text-white font-bold text-sm hover:bg-stone-700">지금 바로 전체화면 켜기</button>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-amber-50/80 border border-amber-200">
+                            <div class="font-bold text-amber-900 mb-1">방법 2. PWABuilder APK에서 주소창 영구 제거</div>
+                            <p class="text-stone-600 text-xs sm:text-sm mb-2">PWABuilder로 만든 APK는 깃허브 저장소에 <b>assetlinks.json</b> 인증 파일이나 별도 <b>manifest.json</b>이 없으면 보안상 상단 주소창을 띄웁니다. 가장 간편하게는 크롬에서 깃허브 주소 접속 후 <b>메뉴(⋮) → [앱 설치]</b>를 누르거나 아래 <b>manifest.json</b>을 깃허브 같은 폴더에 올려주세요.</p>
+                            <button type="button" onclick="downloadManifestFile()" class="w-full py-2 rounded-xl bg-amber-600 text-white font-bold text-xs sm:text-sm hover:bg-amber-700">깃허브 업로드용 manifest.json 다운로드</button>
+                        </div>
+                    </div>
+                `;
                 const iconSrc = window.generatedAppIconUrl || document.getElementById('asset-logo-gureum').src;
                 iconContainer.innerHTML = `<img src="${iconSrc}" alt="구름이 앱 아이콘" class="w-14 h-14 rounded-2xl shadow-md object-cover border border-amber-200">`;
                 cancelBtn.classList.add('hidden');
-                confirmBtn.innerText = '확인했어요';
-                confirmBtn.className = 'flex-1 py-3.5 text-amber-800 font-bold font-gowun text-base hover:bg-white transition-colors';
+                confirmBtn.innerText = '닫기';
+                confirmBtn.className = 'flex-1 py-4 text-amber-800 font-bold font-gowun text-base sm:text-lg hover:bg-white transition-colors';
                 modalPendingAction = null;
             }
 
@@ -1497,6 +1815,9 @@
             selectedBgUrl = null;
             currentSeason = null;
             selectedLayout = null;
+            showTitle = true;
+            showMilestone = true;
+            showDesc = true;
             selectedLogoMode = 'both';
             updatePhotoSelectionUI();
             setStep(1);
@@ -1512,10 +1833,10 @@
             
             mTitle.innerText = title;
             mDesc.innerText = message;
-            iconContainer.innerHTML = '<i data-lucide="sparkles" class="w-7 h-7 text-amber-500"></i>';
+            iconContainer.innerHTML = '<i data-lucide="sparkles" class="w-8 h-8 text-amber-500"></i>';
             cancelBtn.classList.add('hidden');
             confirmBtn.innerText = '확인';
-            confirmBtn.className = 'flex-1 py-3.5 text-stone-800 font-bold font-gowun text-base hover:bg-white active:bg-stone-50';
+            confirmBtn.className = 'flex-1 py-4 text-stone-800 font-bold font-gowun text-base sm:text-lg hover:bg-white active:bg-stone-50';
             modalPendingAction = null; 
             
             lucide.createIcons();
@@ -1550,6 +1871,10 @@
 
         document.getElementById('select-blessing-month').addEventListener('change', (e) => {
             selectedBlessingMonth = e.target.value;
+            if (selectedBlessingMonth !== 'none') {
+                lastActiveBlessingMonth = selectedBlessingMonth;
+            }
+            syncCustomInputsFromState();
             updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
         });
         
@@ -1571,7 +1896,7 @@
             }
         }
 
-        // 구름이 로고를 512x512 정사각형 앱 아이콘(크림색 배경)으로 렌더링하여 iOS/Android 홈 화면 아이콘 및 PWA 매니페스트에 자동 등록
+        // 구름이 로고를 512x512 정사각형 앱 아이콘으로 렌더링하여 PWA 매니페스트(fullscreen 모드)에 등록
         function initPwaAppSetup() {
             const gureumEl = document.getElementById('asset-logo-gureum');
             if (!gureumEl) return;
@@ -1583,14 +1908,12 @@
                     c.height = 512;
                     const ctx = c.getContext('2d');
 
-                    // 아이폰/갤럭시 홈 화면에서도 투명 영역이 검게 변하지 않도록 따뜻한 크림 파스텔 배경 적용
                     const grad = ctx.createLinearGradient(0, 0, 512, 512);
                     grad.addColorStop(0, '#fff9f2');
                     grad.addColorStop(1, '#fdecd8');
                     ctx.fillStyle = grad;
                     ctx.fillRect(0, 0, 512, 512);
 
-                    // 은은한 원형 빛망울
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
                     ctx.beginPath();
                     ctx.arc(256, 256, 190, 0, Math.PI * 2);
@@ -1618,7 +1941,8 @@
                             short_name: "구름이 성장앨범",
                             description: "준삐♥와솔태가 기록하는 구름이의 사계절 성장 사진 액자 스튜디오",
                             start_url: ".",
-                            display: "standalone",
+                            display: "fullscreen",
+                            display_override: ["fullscreen", "standalone", "minimal-ui"],
                             orientation: "portrait",
                             background_color: "#f7f4f0",
                             theme_color: "#f7f4f0",
@@ -1648,7 +1972,6 @@
 
         // 어플리케이션 초기화
         window.onload = function() {
-
             const gSrc = document.getElementById('asset-logo-gureum').src;
             const pSrc = document.getElementById('asset-logo-parents').src;
             document.querySelectorAll('img[data-logo="gureum"]').forEach(el => { el.src = gSrc; });
@@ -1656,21 +1979,20 @@
             initPwaAppSetup();
             initSeasonalBackgrounds();
 
-
             const seasonContainer = document.getElementById('season-buttons');
             seasonContainer.innerHTML = '';
             Object.values(SEASON_DATA).forEach(season => {
                 seasonContainer.innerHTML += `
-                    <button type="button" onclick="handleSeasonSelect('${season.id}')" style="background-color: ${season.fallbackColor}" class="group flex flex-col items-center p-6 sm:p-7 rounded-3xl transition-all duration-500 active:scale-95 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.18)] relative overflow-hidden h-52 sm:h-64 justify-end border border-stone-200/80 w-full shadow-sm text-center">
+                    <button type="button" onclick="handleSeasonSelect('${season.id}')" style="background-color: ${season.fallbackColor}" class="group flex flex-col items-center p-6 sm:p-7 rounded-3xl transition-all duration-500 active:scale-95 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.18)] relative overflow-hidden h-56 sm:h-68 justify-end border border-stone-200/80 w-full shadow-sm text-center">
                         <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-110" style="background-image: url('${season.thumbnail}')"></div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-stone-900/75 via-stone-900/25 to-transparent transition-opacity duration-300 z-0"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-stone-900/30 to-transparent transition-opacity duration-300 z-0"></div>
                         <div class="relative z-10 flex flex-col items-center text-white w-full">
-                            <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mb-2.5 border border-white/30">
-                                <i data-lucide="${season.icon}" stroke-width="1.8" class="w-5 h-5 text-white"></i>
+                            <div class="w-11 h-11 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mb-2.5 border border-white/30">
+                                <i data-lucide="${season.icon}" stroke-width="1.8" class="w-6 h-6 text-white"></i>
                             </div>
-                            <span class="text-[11px] uppercase tracking-widest text-white/80 font-gowun mb-0.5">${season.subTitle}</span>
-                            <span class="text-xl sm:text-2xl font-serif-kr font-bold mb-1.5 tracking-wide text-white drop-shadow-sm">${season.name}</span>
-                            <span class="text-xs text-white/90 keep-all leading-relaxed font-gowun px-2 line-clamp-2">${season.desc}</span>
+                            <span class="text-xs uppercase tracking-widest text-white/85 font-gowun mb-0.5 font-bold">${season.subTitle}</span>
+                            <span class="text-2xl sm:text-[26px] font-serif-kr font-bold mb-1.5 tracking-wide text-white drop-shadow-sm">${season.name}</span>
+                            <span class="text-sm text-white/95 keep-all leading-relaxed font-gowun px-2 line-clamp-2">${season.desc}</span>
                         </div>
                     </button>
                 `;
@@ -1680,12 +2002,12 @@
             layoutContainer.innerHTML = '';
             LAYOUT_DATA.forEach(layout => {
                 layoutContainer.innerHTML += `
-                    <button type="button" onclick="handleLayoutSelect('${layout.id}')" class="group flex flex-col items-center p-4 sm:p-5 bg-white border border-stone-200 rounded-2xl hover:border-amber-500 hover:shadow-md transition-all active:scale-95 w-full">
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 p-2.5 sm:p-3 bg-stone-50 rounded-xl mb-3 flex items-center justify-center group-hover:bg-amber-50/50 transition-colors">
+                    <button type="button" onclick="handleLayoutSelect('${layout.id}')" class="group flex flex-col items-center p-5 sm:p-6 bg-white border border-stone-200 rounded-2xl hover:border-amber-500 hover:shadow-md transition-all active:scale-95 w-full">
+                        <div class="w-20 h-20 sm:w-24 sm:h-24 p-3 bg-stone-50 rounded-xl mb-3.5 flex items-center justify-center group-hover:bg-amber-50/50 transition-colors">
                             ${layout.icon}
                         </div>
-                        <span class="font-serif-kr text-sm sm:text-base text-stone-800 font-bold tracking-wide mb-0.5">${layout.name}</span>
-                        <span class="font-gowun text-[11px] sm:text-xs text-stone-400">${layout.sub}</span>
+                        <span class="font-serif-kr text-base sm:text-lg text-stone-800 font-bold tracking-wide mb-1">${layout.name}</span>
+                        <span class="font-gowun text-xs sm:text-sm text-stone-500 font-bold">${layout.sub}</span>
                     </button>
                 `;
             });
