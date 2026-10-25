@@ -959,4 +959,723 @@
         }
 
         function renderBgButtons() {
-            const bgContainer = document.getElementById('bg-theme-
+            const bgContainer = document.getElementById('bg-theme-buttons');
+            bgContainer.innerHTML = '';
+            
+            currentSeason.bgOptions.forEach((url, idx) => {
+                const isSelected = (selectedBgUrl === url);
+                const label = currentSeason.bgLabels[idx] || `테마 ${idx + 1}`;
+                bgContainer.innerHTML += `
+                    <button type="button" onclick="selectBgOption(${idx})" style="background-color: ${currentSeason.fallbackColor}" class="group relative rounded-xl overflow-hidden aspect-square border-2 ${isSelected ? 'border-stone-800 shadow-md ring-2 ring-stone-800/20' : 'border-stone-200'} hover:opacity-90 transition-all">
+                        <img src="${url}" alt="${label}" class="w-full h-full object-cover">
+                        <div class="absolute inset-x-0 bottom-0 bg-black/55 backdrop-blur-[2px] text-white text-[10px] sm:text-[11px] font-gowun py-1 z-10 truncate px-1">${label}</div>
+                    </button>
+                `;
+            });
+            
+            if (customUploadedBgSrc) {
+                const isSelected = (selectedBgUrl === customUploadedBgSrc);
+                bgContainer.innerHTML += `
+                    <div class="relative rounded-xl overflow-hidden aspect-square border-2 ${isSelected ? 'border-stone-800 shadow-md ring-2 ring-stone-800/20' : 'border-stone-200'} transition-all flex flex-col group">
+                        <img src="${customUploadedBgSrc}" alt="내 배경" class="w-full h-full object-cover cursor-pointer hover:opacity-85 transition-opacity" onclick="selectCustomBg()">
+                        <button type="button" onclick="document.getElementById('custom-bg-input').click()" class="absolute inset-x-0 bottom-0 bg-amber-700/90 hover:bg-amber-800 text-white text-[10px] sm:text-[11px] font-gowun py-1 text-center cursor-pointer flex justify-center items-center gap-1 transition-colors z-10">
+                            <i data-lucide="refresh-cw" class="w-3 h-3"></i> 배경 변경
+                        </button>
+                    </div>
+                `;
+            } else {
+                bgContainer.innerHTML += `
+                    <button type="button" onclick="document.getElementById('custom-bg-input').click()" class="group relative flex flex-col items-center justify-center rounded-xl overflow-hidden aspect-square border-2 border-dashed border-stone-300 bg-stone-50 hover:bg-stone-100 hover:border-stone-400 transition-all text-stone-500 p-1">
+                        <i data-lucide="image-plus" class="w-5 h-5 mb-1 text-stone-400 group-hover:text-stone-600 transition-colors"></i>
+                        <span class="text-[10px] sm:text-[11px] font-bold font-gowun keep-all text-center">내 배경 업로드</span>
+                    </button>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        function selectBgOption(idx) {
+            if (!currentSeason || !currentSeason.bgOptions[idx]) return;
+            updatePreviewFrame(currentSeason.bgOptions[idx]);
+        }
+
+        function selectCustomBg() {
+            if (!customUploadedBgSrc) return;
+            updatePreviewFrame(customUploadedBgSrc);
+        }
+
+        function handleFreshPhotoUpload(e) {
+            if (isGenerating) return;
+            if (e.target.files && e.target.files.length > 0) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    customUploadedBgSrc = await downsampleImage(event.target.result, 1200);
+                    updatePreviewFrame(customUploadedBgSrc);
+                };
+                reader.readAsDataURL(file);
+            }
+            e.target.value = ""; 
+        }
+
+        function resetFileInput() {
+            const oldInput = document.getElementById('photo-input');
+            if (oldInput) {
+                const newInput = document.createElement('input');
+                newInput.type = 'file';
+                newInput.id = 'photo-input';
+                newInput.accept = 'image/*';
+                newInput.multiple = true;
+                newInput.className = 'hidden';
+                newInput.addEventListener('change', handleFileInputChange);
+                oldInput.parentNode.replaceChild(newInput, oldInput);
+            }
+        }
+
+        function openFreshFilePicker() {
+            resetFileInput();
+            document.getElementById('photo-input').click();
+        }
+
+        async function handleFileInputChange(e) {
+            const files = Array.from(e.target.files || []);
+            if (files.length > 0) {
+                const remainingSlots = selectedLayout.count - selectedPhotos.length;
+                const filesToAdd = files.slice(0, remainingSlots);
+
+                if (files.length > remainingSlots) {
+                    showCustomAlert("사진 개수 안내", `선택하신 [${selectedLayout.name}] 프레임에는 최대 ${selectedLayout.count}장까지 담을 수 있어, 처음 ${remainingSlots}장만 추가되었습니다.`);
+                }
+                
+                const grid = document.getElementById('photo-grid');
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 flex flex-col items-center justify-center gap-4 animate-fade-up">
+                        <div class="w-10 h-10 border-4 border-stone-200 border-t-stone-800 rounded-full animate-spin"></div>
+                        <p class="text-stone-600 font-serif-kr text-base">구름이 사진을 고화질 액자 규격으로 다듬는 중...</p>
+                    </div>
+                `;
+                document.getElementById('photo-selection-ui').classList.remove('hidden');
+                document.getElementById('upload-box-empty').classList.add('hidden-step');
+
+                try {
+                    const optimizedSrcs = await Promise.all(filesToAdd.map(file => {
+                        return new Promise(resolve => {
+                            const reader = new FileReader();
+                            reader.onload = async event => {
+                                const res = await downsampleImage(event.target.result, 1200);
+                                resolve(res);
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                    }));
+                    selectedPhotos = selectedPhotos.concat(optimizedSrcs);
+                } catch (error) { 
+                    console.error("파일 처리 실패:", error); 
+                }
+                
+                updatePhotoSelectionUI();
+            }
+            e.target.value = "";
+        }
+
+        function movePhotoOrder(index, direction) {
+            const targetIdx = index + direction;
+            if (targetIdx < 0 || targetIdx >= selectedPhotos.length) return;
+            const temp = selectedPhotos[index];
+            selectedPhotos[index] = selectedPhotos[targetIdx];
+            selectedPhotos[targetIdx] = temp;
+            updatePhotoSelectionUI();
+        }
+
+        function updatePhotoSelectionUI() {
+            const emptyUI = document.getElementById('upload-box-empty');
+            const sampleBar = document.getElementById('sample-photo-bar');
+            const selectionUI = document.getElementById('photo-selection-ui');
+            const grid = document.getElementById('photo-grid');
+            const makeBtn = document.getElementById('btn-next-step4');
+
+            if (selectedPhotos.length === 0) {
+                emptyUI.classList.remove('hidden-step');
+                if (sampleBar) sampleBar.classList.remove('hidden');
+                selectionUI.classList.add('hidden');
+                selectionUI.classList.remove('flex');
+            } else {
+                emptyUI.classList.add('hidden-step');
+                if (sampleBar) sampleBar.classList.add('hidden');
+                selectionUI.classList.remove('hidden');
+                selectionUI.classList.add('flex');
+                grid.innerHTML = ''; 
+                
+                selectedPhotos.forEach((src, idx) => {
+                    const canLeft = idx > 0;
+                    const canRight = idx < selectedPhotos.length - 1;
+                    grid.innerHTML += `
+                        <div class="relative aspect-square rounded-2xl overflow-hidden border border-stone-200 shadow-sm group bg-white">
+                            <img src="${src}" alt="선택된 사진 ${idx + 1}" class="w-full h-full object-cover" />
+                            <div class="absolute top-2 left-2 bg-stone-900/70 text-white text-[11px] font-gowun px-2 py-0.5 rounded-full backdrop-blur-sm">
+                                ${idx + 1}번 컷
+                            </div>
+                            <button type="button" onclick="removePhoto(${idx})" class="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1.5 hover:bg-red-600 transition-colors backdrop-blur-sm" title="사진 삭제">
+                                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                            </button>
+                            ${selectedPhotos.length > 1 ? `
+                            <div class="absolute bottom-2 inset-x-2 flex justify-between pointer-events-none">
+                                <button type="button" onclick="movePhotoOrder(${idx}, -1)" ${!canLeft ? 'disabled' : ''} class="pointer-events-auto p-1.5 rounded-full bg-white/90 text-stone-700 shadow hover:bg-white disabled:opacity-30 transition-opacity">
+                                    <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button type="button" onclick="movePhotoOrder(${idx}, 1)" ${!canRight ? 'disabled' : ''} class="pointer-events-auto p-1.5 rounded-full bg-white/90 text-stone-700 shadow hover:bg-white disabled:opacity-30 transition-opacity">
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+                
+                if (selectedLayout && selectedPhotos.length < selectedLayout.count) {
+                    grid.innerHTML += `
+                        <button type="button" onclick="openFreshFilePicker()" class="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-stone-300 bg-white hover:bg-stone-50 transition-colors text-stone-500 shadow-sm">
+                            <i data-lucide="plus" class="w-7 h-7 mb-1.5 text-stone-400"></i>
+                            <span class="text-sm font-gowun font-bold">사진 추가</span>
+                            <span class="text-xs text-stone-400">(${selectedPhotos.length}/${selectedLayout.count})</span>
+                        </button>
+                    `;
+                }
+                lucide.createIcons();
+
+                if (selectedLayout && selectedPhotos.length === selectedLayout.count) {
+                    makeBtn.style.display = 'flex';
+                    makeBtn.style.backgroundColor = currentSeason ? currentSeason.textColor : '#57534e';
+                } else {
+                    makeBtn.style.display = 'none';
+                }
+            }
+            saveAppState();
+        }
+
+        function removePhoto(index) {
+            selectedPhotos.splice(index, 1);
+            updatePhotoSelectionUI();
+        }
+
+        const loadImg = (src) => {
+            return new Promise((resolve) => {
+                if (!src) { resolve(null); return; }
+                const img = new Image();
+                if (src.startsWith('http')) {
+                    img.crossOrigin = 'anonymous';
+                }
+                img.onload = () => resolve(img);
+                img.onerror = () => resolve(null);
+                img.src = src;
+            });
+        };
+
+        function drawImageCover(ctx, img, boxX, boxY, boxW, boxH) {
+            if (!img) {
+                ctx.fillStyle = '#f3f4f6';
+                ctx.fillRect(boxX, boxY, boxW, boxH);
+                return;
+            }
+            const imgRatio = img.width / img.height;
+            const targetRatio = boxW / boxH;
+            let sX, sY, sW, sH;
+            if (imgRatio > targetRatio) {
+                sH = img.height; sW = img.height * targetRatio; sX = (img.width - sW) / 2; sY = 0;
+            } else {
+                sW = img.width; sH = img.width / targetRatio; sX = 0; sY = (img.height - sH) / 2;
+            }
+            ctx.drawImage(img, sX, sY, sW, sH, boxX, boxY, boxW, boxH);
+            ctx.strokeStyle = "rgba(0,0,0,0.08)";
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(boxX, boxY, boxW, boxH);
+        }
+
+        // 핵심: CP1500 규격 맞춤형 성장 액자 Canvas 합성
+        async function updatePreviewFrame(bgSrc) {
+            if (isGenerating || !currentSeason || !selectedLayout) return; 
+            isGenerating = true;
+            
+            if (bgSrc) selectedBgUrl = bgSrc;
+            renderBgButtons(); 
+            
+            document.getElementById('preview-loading').classList.remove('hidden');
+
+            try {
+                await document.fonts.ready;
+                
+                const userImgs = await Promise.all(selectedPhotos.map(src => loadImg(src)));
+                const bgImg = await loadImg(selectedBgUrl);
+                const gureumLogoEl = document.getElementById('asset-logo-gureum');
+                const parentsLogoEl = document.getElementById('asset-logo-parents');
+
+                const isLandscape = selectedLayout.orientation === 'landscape';
+                
+                // CP1500 Postcard 300dpi 인쇄 표준 해상도 (100x148mm)
+                const CP1500_WIDTH = 1182;
+                const CP1500_HEIGHT = 1748;
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                const cw = isLandscape ? CP1500_HEIGHT : CP1500_WIDTH; 
+                const ch = isLandscape ? CP1500_WIDTH : CP1500_HEIGHT; 
+                canvas.width = cw;
+                canvas.height = ch;
+
+                // 1) 배경 렌더링
+                if (bgImg) {
+                    const bgRatio = bgImg.width / bgImg.height;
+                    const canvasRatio = cw / ch;
+                    let bgSx, bgSy, bgSw, bgSh;
+                    if (bgRatio > canvasRatio) {
+                        bgSh = bgImg.height; bgSw = bgImg.height * canvasRatio; bgSx = (bgImg.width - bgSw) / 2; bgSy = 0;
+                    } else {
+                        bgSw = bgImg.width; bgSh = bgImg.width / canvasRatio; bgSx = 0; bgSy = (bgImg.height - bgSh) / 2;
+                    }
+                    ctx.drawImage(bgImg, bgSx, bgSy, bgSw, bgSh, 0, 0, cw, ch);
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.16)";
+                    ctx.fillRect(0, 0, cw, ch);
+                } else {
+                    ctx.fillStyle = currentSeason.fallbackColor;
+                    ctx.fillRect(0, 0, cw, ch);
+                }
+
+                // 2) 프리미엄 화이트 매트 보더 생성
+                const matteMargin = 82; 
+                ctx.shadowColor = "rgba(0,0,0,0.16)";
+                ctx.shadowBlur = 36;
+                ctx.shadowOffsetY = 14;
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(matteMargin, matteMargin, cw - matteMargin * 2, ch - matteMargin * 2);
+                ctx.shadowColor = "transparent";
+
+                // 내측 파스텔 라인 장식
+                ctx.strokeStyle = currentSeason.accent + "88";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(matteMargin + 16, matteMargin + 16, cw - matteMargin * 2 - 32, ch - matteMargin * 2 - 32);
+
+                const photoMargin = 58; 
+                const targetX = matteMargin + photoMargin;
+                const targetY = matteMargin + photoMargin;
+                const targetW = cw - matteMargin * 2 - photoMargin * 2;
+                
+                // 하단 타이포그래피 & 로고 영역 확보
+                const bottomTextSpace = isLandscape ? 320 : 450;
+                const targetH = ch - matteMargin * 2 - photoMargin - bottomTextSpace; 
+
+                const gap = 26; 
+                const layouts = [];
+
+                if (selectedLayout.id === '1-portrait' || selectedLayout.id === '1-landscape') { 
+                    layouts.push({ x: targetX, y: targetY, w: targetW, h: targetH }); 
+                } else if (selectedLayout.id === '2-horizontal') {
+                    const boxH = (targetH - gap) / 2;
+                    layouts.push({ x: targetX, y: targetY, w: targetW, h: boxH }); 
+                    layouts.push({ x: targetX, y: targetY + boxH + gap, w: targetW, h: boxH });
+                } else if (selectedLayout.id === '2-vertical') {
+                    const boxW = (targetW - gap) / 2;
+                    layouts.push({ x: targetX, y: targetY, w: boxW, h: targetH }); 
+                    layouts.push({ x: targetX + boxW + gap, y: targetY, w: boxW, h: targetH });
+                } else if (selectedLayout.id === '3-top') {
+                    const boxH = (targetH - gap) / 2;
+                    const boxW_half = (targetW - gap) / 2;
+                    layouts.push({ x: targetX, y: targetY, w: targetW, h: boxH }); 
+                    layouts.push({ x: targetX, y: targetY + boxH + gap, w: boxW_half, h: boxH }); 
+                    layouts.push({ x: targetX + boxW_half + gap, y: targetY + boxH + gap, w: boxW_half, h: boxH });
+                } else if (selectedLayout.id === '4-grid') {
+                    const boxW = (targetW - gap) / 2;
+                    const boxH = (targetH - gap) / 2;
+                    layouts.push({ x: targetX, y: targetY, w: boxW, h: boxH }); 
+                    layouts.push({ x: targetX + boxW + gap, y: targetY, w: boxW, h: boxH });
+                    layouts.push({ x: targetX, y: targetY + boxH + gap, w: boxW, h: boxH }); 
+                    layouts.push({ x: targetX + boxW + gap, y: targetY + boxH + gap, w: boxW, h: boxH });
+                }
+
+                // 3) 각 슬롯에 아이 사진 렌더링
+                userImgs.forEach((img, idx) => {
+                    if (layouts[idx]) {
+                        drawImageCover(ctx, img, layouts[idx].x, layouts[idx].y, layouts[idx].w, layouts[idx].h);
+                    }
+                });
+
+                // 4) 하단 맞춤 타이포그래피 렌더링
+                const titleText = (customTitleText || currentSeason.defaultTitle).trim();
+                const milestoneText = (customMilestoneText || '').trim();
+                const descText = (customDescText || currentSeason.desc).trim();
+
+                const baseY = targetY + targetH;
+                ctx.textAlign = 'center';
+
+                const titleSize = isLandscape ? 50 : 62;
+                const mileSize = isLandscape ? 23 : 27;
+                const bodySize = isLandscape ? 29 : 35;
+                const subSize = isLandscape ? 23 : 27;
+
+                // (a) 메인 제목
+                ctx.fillStyle = currentSeason.textColor;
+                ctx.font = `600 ${titleSize}px "Noto Serif KR", serif`;
+                ctx.fillText(titleText, cw / 2, baseY + (isLandscape ? 66 : 86));
+
+                // (b) 성장 기록 / 날짜 배지 & 구분선
+                const lineY = baseY + (isLandscape ? 102 : 134);
+                if (milestoneText) {
+                    ctx.font = `400 ${mileSize}px "Gowun Dodum", sans-serif`;
+                    const textWidth = ctx.measureText(milestoneText).width;
+                    const lineHalf = Math.min(cw * 0.35, (textWidth / 2) + 80);
+
+                    ctx.strokeStyle = currentSeason.accent;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(cw / 2 - lineHalf, lineY - 8);
+                    ctx.lineTo(cw / 2 - (textWidth / 2) - 18, lineY - 8);
+                    ctx.moveTo(cw / 2 + (textWidth / 2) + 18, lineY - 8);
+                    ctx.lineTo(cw / 2 + lineHalf, lineY - 8);
+                    ctx.stroke();
+
+                    ctx.fillStyle = currentSeason.textColor;
+                    ctx.fillText(milestoneText, cw / 2, lineY);
+                } else {
+                    ctx.beginPath();
+                    ctx.moveTo(cw / 2 - 50, lineY - 8);
+                    ctx.lineTo(cw / 2 + 50, lineY - 8);
+                    ctx.strokeStyle = currentSeason.accent;
+                    ctx.lineWidth = 2.5;
+                    ctx.stroke();
+                }
+
+                // (c) 부모님 한 줄 메시지
+                ctx.font = `400 ${bodySize}px "Gowun Dodum", sans-serif`;
+                ctx.fillStyle = '#4b5563';
+                ctx.fillText(descText, cw / 2, baseY + (isLandscape ? 146 : 192));
+
+                // (d) 월별 축복 문구
+                if (selectedBlessingMonth !== 'none' && MONTHLY_BLESSINGS[selectedBlessingMonth]) {
+                    ctx.font = `400 ${subSize}px "Gowun Dodum", sans-serif`;
+                    ctx.fillStyle = '#8a8580';
+                    ctx.fillText(MONTHLY_BLESSINGS[selectedBlessingMonth], cw / 2, baseY + (isLandscape ? 184 : 240));
+                }
+
+                // 5) 하단 패밀리 로고 스탬프 (구름이 & 준삐와솔태)
+                const footerBottomY = ch - matteMargin - (isLandscape ? 22 : 34);
+                const logoMaxH = isLandscape ? 72 : 98;
+
+                const hasGureum = gureumLogoEl && gureumLogoEl.complete && gureumLogoEl.naturalWidth > 0;
+                const hasParents = parentsLogoEl && parentsLogoEl.complete && parentsLogoEl.naturalWidth > 0;
+
+                if (selectedLogoMode === 'both' && hasGureum && hasParents) {
+                    const gH = logoMaxH;
+                    const gW = gureumLogoEl.naturalWidth * (gH / gureumLogoEl.naturalHeight);
+                    const pH = logoMaxH * 0.92;
+                    const pW = parentsLogoEl.naturalWidth * (pH / parentsLogoEl.naturalHeight);
+                    const spacing = 22;
+                    const totalW = gW + spacing + pW;
+                    const startX = (cw - totalW) / 2;
+
+                    ctx.drawImage(gureumLogoEl, startX, footerBottomY - gH, gW, gH);
+                    ctx.drawImage(parentsLogoEl, startX + gW + spacing, footerBottomY - pH - 2, pW, pH);
+                } else if (selectedLogoMode === 'gureum' && hasGureum) {
+                    const gH = logoMaxH * 1.05;
+                    const gW = gureumLogoEl.naturalWidth * (gH / gureumLogoEl.naturalHeight);
+                    ctx.drawImage(gureumLogoEl, cw / 2 - gW / 2, footerBottomY - gH, gW, gH);
+                } else if (selectedLogoMode === 'parents' && hasParents) {
+                    const pH = logoMaxH * 1.02;
+                    const pW = parentsLogoEl.naturalWidth * (pH / parentsLogoEl.naturalHeight);
+                    ctx.drawImage(parentsLogoEl, cw / 2 - pW / 2, footerBottomY - pH, pW, pH);
+                } else {
+                    ctx.font = '500 24px "Pretendard", sans-serif';
+                    ctx.fillStyle = '#9ca3af';
+                    ctx.fillText('GUREUM GROWTH ARCHIVE · JUNPPI ♥ SOLTAE', cw / 2, footerBottomY - 14);
+                }
+
+                generatedImageUrl = canvas.toDataURL('image/png', 1.0);
+                document.getElementById('final-image').src = generatedImageUrl;
+                saveAppState();
+
+            } catch (error) {
+                console.error("프레임 렌더링 중 오류:", error);
+            } finally {
+                document.getElementById('preview-loading').classList.add('hidden');
+                isGenerating = false;
+            }
+        }
+
+        function handleAddPhotoClick() {
+            if (!hasPromptedUpload) {
+                openModal('upload');
+            } else {
+                openFreshFilePicker();
+            }
+        }
+
+        // 모달 제어 함수 (기존 코드에서 누락되어 있던 openModal / closeModal / handleReset 완벽 구현)
+        function openModal(type) {
+            const modal = document.getElementById('custom-modal');
+            const mTitle = document.getElementById('modal-title');
+            const mDesc = document.getElementById('modal-desc');
+            const iconContainer = document.getElementById('modal-icon-container');
+            const confirmBtn = document.getElementById('modal-confirm-btn');
+            const cancelBtn = document.getElementById('modal-cancel-btn');
+
+            cancelBtn.classList.remove('hidden');
+
+            if (type === 'upload') {
+                mTitle.innerText = '구름이 사진 불러오기';
+                mDesc.innerText = `선택하신 [${selectedLayout ? selectedLayout.name : '성장 프레임'}] 비율에 맞춰 사진이 중앙 정렬로 예쁘게 담깁니다. 스마트폰 고해상도 사진도 끊김 없이 자동 최적화됩니다.`;
+                iconContainer.innerHTML = '<i data-lucide="camera" class="w-7 h-7 text-amber-600"></i>';
+                confirmBtn.innerText = '사진 선택하기';
+                confirmBtn.className = 'flex-1 py-3.5 text-amber-800 font-bold font-gowun text-base border-l border-stone-100 hover:bg-white transition-colors';
+                modalPendingAction = 'upload';
+            } else if (type === 'download') {
+                mTitle.innerText = '고화질 성장 액자 저장';
+                mDesc.innerText = '캐논 셀피 CP1500 포토프린터 엽서 규격(300dpi) 고화질 PNG 이미지로 저장합니다. 지금 바로 앨범에 간직해 보세요!';
+                iconContainer.innerHTML = '<i data-lucide="download" class="w-7 h-7 text-emerald-600"></i>';
+                confirmBtn.innerText = '저장하기';
+                confirmBtn.className = 'flex-1 py-3.5 text-emerald-700 font-bold font-gowun text-base border-l border-stone-100 hover:bg-white transition-colors';
+                modalPendingAction = 'download';
+            } else if (type === 'reset') {
+                mTitle.innerText = '처음부터 다시 만들까요?';
+                mDesc.innerText = '현재 선택한 사진과 입력한 맞춤 문구가 초기화되고 계절 테마 선택 화면으로 돌아갑니다.';
+                iconContainer.innerHTML = '<i data-lucide="rotate-ccw" class="w-7 h-7 text-rose-500"></i>';
+                confirmBtn.innerText = '초기화';
+                confirmBtn.className = 'flex-1 py-3.5 text-rose-600 font-bold font-gowun text-base border-l border-stone-100 hover:bg-white transition-colors';
+                modalPendingAction = 'reset';
+            } else if (type === 'install-guide') {
+                mTitle.innerText = '휴대폰 홈 화면에 앱으로 설치하기';
+                mDesc.innerText = '• 아이폰(Safari): 하단 [공유(↑)] 버튼 → [홈 화면에 추가]\n• 갤럭시(Chrome/삼성인터넷): 상단 메뉴(⋮) → [홈 화면에 추가 / 앱 설치]\n\n설치하면 귀여운 구름이 아이콘이 생기고 주소창 없는 전체화면 앱으로 열립니다!';
+                const iconSrc = window.generatedAppIconUrl || document.getElementById('asset-logo-gureum').src;
+                iconContainer.innerHTML = `<img src="${iconSrc}" alt="구름이 앱 아이콘" class="w-14 h-14 rounded-2xl shadow-md object-cover border border-amber-200">`;
+                cancelBtn.classList.add('hidden');
+                confirmBtn.innerText = '확인했어요';
+                confirmBtn.className = 'flex-1 py-3.5 text-amber-800 font-bold font-gowun text-base hover:bg-white transition-colors';
+                modalPendingAction = null;
+            }
+
+            lucide.createIcons();
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+            modalPendingAction = null;
+        }
+
+        function handleModalConfirm() {
+            const action = modalPendingAction;
+            closeModal();
+            if (action === 'upload') {
+                hasPromptedUpload = true;
+                openFreshFilePicker();
+            } else if (action === 'download') {
+                executeDownload();
+            } else if (action === 'reset') {
+                handleReset();
+            }
+        }
+
+        function handleReset() {
+            clearSavedState();
+            selectedPhotos = [];
+            customUploadedBgSrc = null;
+            selectedBgUrl = null;
+            currentSeason = null;
+            selectedLayout = null;
+            selectedLogoMode = 'both';
+            updatePhotoSelectionUI();
+            setStep(1);
+        }
+
+        function showCustomAlert(title, message) {
+            const modal = document.getElementById('custom-modal');
+            const mTitle = document.getElementById('modal-title');
+            const mDesc = document.getElementById('modal-desc');
+            const iconContainer = document.getElementById('modal-icon-container');
+            const confirmBtn = document.getElementById('modal-confirm-btn');
+            const cancelBtn = document.getElementById('modal-cancel-btn');
+            
+            mTitle.innerText = title;
+            mDesc.innerText = message;
+            iconContainer.innerHTML = '<i data-lucide="sparkles" class="w-7 h-7 text-amber-500"></i>';
+            cancelBtn.classList.add('hidden');
+            confirmBtn.innerText = '확인';
+            confirmBtn.className = 'flex-1 py-3.5 text-stone-800 font-bold font-gowun text-base hover:bg-white active:bg-stone-50';
+            modalPendingAction = null; 
+            
+            lucide.createIcons();
+            modal.classList.remove('hidden');
+        }
+
+        function executeDownload() {
+            if (!generatedImageUrl) return;
+            const link = document.createElement('a');
+            link.href = generatedImageUrl;
+            const seasonTag = currentSeason ? currentSeason.id : 'memory';
+            link.download = `Gureum_Growth_Album_${seasonTag}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // 이벤트 리스너 바인딩
+        document.getElementById('custom-bg-input').addEventListener('change', handleFreshPhotoUpload);
+
+        ['input-custom-title', 'input-custom-milestone', 'input-custom-desc'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', () => {
+                    customTitleText = document.getElementById('input-custom-title').value;
+                    customMilestoneText = document.getElementById('input-custom-milestone').value;
+                    customDescText = document.getElementById('input-custom-desc').value;
+                    triggerDebouncedPreview();
+                });
+            }
+        });
+
+        document.getElementById('select-blessing-month').addEventListener('change', (e) => {
+            selectedBlessingMonth = e.target.value;
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        });
+        
+        let deferredInstallPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+        });
+
+        async function handleInstallAppClick() {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                try {
+                    await deferredInstallPrompt.userChoice;
+                } catch (err) {}
+                deferredInstallPrompt = null;
+            } else {
+                openModal('install-guide');
+            }
+        }
+
+        // 구름이 로고를 512x512 정사각형 앱 아이콘(크림색 배경)으로 렌더링하여 iOS/Android 홈 화면 아이콘 및 PWA 매니페스트에 자동 등록
+        function initPwaAppSetup() {
+            const gureumEl = document.getElementById('asset-logo-gureum');
+            if (!gureumEl) return;
+
+            const buildIconAndManifest = () => {
+                try {
+                    const c = document.createElement('canvas');
+                    c.width = 512;
+                    c.height = 512;
+                    const ctx = c.getContext('2d');
+
+                    // 아이폰/갤럭시 홈 화면에서도 투명 영역이 검게 변하지 않도록 따뜻한 크림 파스텔 배경 적용
+                    const grad = ctx.createLinearGradient(0, 0, 512, 512);
+                    grad.addColorStop(0, '#fff9f2');
+                    grad.addColorStop(1, '#fdecd8');
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(0, 0, 512, 512);
+
+                    // 은은한 원형 빛망울
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.beginPath();
+                    ctx.arc(256, 256, 190, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    if (gureumEl.naturalWidth > 0) {
+                        const targetW = 410;
+                        const targetH = targetW * (gureumEl.naturalHeight / gureumEl.naturalWidth);
+                        ctx.drawImage(gureumEl, 256 - targetW / 2, 256 - targetH / 2, targetW, targetH);
+                    }
+
+                    const appIconUrl = c.toDataURL('image/png');
+                    window.generatedAppIconUrl = appIconUrl;
+
+                    const appleLink = document.getElementById('apple-touch-icon-link');
+                    const favLink = document.getElementById('favicon-link');
+                    const manifestLink = document.getElementById('pwa-manifest-link');
+
+                    if (appleLink) appleLink.href = appIconUrl;
+                    if (favLink) favLink.href = appIconUrl;
+
+                    if (manifestLink) {
+                        const manifestObj = {
+                            name: "구름이의 사계절 성장 기록관",
+                            short_name: "구름이 성장앨범",
+                            description: "준삐♥와솔태가 기록하는 구름이의 사계절 성장 사진 액자 스튜디오",
+                            start_url: ".",
+                            display: "standalone",
+                            orientation: "portrait",
+                            background_color: "#f7f4f0",
+                            theme_color: "#f7f4f0",
+                            icons: [
+                                {
+                                    src: appIconUrl,
+                                    sizes: "512x512",
+                                    type: "image/png",
+                                    purpose: "any maskable"
+                                }
+                            ]
+                        };
+                        const manifestStr = JSON.stringify(manifestObj);
+                        manifestLink.href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(manifestStr);
+                    }
+                } catch (e) {
+                    console.warn("PWA 아이콘 초기화 생략:", e);
+                }
+            };
+
+            if (gureumEl.complete && gureumEl.naturalWidth > 0) {
+                buildIconAndManifest();
+            } else {
+                gureumEl.addEventListener('load', buildIconAndManifest, { once: true });
+            }
+        }
+
+        // 어플리케이션 초기화
+        window.onload = function() {
+
+            const gSrc = document.getElementById('asset-logo-gureum').src;
+            const pSrc = document.getElementById('asset-logo-parents').src;
+            document.querySelectorAll('img[data-logo="gureum"]').forEach(el => { el.src = gSrc; });
+            document.querySelectorAll('img[data-logo="parents"]').forEach(el => { el.src = pSrc; });
+            initPwaAppSetup();
+            initSeasonalBackgrounds();
+
+
+            const seasonContainer = document.getElementById('season-buttons');
+            seasonContainer.innerHTML = '';
+            Object.values(SEASON_DATA).forEach(season => {
+                seasonContainer.innerHTML += `
+                    <button type="button" onclick="handleSeasonSelect('${season.id}')" style="background-color: ${season.fallbackColor}" class="group flex flex-col items-center p-6 sm:p-7 rounded-3xl transition-all duration-500 active:scale-95 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.18)] relative overflow-hidden h-52 sm:h-64 justify-end border border-stone-200/80 w-full shadow-sm text-center">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-110" style="background-image: url('${season.thumbnail}')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-stone-900/75 via-stone-900/25 to-transparent transition-opacity duration-300 z-0"></div>
+                        <div class="relative z-10 flex flex-col items-center text-white w-full">
+                            <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mb-2.5 border border-white/30">
+                                <i data-lucide="${season.icon}" stroke-width="1.8" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <span class="text-[11px] uppercase tracking-widest text-white/80 font-gowun mb-0.5">${season.subTitle}</span>
+                            <span class="text-xl sm:text-2xl font-serif-kr font-bold mb-1.5 tracking-wide text-white drop-shadow-sm">${season.name}</span>
+                            <span class="text-xs text-white/90 keep-all leading-relaxed font-gowun px-2 line-clamp-2">${season.desc}</span>
+                        </div>
+                    </button>
+                `;
+            });
+
+            const layoutContainer = document.getElementById('layout-buttons');
+            layoutContainer.innerHTML = '';
+            LAYOUT_DATA.forEach(layout => {
+                layoutContainer.innerHTML += `
+                    <button type="button" onclick="handleLayoutSelect('${layout.id}')" class="group flex flex-col items-center p-4 sm:p-5 bg-white border border-stone-200 rounded-2xl hover:border-amber-500 hover:shadow-md transition-all active:scale-95 w-full">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 p-2.5 sm:p-3 bg-stone-50 rounded-xl mb-3 flex items-center justify-center group-hover:bg-amber-50/50 transition-colors">
+                            ${layout.icon}
+                        </div>
+                        <span class="font-serif-kr text-sm sm:text-base text-stone-800 font-bold tracking-wide mb-0.5">${layout.name}</span>
+                        <span class="font-gowun text-[11px] sm:text-xs text-stone-400">${layout.sub}</span>
+                    </button>
+                `;
+            });
+
+            lucide.createIcons(); 
+            checkBackup();
+        };
+    </script>
+</body>
+</html>
