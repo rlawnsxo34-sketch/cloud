@@ -14,7 +14,7 @@
     <meta name="theme-color" content="#f7f4f0">
     <link id="apple-touch-icon-link" rel="apple-touch-icon" sizes="512x512" href="">
     <link id="favicon-link" rel="icon" type="image/png" href="">
-    <link id="pwa-manifest-link" rel="manifest" href="">
+    href="manifest.json"
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1615,8 +1615,7 @@
                             ]
                         };
                         const manifestStr = JSON.stringify(manifestObj);
-                        manifestLink.href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(manifestStr);
-                    }
+                                            }
                 } catch (e) {
                     console.warn("PWA 아이콘 초기화 생략:", e);
                 }
