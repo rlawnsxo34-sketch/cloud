@@ -12,9 +12,9 @@
     <meta name="apple-mobile-web-app-title" content="구름이 성장앨범">
     <meta name="application-name" content="구름이 성장앨범">
     <meta name="theme-color" content="#f7f4f0">
-    <link id="apple-touch-icon-link" rel="apple-touch-icon" sizes="512x512" href="">
-    <link id="favicon-link" rel="icon" type="image/png" href="">
-    <link id="pwa-manifest-link" rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%EA%B5%AC%EB%A6%84%EC%9D%B4%EC%9D%98%20%EC%84%B1%EC%9E%A5%20%EA%B8%B0%EB%A1%9D%EA%B4%80%22%2C%22short_name%22%3A%22%EA%B5%AC%EB%A6%84%EC%9D%B4%20%EC%84%B1%EC%9E%A5%EC%95%A8%EB%B2%94%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22fullscreen%22%2C%22display_override%22%3A%5B%22fullscreen%22%2C%22standalone%22%2C%22minimal-ui%22%5D%2C%22orientation%22%3A%22portrait%22%2C%22background_color%22%3A%22%23f7f4f0%22%2C%22theme_color%22%3A%22%23f7f4f0%22%7D'>
+    <link id="apple-touch-icon-link" rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+    <link id="favicon-link" rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link id="pwa-manifest-link" rel="manifest" href="manifest.json">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1766,26 +1766,76 @@
             }
         }
 
+        function createAppIconDataUrl(size) {
+            const gureumEl = document.getElementById('asset-logo-gureum');
+            const c = document.createElement('canvas');
+            c.width = size;
+            c.height = size;
+            const ctx = c.getContext('2d');
+
+            const grad = ctx.createLinearGradient(0, 0, size, size);
+            grad.addColorStop(0, '#fff9f2');
+            grad.addColorStop(1, '#fdecd8');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, size, size);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size * 0.37, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (gureumEl && gureumEl.naturalWidth > 0) {
+                const targetW = size * 0.78;
+                const targetH = targetW * (gureumEl.naturalHeight / gureumEl.naturalWidth);
+                ctx.drawImage(gureumEl, (size - targetW) / 2, (size - targetH) / 2, targetW, targetH);
+            }
+            return c.toDataURL('image/png');
+        }
+
+        function downloadAppIconFile(size) {
+            const dataUrl = (size === 192 ? window.generatedAppIconUrl192 : window.generatedAppIconUrl) || createAppIconDataUrl(size);
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = `icon-${size}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
         function downloadManifestFile() {
-            const iconSrc = window.generatedAppIconUrl || document.getElementById('asset-logo-gureum').src;
             const manifestObj = {
-                id: "./index.html",
+                id: "./",
                 name: "구름이의 성장 기록관",
                 short_name: "구름이 성장앨범",
-                description: "준삐♥와솔태가 기록하는 구름이의 사계절 성장 앨범",
+                description: "준삐와 솔태가 기록하는 구름이의 사계절 성장 앨범",
+                lang: "ko",
+                dir: "ltr",
                 start_url: "./index.html",
                 scope: "./",
                 display: "fullscreen",
-                display_override: ["fullscreen", "standalone", "minimal-ui"],
+                display_override: ["fullscreen", "standalone"],
                 orientation: "portrait",
                 background_color: "#f7f4f0",
                 theme_color: "#f7f4f0",
+                categories: ["photo", "lifestyle"],
                 icons: [
                     {
-                        src: iconSrc,
+                        src: "./icon-192.png",
+                        sizes: "192x192",
+                        type: "image/png",
+                        purpose: "any"
+                    },
+                    {
+                        src: "./icon-512.png",
                         sizes: "512x512",
                         type: "image/png",
-                        purpose: "any maskable"
+                        purpose: "any"
+                    },
+                    {
+                        src: "./icon-512.png",
+                        sizes: "512x512",
+                        type: "image/png",
+                        purpose: "maskable"
                     }
                 ]
             };
@@ -1801,8 +1851,10 @@
         }
 
         function downloadServiceWorkerFile() {
-            const swCode = `const CACHE_NAME = 'gureum-album-v2';
+            const swCode = `const CACHE_NAME = 'gureum-album-v3';
+const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).catch(() => {}));
   self.skipWaiting();
 });
 self.addEventListener('activate', (e) => {
@@ -1821,6 +1873,13 @@ self.addEventListener('fetch', (e) => {
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        }
+
+        function downloadAllPwaFiles() {
+            downloadManifestFile();
+            setTimeout(() => downloadServiceWorkerFile(), 250);
+            setTimeout(() => downloadAppIconFile(512), 500);
+            setTimeout(() => downloadAppIconFile(192), 750);
         }
 
         function openModal(type) {
@@ -1876,11 +1935,14 @@ self.addEventListener('fetch', (e) => {
                         </div>
 
                         <div class="p-3 rounded-2xl bg-blue-50/70 border border-blue-200 space-y-2">
-                            <div class="font-bold text-blue-950">3. 크롬 [앱 설치]용 파일 받기</div>
-                            <p class="text-stone-700 leading-snug">아래 두 파일을 깃허브에 <code>index.html</code>과 함께 올리면 크롬 메뉴(⋮)의 <b>[앱 설치]</b>로 주소창 없는 앱을 설치할 수 있습니다.</p>
-                            <div class="grid grid-cols-2 gap-1.5">
-                                <button type="button" onclick="downloadManifestFile()" class="py-2 px-2 rounded-xl bg-amber-600 text-white font-bold text-xs hover:bg-amber-700">manifest.json 받기</button>
-                                <button type="button" onclick="downloadServiceWorkerFile()" class="py-2 px-2 rounded-xl bg-blue-700 text-white font-bold text-xs hover:bg-blue-800">sw.js 받기</button>
+                            <div class="font-bold text-blue-950">3. PWABuilder 및 깃허브 필수 파일 받기</div>
+                            <p class="text-stone-700 leading-snug">PWABuilder에서 APK를 생성하려면 <code>index.html</code>과 함께 <b>아래 4개 파일</b>이 같은 깃허브 폴더에 있어야 합니다.</p>
+                            <button type="button" onclick="downloadAllPwaFiles()" class="w-full py-2.5 px-3 rounded-xl bg-blue-700 text-white font-bold text-xs sm:text-sm hover:bg-blue-800 shadow-sm">필수 파일 4개 한 번에 받기</button>
+                            <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+                                <button type="button" onclick="downloadManifestFile()" class="py-1.5 px-2 rounded-xl bg-white border border-blue-200 text-blue-900 font-bold text-xs hover:bg-blue-100">manifest.json</button>
+                                <button type="button" onclick="downloadServiceWorkerFile()" class="py-1.5 px-2 rounded-xl bg-white border border-blue-200 text-blue-900 font-bold text-xs hover:bg-blue-100">sw.js</button>
+                                <button type="button" onclick="downloadAppIconFile(512)" class="py-1.5 px-2 rounded-xl bg-white border border-blue-200 text-blue-900 font-bold text-xs hover:bg-blue-100">icon-512.png</button>
+                                <button type="button" onclick="downloadAppIconFile(192)" class="py-1.5 px-2 rounded-xl bg-white border border-blue-200 text-blue-900 font-bold text-xs hover:bg-blue-100">icon-192.png</button>
                             </div>
                         </div>
                     </div>
@@ -2012,65 +2074,16 @@ self.addEventListener('fetch', (e) => {
 
             const buildIconAndManifest = () => {
                 try {
-                    const c = document.createElement('canvas');
-                    c.width = 512;
-                    c.height = 512;
-                    const ctx = c.getContext('2d');
+                    const appIcon512 = createAppIconDataUrl(512);
+                    const appIcon192 = createAppIconDataUrl(192);
+                    window.generatedAppIconUrl = appIcon512;
+                    window.generatedAppIconUrl192 = appIcon192;
 
-                    const grad = ctx.createLinearGradient(0, 0, 512, 512);
-                    grad.addColorStop(0, '#fff9f2');
-                    grad.addColorStop(1, '#fdecd8');
-                    ctx.fillStyle = grad;
-                    ctx.fillRect(0, 0, 512, 512);
-
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                    ctx.beginPath();
-                    ctx.arc(256, 256, 190, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    if (gureumEl.naturalWidth > 0) {
-                        const targetW = 410;
-                        const targetH = targetW * (gureumEl.naturalHeight / gureumEl.naturalWidth);
-                        ctx.drawImage(gureumEl, 256 - targetW / 2, 256 - targetH / 2, targetW, targetH);
-                    }
-
-                    const appIconUrl = c.toDataURL('image/png');
-                    window.generatedAppIconUrl = appIconUrl;
-
-                    const appleLink = document.getElementById('apple-touch-icon-link');
                     const favLink = document.getElementById('favicon-link');
-                    const manifestLink = document.getElementById('pwa-manifest-link');
-
-                    if (appleLink) appleLink.href = appIconUrl;
-                    if (favLink) favLink.href = appIconUrl;
-
-                    if (manifestLink) {
-                        applyDynamicManifest(manifestLink, appIconUrl);
+                    if (favLink && location.protocol !== 'https:') {
+                        favLink.href = appIcon192;
                     }
                 } catch (e) {}
-            };
-
-            const applyDynamicManifest = (manifestLink, appIconUrl) => {
-                const manifestObj = {
-                    name: "구름이의 성장 기록관",
-                    short_name: "구름이 성장앨범",
-                    description: "준삐♥와솔태가 기록하는 구름이의 사계절 성장 앨범",
-                    start_url: ".",
-                    display: "fullscreen",
-                    display_override: ["fullscreen", "standalone", "minimal-ui"],
-                    orientation: "portrait",
-                    background_color: "#f7f4f0",
-                    theme_color: "#f7f4f0",
-                    icons: [
-                        {
-                            src: appIconUrl,
-                            sizes: "512x512",
-                            type: "image/png",
-                            purpose: "any maskable"
-                        }
-                    ]
-                };
-                manifestLink.href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifestObj));
             };
 
             if (gureumEl.complete && gureumEl.naturalWidth > 0) {
