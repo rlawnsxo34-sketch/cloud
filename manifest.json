@@ -1,7 +1,8 @@
 {
-  "name": "구름이의 사계절 성장 기록관",
+  "id": "./index.html",
+  "name": "구름이의 성장 기록관",
   "short_name": "구름이 성장앨범",
-  "description": "준삐♥와솔태가 기록하는 구름이의 사계절 성장 사진 액자 스튜디오",
+  "description": "준삐♥와솔태가 기록하는 구름이의 사계절 성장 앨범",
   "start_url": "./index.html",
   "scope": "./",
   "display": "fullscreen",
