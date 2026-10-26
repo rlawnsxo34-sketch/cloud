@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>구름이의 사계절 성장 기록관 | 준삐♥와솔태 패밀리 아카이브</title>
+    <title>구름이의 성장 기록관</title>
 
-    <!-- 스마트폰 전체화면 앱(PWA Fullscreen / Standalone) 및 구름이 아이콘 설정 -->
+    <!-- 스마트폰 전체화면 앱(PWA Fullscreen / Standalone) 및 아이콘 설정 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,32 +14,30 @@
     <meta name="theme-color" content="#f7f4f0">
     <link id="apple-touch-icon-link" rel="apple-touch-icon" sizes="512x512" href="">
     <link id="favicon-link" rel="icon" type="image/png" href="">
-    <!-- 깃허브에 manifest.json 파일을 함께 올리면 정적 파일을 우선 사용하고, 단일 파일 실행 시 아래 동적 매니페스트로 폴백됩니다 -->
-    <link id="pwa-manifest-link" rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%EA%B5%AC%EB%A6%84%EC%9D%B4%EC%9D%98%20%EC%82%AC%EA%B3%84%EC%A0%88%20%EC%84%B1%EC%9E%A5%20%EA%B8%B0%EB%A1%9D%EA%B4%80%22%2C%22short_name%22%3A%22%EA%B5%AC%EB%A6%84%EC%9D%B4%20%EC%84%B1%EC%9E%A5%EC%95%A8%EB%B2%94%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22fullscreen%22%2C%22display_override%22%3A%5B%22fullscreen%22%2C%22standalone%22%2C%22minimal-ui%22%5D%2C%22orientation%22%3A%22portrait%22%2C%22background_color%22%3A%22%23f7f4f0%22%2C%22theme_color%22%3A%22%23f7f4f0%22%7D'>
+    <link id="pwa-manifest-link" rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%EA%B5%AC%EB%A6%84%EC%9D%B4%EC%9D%98%20%EC%84%B1%EC%9E%A5%20%EA%B8%B0%EB%A1%9D%EA%B4%80%22%2C%22short_name%22%3A%22%EA%B5%AC%EB%A6%84%EC%9D%B4%20%EC%84%B1%EC%9E%A5%EC%95%A8%EB%B2%94%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22fullscreen%22%2C%22display_override%22%3A%5B%22fullscreen%22%2C%22standalone%22%2C%22minimal-ui%22%5D%2C%22orientation%22%3A%22portrait%22%2C%22background_color%22%3A%22%23f7f4f0%22%2C%22theme_color%22%3A%22%23f7f4f0%22%7D'>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 
-    <!-- 모바일 최적화 폰트 크기, 비율 및 트랜지션 효과 설정 -->
+    <!-- 모바일 최적화 폰트 및 트랜지션 설정 -->
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Serif+KR:wght@400;600;700&display=swap');
 
-        /* 모바일 화면 비율과 가독성을 동시에 잡는 반응형 루트 글자 크기 */
         html {
-            font-size: 16.5px;
+            font-size: 16px;
             height: -webkit-fill-available;
         }
         @media (min-width: 390px) {
             html {
-                font-size: 17px;
+                font-size: 16.5px;
             }
         }
         @media (min-width: 640px) {
             html {
-                font-size: 18px;
+                font-size: 17.5px;
             }
         }
 
@@ -62,11 +60,11 @@
         .keep-all { word-break: keep-all; overflow-wrap: break-word; }
 
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(12px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-up {
-            animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes floatSlow {
@@ -79,298 +77,270 @@
         
         .hidden-step { display: none !important; }
         
-        /* 스크롤바 숨기기 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-[#efeae4] min-h-[100dvh] flex items-stretch sm:items-center justify-center p-0 sm:p-4 md:p-6 relative">
 
-    <!-- 메인 컨테이너: 모바일에서는 화면 100% 꽉 찬 네이티브 앱 비율, 태블릿/PC에서는 라운드 카드 -->
-    <div class="w-full max-w-6xl bg-white sm:rounded-[2rem] shadow-none sm:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col min-h-[100dvh] sm:min-h-[800px] border-0 sm:border border-stone-200/80 relative">
+    <!-- 메인 컨테이너 -->
+    <div class="w-full max-w-6xl bg-white sm:rounded-[2rem] shadow-none sm:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col min-h-[100dvh] sm:min-h-[780px] border-0 sm:border border-stone-200/80 relative">
         
-        <!-- 상단 헤더 및 네비게이션 (모바일 한 손 조작에 맞춰 슬림화) -->
-        <header class="px-3 sm:px-8 py-2 sm:py-3.5 flex flex-col lg:flex-row justify-between items-center border-b border-stone-100 bg-white/95 backdrop-blur-md z-30 sticky top-0 gap-1.5 sm:gap-3">
-            <!-- 좌측 브랜드 로고 영역 + 우측 퀵 버튼 -->
-            <div class="flex items-center justify-between w-full lg:w-auto gap-1.5">
-                <button type="button" onclick="confirmHeaderHome()" class="flex items-center gap-2 sm:gap-3 text-left group focus:outline-none min-w-0">
+        <!-- 상단 헤더 및 네비게이션 (글자 잘림 없이 모든 모바일 화면 폭에 완벽 대응) -->
+        <header class="px-3 sm:px-8 py-2.5 sm:py-3.5 flex flex-col lg:flex-row justify-between items-center border-b border-stone-200/70 bg-white/95 backdrop-blur-md z-30 sticky top-0 gap-2 sm:gap-3">
+            <!-- 상단 타이틀 + 우측 버튼 -->
+            <div class="flex items-center justify-between w-full lg:w-auto gap-2">
+                <button type="button" onclick="confirmHeaderHome()" class="flex items-center gap-2 text-left group focus:outline-none flex-shrink-0">
                     <div class="relative flex items-center flex-shrink-0">
-                        <img id="header-logo-gureum" data-logo="gureum" src="" alt="구름 로고" class="h-8 sm:h-11 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-105">
-                        <img id="header-logo-parents" data-logo="parents" src="" alt="준삐와솔태 로고" class="h-7 sm:h-9 w-auto object-contain -ml-1.5 mt-0.5 drop-shadow-sm transition-transform group-hover:scale-105">
+                        <img id="header-logo-gureum" data-logo="gureum" src="" alt="구름 로고" class="h-7 sm:h-10 w-auto object-contain drop-shadow-sm">
+                        <img id="header-logo-parents" data-logo="parents" src="" alt="준삐와솔태 로고" class="h-6 sm:h-8 w-auto object-contain -ml-1.5 mt-0.5 drop-shadow-sm">
                     </div>
-                    <div class="min-w-0">
-                        <div class="flex items-center gap-1.5">
-                            <span class="font-serif-kr font-bold text-stone-800 text-base sm:text-xl tracking-tight truncate">구름이의 성장 기록관</span>
-                            <span class="hidden sm:inline-block text-xs font-gowun px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold">준삐♥와솔태</span>
-                        </div>
-                        <p class="hidden sm:block text-xs sm:text-sm text-stone-500 font-gowun">계절마다 자라나는 우리 아이 사진 액자</p>
-                    </div>
+                    <span class="font-serif-kr font-bold text-stone-800 text-[15px] sm:text-xl tracking-tight whitespace-nowrap">구름이의 성장 기록관</span>
                 </button>
 
-                <!-- 우측 상단: 주소창 숨기기(전체화면) & 앱 설치 안내 버튼 -->
-                <div class="flex items-center gap-1 flex-shrink-0">
-                    <button type="button" id="btn-fullscreen-toggle" onclick="toggleFullscreenMode()" class="px-2.5 sm:px-3 py-1.5 rounded-full text-xs sm:text-sm font-gowun font-bold bg-stone-800 text-white hover:bg-stone-700 active:scale-95 transition-all flex items-center gap-1 shadow-sm">
+                <!-- 우측 상단 버튼: 간결한 라벨로 타이틀이 절대 잘리지 않도록 구성 -->
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                    <button type="button" id="btn-fullscreen-toggle" onclick="toggleFullscreenMode()" class="px-2.5 py-1.5 rounded-full text-xs font-gowun font-bold bg-stone-800 text-white hover:bg-stone-700 active:scale-95 transition-all flex items-center gap-1 shadow-sm whitespace-nowrap">
                         <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
-                        <span id="fullscreen-btn-label">주소창 숨김</span>
+                        <span id="fullscreen-btn-label">전체화면</span>
                     </button>
-                    <button id="btn-reset-top" onclick="confirmHeaderHome()" class="hidden items-center gap-1 text-xs sm:text-sm text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-2.5 py-1.5 rounded-full transition-colors font-medium">
-                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-                        <span>처음으로</span>
-                    </button>
-                    <button type="button" id="btn-pwa-install" onclick="handleInstallAppClick()" class="px-2.5 sm:px-3 py-1.5 rounded-full text-xs sm:text-sm font-gowun font-bold bg-amber-50 text-amber-900 border border-amber-200/80 hover:bg-amber-100 active:scale-95 transition-all flex items-center gap-1 shadow-sm">
+                    <button type="button" id="btn-pwa-install" onclick="handleInstallAppClick()" class="px-2.5 py-1.5 rounded-full text-xs font-gowun font-bold bg-amber-50 text-amber-900 border border-amber-200/90 hover:bg-amber-100 active:scale-95 transition-all flex items-center gap-1 shadow-sm whitespace-nowrap">
                         <i data-lucide="smartphone" class="w-3.5 h-3.5 text-amber-700"></i>
                         <span>앱 설치</span>
                     </button>
                 </div>
             </div>
             
-            <!-- 모바일 4단계 균등 분할 진행 바 (가로 스크롤 없이 한눈에 들어오는 구성) -->
-            <nav class="grid grid-cols-4 lg:flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium text-stone-400 w-full lg:w-auto bg-stone-100/80 lg:bg-transparent p-1 lg:p-0 rounded-xl">
-                <button type="button" onclick="handleNavClick(1)" id="nav-step-1" class="px-1.5 sm:px-3 py-1.5 rounded-lg lg:rounded-full transition-all duration-200 text-stone-900 bg-white lg:bg-stone-100 shadow-sm lg:shadow-none font-bold truncate text-center">1. 계절 테마</button>
-                <button type="button" onclick="handleNavClick(2)" id="nav-step-2" class="px-1.5 sm:px-3 py-1.5 rounded-lg lg:rounded-full transition-all duration-200 truncate text-center">2. 성장 프레임</button>
-                <button type="button" onclick="handleNavClick(3)" id="nav-step-3" class="px-1.5 sm:px-3 py-1.5 rounded-lg lg:rounded-full transition-all duration-200 truncate text-center">3. 사진 담기</button>
-                <button type="button" onclick="handleNavClick(4)" id="nav-step-4" class="px-1.5 sm:px-3 py-1.5 rounded-lg lg:rounded-full transition-all duration-200 truncate text-center">4. 문구·배경 및 완성</button>
+            <!-- 4단계 네비게이션 바: 간결한 명칭으로 4개 탭 모두 말줄임표(...) 없이 선명하게 표시 -->
+            <nav class="grid grid-cols-4 lg:flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium text-stone-500 w-full lg:w-auto bg-stone-100/90 lg:bg-transparent p-1 lg:p-0 rounded-xl">
+                <button type="button" onclick="handleNavClick(1)" id="nav-step-1" class="px-1 sm:px-3.5 py-1.5 rounded-lg lg:rounded-full transition-all duration-200 text-stone-900 bg-white lg:bg-stone-100 shadow-sm lg:shadow-none font-bold whitespace-nowrap text-center">1. 계절</button>
+                <button type="button" onclick="handleNavClick(2)" id="nav-step-2" class="px-1 sm:px-3.5 py-1.5 rounded-lg lg:rounded-full transition-all duration-200 whitespace-nowrap text-center">2. 프레임</button>
+                <button type="button" onclick="handleNavClick(3)" id="nav-step-3" class="px-1 sm:px-3.5 py-1.5 rounded-lg lg:rounded-full transition-all duration-200 whitespace-nowrap text-center">3. 사진</button>
+                <button type="button" onclick="handleNavClick(4)" id="nav-step-4" class="px-1 sm:px-3.5 py-1.5 rounded-lg lg:rounded-full transition-all duration-200 whitespace-nowrap text-center">4. 완성</button>
             </nav>
         </header>
 
-        <!-- 콘텐츠 영역 (모바일 여백 및 화면 비율 최적화) -->
-        <main class="flex-1 p-3.5 sm:p-8 md:p-10 flex flex-col items-center justify-start sm:justify-center relative bg-[#faf8f5] overflow-y-auto">
+        <!-- 콘텐츠 영역 (불필요한 상단 빈 여백 제거 및 스크롤 간섭 해결) -->
+        <main class="flex-1 px-3.5 py-4 sm:p-8 md:p-10 flex flex-col items-center justify-start sm:justify-center relative bg-[#faf8f5]">
             
-            <!-- STEP 1: 계절 감성 테마 선택 (모바일 2x2 그리드로 스크롤 없이 한 화면에 4계절 표시) -->
-            <section id="step-1" class="w-full text-center animate-fade-up max-w-5xl my-auto py-1 sm:py-0">
-                <!-- 상단 패밀리 엠블럼 배지 -->
-                <div class="inline-flex items-center gap-2.5 sm:gap-3.5 px-3.5 sm:px-5 py-1.5 sm:py-2.5 rounded-full bg-white shadow-sm border border-stone-200/70 mb-3 sm:mb-6">
-                    <img data-logo="gureum" src="" alt="구름이" class="h-8 sm:h-11 w-auto object-contain animate-float">
-                    <div class="text-left">
-                        <div class="text-[11px] sm:text-xs font-gowun text-amber-700 font-bold tracking-wide">JUNPPI ♥ SOLTAE · BABY GUREUM</div>
-                        <div class="text-xs sm:text-base font-serif-kr text-stone-800 font-bold">준삐와 솔태가 기록하는 구름이의 사계절</div>
-                    </div>
-                    <img data-logo="parents" src="" alt="준삐와솔태" class="h-8 sm:h-11 w-auto object-contain">
+            <!-- STEP 1: 계절 감성 테마 선택 -->
+            <section id="step-1" class="w-full text-center animate-fade-up max-w-5xl">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-sm border border-stone-200/70 mb-3 sm:mb-5">
+                    <img data-logo="gureum" src="" alt="구름이" class="h-6 sm:h-9 w-auto object-contain animate-float">
+                    <span class="text-xs sm:text-sm font-serif-kr text-stone-800 font-bold">준삐♥와솔태가 기록하는 구름이의 사계절</span>
+                    <img data-logo="parents" src="" alt="준삐와솔태" class="h-6 sm:h-9 w-auto object-contain">
                 </div>
 
-                <h1 class="text-xl sm:text-4xl lg:text-[42px] font-serif-kr mb-1.5 sm:mb-4 text-stone-800 keep-all leading-snug font-bold">
-                    구름이가 자라난 순간,<br class="hidden sm:block"/> 어떤 계절의 온도로 담아볼까요?
+                <h1 class="text-xl sm:text-4xl font-serif-kr mb-1.5 sm:mb-3 text-stone-800 keep-all leading-snug font-bold">
+                    구름이가 자라난 순간,<br class="hidden sm:block"/> 어떤 계절로 담아볼까요?
                 </h1>
-                <p class="text-stone-600 mb-3.5 sm:mb-8 text-xs sm:text-lg font-gowun keep-all px-2 max-w-2xl mx-auto">
-                    아이의 사진과 어울리는 계절 감성 테마를 골라주세요. (모바일 한 화면 2×2 구성)
+                <p class="text-stone-500 mb-4 sm:mb-7 text-xs sm:text-base font-gowun keep-all px-2 max-w-xl mx-auto">
+                    사진과 어울리는 계절 테마를 선택해 주세요.
                 </p>
 
-                <!-- 모바일에서 2열x2행(grid-cols-2), PC에서 4열(lg:grid-cols-4) -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-5" id="season-buttons"></div>
             </section>
 
-            <!-- STEP 2: 프레임 레이아웃 선택 (모바일 2x3 한 화면 최적화) -->
-            <section id="step-2" class="hidden-step w-full text-center animate-fade-up flex-col items-center my-auto py-1 sm:py-0">
-                <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white border border-stone-200 text-xs sm:text-sm font-gowun text-stone-700 mb-2 sm:mb-3.5 shadow-sm font-bold">
-                    <img data-logo="gureum" src="" alt="구름" class="h-5 w-auto object-contain">
-                    <span id="step2-season-badge">선택한 계절 테마</span>
+            <!-- STEP 2: 프레임 레이아웃 선택 -->
+            <section id="step-2" class="hidden-step w-full text-center animate-fade-up flex-col items-center">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-stone-200 text-xs font-gowun text-stone-700 mb-2 sm:mb-3 shadow-sm font-bold">
+                    <img data-logo="gureum" src="" alt="구름" class="h-4 w-auto object-contain">
+                    <span id="step2-season-badge">선택한 계절</span>
                 </div>
-                <h2 id="step2-title" class="text-xl sm:text-4xl font-serif-kr mb-1.5 sm:mb-3 keep-all text-stone-800 font-bold">성장 프레임 및 출력 방향 선택</h2>
-                <p class="text-stone-600 mb-3.5 sm:mb-8 text-xs sm:text-base font-gowun keep-all px-2">
-                    원하는 사진 분할 구성을 터치해 주세요. (CP1500 포토프린터 300dpi 규격)
+                <h2 id="step2-title" class="text-xl sm:text-3xl font-serif-kr mb-1 sm:mb-2.5 keep-all text-stone-800 font-bold">프레임 구성 선택</h2>
+                <p class="text-stone-500 mb-4 sm:mb-7 text-xs sm:text-base font-gowun keep-all px-2">
+                    담고 싶은 사진 개수와 배치를 골라주세요.
                 </p>
                 <div class="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-5 w-full max-w-4xl mx-auto" id="layout-buttons"></div>
-                <button type="button" onclick="setStep(1)" class="mt-4 sm:mt-8 px-5 py-2.5 text-stone-700 hover:text-stone-950 font-gowun text-sm sm:text-base font-bold transition-colors active:scale-95 bg-white rounded-full border border-stone-300 shadow-sm">
-                    ← 계절 테마 다시 고르기
+                <button type="button" onclick="setStep(1)" class="mt-4 sm:mt-7 px-5 py-2 text-stone-700 hover:text-stone-950 font-gowun text-xs sm:text-sm font-bold transition-colors active:scale-95 bg-white rounded-full border border-stone-300 shadow-sm">
+                    ← 계절 다시 고르기
                 </button>
             </section>
 
-            <!-- STEP 3: 구름이 사진 업로드 (모바일 비율 최적화) -->
-            <section id="step-3" class="hidden-step w-full text-center animate-fade-up flex-col items-center my-auto py-1 sm:py-0">
-                <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white border border-stone-200 text-xs sm:text-sm font-gowun text-stone-700 mb-2 sm:mb-3.5 shadow-sm font-bold">
-                    <img data-logo="gureum" src="" alt="구름" class="h-5 w-auto object-contain">
+            <!-- STEP 3: 구름이 사진 업로드 -->
+            <section id="step-3" class="hidden-step w-full text-center animate-fade-up flex-col items-center">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-stone-200 text-xs font-gowun text-stone-700 mb-2 sm:mb-3 shadow-sm font-bold">
+                    <img data-logo="gureum" src="" alt="구름" class="h-4 w-auto object-contain">
                     <span id="step3-layout-badge">프레임 정보</span>
                 </div>
-                <h2 id="step3-title" class="text-xl sm:text-4xl font-serif-kr mb-1.5 sm:mb-3 keep-all text-stone-800 font-bold">구름이의 성장 사진 담기</h2>
-                <p id="upload-instruction-text" class="text-stone-600 mb-4 sm:mb-7 text-xs sm:text-base font-gowun keep-all px-2">
-                    선택하신 프레임에 맞게 사진을 선택해주세요.
+                <h2 id="step3-title" class="text-xl sm:text-3xl font-serif-kr mb-1 sm:mb-2.5 keep-all text-stone-800 font-bold">구름이 사진 담기</h2>
+                <p id="upload-instruction-text" class="text-stone-500 mb-4 sm:mb-6 text-xs sm:text-base font-gowun keep-all px-2">
+                    프레임에 들어갈 사진을 선택해 주세요.
                 </p>
                 
-                <!-- 비어있을 때 업로드 박스 (모바일 세로 높이를 줄여 한 화면에 모든 버튼이 들어오도록 조정) -->
-                <div id="upload-box-empty" onclick="handleAddPhotoClick()" class="cursor-pointer w-full max-w-[420px] py-8 sm:py-12 px-5 sm:px-8 rounded-3xl border-2 border-dashed flex items-center justify-center relative overflow-hidden transition-all duration-300 hover:shadow-xl group bg-white mx-auto shadow-sm">
+                <!-- 비어있을 때 업로드 박스 -->
+                <div id="upload-box-empty" onclick="handleAddPhotoClick()" class="cursor-pointer w-full max-w-[380px] py-7 sm:py-11 px-5 rounded-3xl border-2 border-dashed flex items-center justify-center relative overflow-hidden transition-all duration-300 hover:shadow-xl group bg-white mx-auto shadow-sm">
                     <div id="upload-bg-tint" class="absolute inset-0 opacity-[0.04]"></div>
-                    <div class="flex flex-col items-center gap-3 sm:gap-4 transition-transform duration-500 group-hover:scale-105 relative z-10 pointer-events-none">
+                    <div class="flex flex-col items-center gap-2.5 sm:gap-3.5 transition-transform duration-500 group-hover:scale-105 relative z-10 pointer-events-none">
                         <div class="relative">
-                            <div id="upload-icon-bg" class="w-16 h-16 sm:w-22 sm:h-22 rounded-full flex items-center justify-center shadow-sm bg-stone-50">
-                                <i data-lucide="image-plus" id="upload-icon" class="w-8 h-8 sm:w-10 sm:h-10 text-stone-600" stroke-width="1.5"></i>
+                            <div id="upload-icon-bg" class="w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center shadow-sm bg-stone-50">
+                                <i data-lucide="image-plus" id="upload-icon" class="w-7 h-7 sm:w-9 sm:h-9 text-stone-600" stroke-width="1.5"></i>
                             </div>
-                            <img data-logo="gureum" src="" alt="구름" class="w-9 h-9 object-contain absolute -bottom-1 -right-2 drop-shadow">
+                            <img data-logo="gureum" src="" alt="구름" class="w-8 h-8 object-contain absolute -bottom-1 -right-2 drop-shadow">
                         </div>
-                        <div class="text-stone-800 font-serif-kr text-lg sm:text-2xl font-bold">터치하여 구름이 사진 불러오기</div>
-                        <div class="text-stone-600 font-gowun text-xs sm:text-sm tracking-wide bg-stone-100 px-3.5 py-1.5 rounded-full">
-                            한 번에 여러 장 선택 가능 · 고화질 자동 최적화
+                        <div class="text-stone-800 font-serif-kr text-base sm:text-xl font-bold">터치하여 사진 선택</div>
+                        <div class="text-stone-500 font-gowun text-xs bg-stone-100 px-3 py-1 rounded-full">
+                            한 번에 여러 장 선택 가능
                         </div>
                     </div>
                 </div>
 
                 <!-- 예시 사진으로 빠른 체험 버튼 -->
-                <div id="sample-photo-bar" class="mt-3.5 sm:mt-5 flex items-center justify-center">
+                <div id="sample-photo-bar" class="mt-3 sm:mt-4 flex items-center justify-center">
                     <button type="button" onclick="fillSamplePhotos()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-gowun font-bold bg-amber-50/90 hover:bg-amber-100 text-amber-900 border border-amber-200/80 transition-all shadow-sm active:scale-95">
-                        <i data-lucide="sparkles" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>
-                        <span>사진 없이 먼저 테스트해 볼래요 (구름이 일러스트 예시 채우기)</span>
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600 flex-shrink-0"></i>
+                        <span>예시 이미지로 먼저 둘러보기</span>
                     </button>
                 </div>
 
                 <!-- 사진 선택 후 그리드 UI -->
                 <div id="photo-selection-ui" class="hidden w-full max-w-2xl mx-auto flex-col items-center">
-                    <p class="text-xs sm:text-sm text-stone-500 font-gowun mb-2.5">◀ ▶ 버튼으로 사진이 들어갈 순서를 자유롭게 바꿀 수 있어요.</p>
+                    <p class="text-xs text-stone-500 font-gowun mb-2.5">◀ ▶ 버튼으로 사진 순서를 바꿀 수 있어요.</p>
                     <div id="photo-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 w-full mb-4 sm:mb-6"></div>
                     <div class="flex flex-col sm:flex-row gap-2.5 w-full max-w-md mx-auto">
-                        <button type="button" id="btn-next-step4" onclick="initStep4()" style="display:none;" class="flex-1 py-3.5 sm:py-4 px-5 rounded-2xl font-serif-kr text-base sm:text-xl text-white font-bold transition-all active:scale-95 shadow-md hover:shadow-lg justify-center items-center gap-2">
+                        <button type="button" id="btn-next-step4" onclick="initStep4()" style="display:none;" class="flex-1 py-3.5 px-5 rounded-2xl font-serif-kr text-base sm:text-lg text-white font-bold transition-all active:scale-95 shadow-md hover:shadow-lg justify-center items-center gap-2">
                             <i data-lucide="wand-2" class="w-5 h-5"></i>
-                            <span>문구·배경 꾸미고 액자 완성하기</span>
+                            <span>액자 꾸미러 가기</span>
                         </button>
                     </div>
                 </div>
 
                 <input type="file" id="photo-input" accept="image/*" multiple class="hidden" />
                 
-                <button type="button" onclick="setStep(2)" id="btn-back-step3" class="mt-4 sm:mt-7 px-5 py-2.5 text-stone-700 hover:text-stone-950 font-gowun text-sm sm:text-base font-bold transition-colors active:scale-95 bg-white rounded-full border border-stone-300 shadow-sm">
-                    ← 프레임 다시 선택하기
+                <button type="button" onclick="setStep(2)" id="btn-back-step3" class="mt-4 sm:mt-6 px-5 py-2 text-stone-700 hover:text-stone-950 font-gowun text-xs sm:text-sm font-bold transition-colors active:scale-95 bg-white rounded-full border border-stone-300 shadow-sm">
+                    ← 프레임 다시 선택
                 </button>
             </section>
 
-            <!-- STEP 4: 모바일 상단 고정 미리보기 + 하단 탭/접기 컨트롤 패널 -->
-            <section id="step-4" class="hidden-step w-full animate-fade-up flex-col lg:flex-row gap-3.5 lg:gap-8 items-center lg:items-start justify-center max-w-6xl">
+            <!-- STEP 4: 액자 미리보기 및 꾸미기 (버튼 겹침/잘림 완벽 해결 레이아웃) -->
+            <section id="step-4" class="hidden-step w-full animate-fade-up flex-col lg:flex-row gap-3 lg:gap-8 items-stretch lg:items-start justify-center max-w-6xl">
                 
-                <!-- 왼쪽(모바일 상단 고정): 캔버스 미리보기 영역 — 모바일에서 스크롤해도 상단에 고정되어 실시간 확인 가능 -->
-                <div id="mobile-preview-sticky-wrap" class="w-full lg:w-[46%] flex-shrink-0 sticky top-[76px] sm:top-20 z-20 flex flex-col items-center bg-[#faf8f5]/95 backdrop-blur-md pt-0.5 pb-2 lg:p-0 border-b lg:border-b-0 border-stone-200/80">
-                    <div class="w-full flex items-center justify-between mb-1.5 px-1 gap-1">
+                <!-- 왼쪽(모바일 상단): 미리보기 카드 (스크롤 시 하단 버튼을 가리지 않도록 독립 배치 + 크기 조절 지원) -->
+                <div class="w-full lg:w-[46%] flex-shrink-0 lg:sticky lg:top-24 flex flex-col items-center bg-white p-3 sm:p-4 rounded-2xl sm:rounded-3xl border border-stone-200/90 shadow-sm">
+                    <div class="w-full flex items-center justify-between mb-2 gap-1">
+                        <button type="button" onclick="toggleMobilePreviewSize()" class="text-xs font-gowun font-bold text-stone-700 bg-stone-100 hover:bg-stone-200 px-2.5 py-1 rounded-full flex items-center gap-1 active:scale-95 transition-colors">
+                            <i data-lucide="minimize-2" id="icon-preview-size" class="w-3.5 h-3.5 text-stone-600"></i>
+                            <span id="label-preview-size">미리보기 작게</span>
+                        </button>
                         <div class="flex items-center gap-1.5">
-                            <button type="button" onclick="toggleMobilePreviewSize()" class="lg:hidden text-xs font-gowun font-bold text-stone-700 bg-white px-2.5 py-1 rounded-full border border-stone-300 shadow-sm flex items-center gap-1 active:scale-95">
-                                <i data-lucide="Minimize-2" id="icon-preview-size" class="w-3.5 h-3.5 text-amber-700"></i>
-                                <span id="label-preview-size">미리보기 작게</span>
-                            </button>
-                            <span class="hidden sm:flex text-xs sm:text-sm font-gowun font-bold text-stone-600 items-center gap-1">
-                                <i data-lucide="printer" class="w-3.5 h-3.5"></i> CP1500 엽서 (300dpi)
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button type="button" onclick="openPreviewZoomModal()" class="text-xs sm:text-sm font-gowun font-bold text-amber-900 hover:text-amber-950 flex items-center gap-1 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200 shadow-sm">
+                            <button type="button" onclick="openPreviewZoomModal()" class="text-xs font-gowun font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-full border border-amber-200 flex items-center gap-1">
                                 <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i> 크게 보기
                             </button>
-                            <button type="button" onclick="setStep(3)" class="text-xs sm:text-sm font-gowun font-bold text-stone-600 hover:text-stone-900 underline underline-offset-2">
-                                사진 다시 고르기
+                            <button type="button" onclick="setStep(3)" class="text-xs font-gowun font-bold text-stone-600 hover:text-stone-900 bg-stone-100 px-2.5 py-1 rounded-full">
+                                사진 변경
                             </button>
                         </div>
                     </div>
 
-                    <div id="preview-box-container" class="relative w-full flex justify-center items-center p-2 sm:p-4 bg-stone-200/70 rounded-2xl sm:rounded-3xl border border-stone-200/90 shadow-inner transition-all duration-300">
-                        <div id="preview-loading" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl hidden">
-                            <div class="w-9 h-9 border-4 border-stone-200 border-t-stone-800 rounded-full animate-spin"></div>
-                            <div class="text-stone-800 font-serif-kr text-sm sm:text-base font-bold mt-2">구름이 성장 액자 그리는 중...</div>
+                    <div id="preview-box-container" class="relative w-full flex justify-center items-center p-2.5 sm:p-4 bg-stone-100/90 rounded-xl sm:rounded-2xl border border-stone-200/70 transition-all duration-300">
+                        <div id="preview-loading" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl hidden">
+                            <div class="w-8 h-8 border-4 border-stone-200 border-t-stone-800 rounded-full animate-spin"></div>
+                            <div class="text-stone-800 font-serif-kr text-xs sm:text-sm font-bold mt-2">액자 그리는 중...</div>
                         </div>
                         
-                        <img id="final-image" onclick="openPreviewZoomModal()" src="" alt="미리보기 성장 앨범 액자" title="터치하여 크게 보기" class="cursor-pointer w-auto h-auto max-h-[30vh] sm:max-h-[56vh] lg:max-h-[68vh] object-contain block relative z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] rounded-sm transition-all duration-300" />
+                        <img id="final-image" onclick="openPreviewZoomModal()" src="" alt="미리보기 성장 앨범 액자" title="터치하여 크게 보기" class="cursor-pointer w-auto h-auto max-h-[32vh] sm:max-h-[55vh] lg:max-h-[65vh] object-contain block relative z-10 drop-shadow-[0_8px_18px_rgba(0,0,0,0.14)] rounded-sm transition-all duration-300" />
                     </div>
                 </div>
 
-                <!-- 오른쪽(모바일 하단): 모바일 원터치 카테고리 탭 + 접기/펼치기 컨트롤 패널 -->
-                <div class="w-full lg:w-[54%] flex flex-col gap-3 text-left pb-4">
+                <!-- 오른쪽(모바일 하단): 카테고리 탭 바 + 상세 꾸미기 패널 -->
+                <div class="w-full lg:w-[54%] flex flex-col gap-2.5 text-left pb-2">
                     
-                    <!-- 모바일 전용 원터치 카테고리 전환 & 모두 접기 컨트롤 바 -->
-                    <div class="bg-white p-2 sm:p-3 rounded-2xl border border-stone-200/90 shadow-sm flex flex-col gap-2">
-                        <div class="flex items-center justify-between px-1">
-                            <span class="text-xs sm:text-sm font-gowun font-bold text-stone-700 flex items-center gap-1.5">
-                                <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-amber-600"></i>
-                                <span>꾸미기 메뉴 선택 (터치 시 해당 메뉴만 열림)</span>
-                            </span>
-                            <button type="button" id="btn-fold-all" onclick="toggleAllSectionsFold()" class="px-2.5 py-1 rounded-xl text-xs font-gowun font-bold bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors flex items-center gap-1">
-                                <i data-lucide="chevrons-up" id="icon-fold-all" class="w-3.5 h-3.5"></i>
-                                <span id="label-fold-all">모두 접기</span>
-                            </button>
-                        </div>
-                        <!-- 모바일에서 한 손으로 탭 전환 가능한 3분할 퀵 버튼 -->
-                        <div class="grid grid-cols-3 gap-1.5">
-                            <button type="button" id="quick-tab-text" onclick="focusSingleSection('text')" class="py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-amber-300 bg-amber-50 text-amber-900 flex items-center justify-center gap-1 transition-all">
+                    <!-- 원터치 카테고리 전환 탭 바 (절대 가려지지 않는 독립 카드) -->
+                    <div class="bg-white p-2 rounded-2xl border border-stone-200/90 shadow-sm flex items-center gap-1.5">
+                        <div class="grid grid-cols-3 gap-1.5 flex-1">
+                            <button type="button" id="quick-tab-text" onclick="focusSingleSection('text')" class="py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-amber-400 bg-amber-50 text-amber-900 flex items-center justify-center gap-1 transition-all whitespace-nowrap">
                                 <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i>
                                 <span>1. 문구</span>
                             </button>
-                            <button type="button" id="quick-tab-logo" onclick="focusSingleSection('logo')" class="py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-700 flex items-center justify-center gap-1 transition-all">
+                            <button type="button" id="quick-tab-logo" onclick="focusSingleSection('logo')" class="py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-600 flex items-center justify-center gap-1 transition-all whitespace-nowrap">
                                 <i data-lucide="award" class="w-3.5 h-3.5"></i>
                                 <span>2. 로고</span>
                             </button>
-                            <button type="button" id="quick-tab-bg" onclick="focusSingleSection('bg')" class="py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-700 flex items-center justify-center gap-1 transition-all">
+                            <button type="button" id="quick-tab-bg" onclick="focusSingleSection('bg')" class="py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-600 flex items-center justify-center gap-1 transition-all whitespace-nowrap">
                                 <i data-lucide="palette" class="w-3.5 h-3.5"></i>
                                 <span>3. 배경</span>
                             </button>
                         </div>
+                        <button type="button" id="btn-fold-all" onclick="toggleAllSectionsFold()" class="py-2 px-2.5 rounded-xl text-xs font-gowun font-bold bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors flex items-center gap-1 flex-shrink-0 whitespace-nowrap">
+                            <i data-lucide="chevrons-up" id="icon-fold-all" class="w-3.5 h-3.5"></i>
+                            <span id="label-fold-all">모두 접기</span>
+                        </button>
                     </div>
 
-                    <!-- 1. 맞춤 텍스트 입력 섹션 (접기/펼치기 지원 + 개별 표시 안 함 버튼) -->
+                    <!-- 1. 맞춤 문구 섹션 -->
                     <div class="bg-white rounded-2xl sm:rounded-3xl border border-stone-200/90 shadow-sm overflow-hidden">
-                        <div class="flex items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 bg-stone-50/70 border-b border-stone-100 cursor-pointer select-none" onclick="toggleSectionFold('text')">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="pen-tool" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-600"></i>
-                                <h3 class="text-base sm:text-lg font-serif-kr font-bold text-stone-800">1. 액자 맞춤 문구</h3>
-                                <span id="badge-summary-text" class="text-xs font-gowun px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold">표시 중</span>
+                        <div class="flex items-center justify-between px-4 py-3 bg-stone-50/70 border-b border-stone-100 cursor-pointer select-none" onclick="toggleSectionFold('text')">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <i data-lucide="pen-tool" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>
+                                <h3 class="text-sm sm:text-base font-serif-kr font-bold text-stone-800 whitespace-nowrap">1. 맞춤 문구</h3>
+                                <span id="badge-summary-text" class="text-[11px] font-gowun px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold whitespace-nowrap">4개 표시 중</span>
                             </div>
-                            <button type="button" class="px-2.5 py-1 rounded-xl text-xs font-gowun font-bold bg-white border border-stone-200 text-stone-600 hover:bg-stone-100 flex items-center gap-1">
+                            <button type="button" class="px-2.5 py-1 rounded-xl text-xs font-gowun font-bold bg-white border border-stone-200 text-stone-600 hover:bg-stone-100 flex items-center gap-1 flex-shrink-0">
                                 <span id="fold-label-text">접기</span>
                                 <i data-lucide="chevron-up" id="fold-icon-text" class="w-3.5 h-3.5"></i>
                             </button>
                         </div>
 
-                        <div id="section-body-text" class="p-3.5 sm:p-5 space-y-3">
+                        <div id="section-body-text" class="p-3.5 sm:p-5 space-y-2.5">
                             <!-- 문구 전체 켜기/끄기 및 초기화 버튼 -->
-                            <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-stone-100">
-                                <button type="button" id="btn-toggle-all-text" onclick="toggleAllCustomTexts()" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-300 bg-white hover:bg-stone-100 text-stone-700 transition-colors flex items-center gap-1">
+                            <div class="flex items-center justify-between gap-2 pb-2 border-b border-stone-100">
+                                <button type="button" id="btn-toggle-all-text" onclick="toggleAllCustomTexts()" class="px-3 py-1.5 rounded-xl text-xs font-gowun font-bold border border-stone-300 bg-white hover:bg-stone-100 text-stone-700 transition-colors flex items-center gap-1.5">
                                     <i data-lucide="eye-off" class="w-3.5 h-3.5"></i>
-                                    <span id="label-toggle-all-text">문구 전체 표시 안 함 (사진만 크게)</span>
+                                    <span id="label-toggle-all-text">문구 전체 숨기기</span>
                                 </button>
-                                <button type="button" onclick="resetCustomTextToSeasonDefault()" class="text-xs font-gowun font-bold text-stone-500 hover:text-stone-800 underline underline-offset-2">
-                                    기본 문구로 초기화
+                                <button type="button" onclick="resetCustomTextToSeasonDefault()" class="text-xs font-gowun font-bold text-stone-500 hover:text-stone-800 underline underline-offset-2 whitespace-nowrap">
+                                    기본 문구 복원
                                 </button>
                             </div>
 
-                            <!-- 빠른 제목 프리셋 칩 -->
-                            <div class="flex flex-wrap gap-1.5" id="title-preset-chips">
-                                <button type="button" onclick="applyTitlePreset('구름이의 자라나는 시간')" class="px-2.5 py-1 rounded-full text-xs font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors">☁️ 구름이의 자라나는 시간</button>
-                                <button type="button" onclick="applyTitlePreset('준삐와 솔태의 보물, 구름이')" class="px-2.5 py-1 rounded-full text-xs font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors">💛 준삐와 솔태의 보물, 구름이</button>
-                                <button type="button" onclick="applyTitlePreset('무럭무럭 자라나는 우리 아기')" class="px-2.5 py-1 rounded-full text-xs font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors">🌱 무럭무럭 자라나는 우리 아기</button>
-                                <button type="button" onclick="applyTitlePreset('사랑으로 피어난 구름이의 계절')" class="px-2.5 py-1 rounded-full text-xs font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors">🌸 사랑으로 피어난 구름이의 계절</button>
+                            <!-- 빠른 제목 프리셋 칩: 모바일 2x2 균등 그리드로 배치하여 세로 공간 절약 및 잘림 방지 -->
+                            <div class="grid grid-cols-2 gap-1.5" id="title-preset-chips">
+                                <button type="button" onclick="applyTitlePreset('구름이의 자라나는 시간')" class="px-2 py-1.5 rounded-xl text-xs font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors truncate text-center">☁️ 구름이의 자라나는 시간</button>
+                                <button type="button" onclick="applyTitlePreset('준삐와 솔태의 보물, 구름이')" class="px-2 py-1.5 rounded-xl text-xs font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors truncate text-center">💛 준삐와 솔태의 보물</button>
+                                <button type="button" onclick="applyTitlePreset('무럭무럭 자라나는 우리 아기')" class="px-2 py-1.5 rounded-xl text-xs font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors truncate text-center">🌱 무럭무럭 자라는 아기</button>
+                                <button type="button" onclick="applyTitlePreset('사랑으로 피어난 구름이의 계절')" class="px-2 py-1.5 rounded-xl text-xs font-gowun font-bold bg-stone-100 hover:bg-amber-50 hover:text-amber-800 text-stone-700 transition-colors truncate text-center">🌸 사랑으로 피어난 계절</button>
                             </div>
 
-                            <!-- (1) 메인 타이틀 + 표시 안 함 버튼 -->
-                            <div class="bg-stone-50/70 p-3 rounded-2xl border border-stone-200/70">
+                            <!-- (1) 메인 제목 -->
+                            <div class="bg-stone-50/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200/70">
                                 <div class="flex items-center justify-between mb-1.5">
-                                    <label for="input-custom-title" class="text-xs sm:text-sm font-gowun font-bold text-stone-700">메인 제목 (액자 큰 글씨)</label>
+                                    <label for="input-custom-title" class="text-xs sm:text-sm font-gowun font-bold text-stone-700">메인 제목</label>
                                     <button type="button" id="btn-toggle-title" onclick="toggleTextPart('title')" class="px-2.5 py-0.5 rounded-full text-xs font-gowun font-bold transition-all border">
                                         표시 안 함
                                     </button>
                                 </div>
                                 <input type="text" id="input-custom-title" maxlength="24" placeholder="예: 구름이의 자라나는 시간"
-                                    class="w-full px-3.5 py-2 rounded-xl border border-stone-300 bg-white text-sm sm:text-base font-serif-kr text-stone-800 focus:outline-none focus:border-stone-600 transition-colors">
+                                    class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm font-serif-kr text-stone-800 focus:outline-none focus:border-stone-600 transition-colors">
                             </div>
 
-                            <!-- (2) 성장 기록 · 촬영일 + 표시 안 함 버튼 -->
-                            <div class="bg-stone-50/70 p-3 rounded-2xl border border-stone-200/70">
+                            <!-- (2) 날짜 · 성장 기록 -->
+                            <div class="bg-stone-50/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200/70">
                                 <div class="flex items-center justify-between mb-1.5">
-                                    <label for="input-custom-milestone" class="text-xs sm:text-sm font-gowun font-bold text-stone-700">성장 기록 · 촬영일 (가운데 배지)</label>
+                                    <label for="input-custom-milestone" class="text-xs sm:text-sm font-gowun font-bold text-stone-700">날짜 · 성장 기록</label>
                                     <button type="button" id="btn-toggle-milestone" onclick="toggleTextPart('milestone')" class="px-2.5 py-0.5 rounded-full text-xs font-gowun font-bold transition-all border">
                                         표시 안 함
                                     </button>
                                 </div>
                                 <input type="text" id="input-custom-milestone" maxlength="30" placeholder="예: 2026.10 · 생후 D+100의 기록"
-                                    class="w-full px-3.5 py-2 rounded-xl border border-stone-300 bg-white text-xs sm:text-sm font-gowun text-stone-800 focus:outline-none focus:border-stone-600 transition-colors">
+                                    class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-xs sm:text-sm font-gowun text-stone-800 focus:outline-none focus:border-stone-600 transition-colors">
                             </div>
 
-                            <!-- (3) 부모님 한 줄 메시지 + 표시 안 함 버튼 -->
-                            <div class="bg-stone-50/70 p-3 rounded-2xl border border-stone-200/70">
+                            <!-- (3) 한 줄 메시지 -->
+                            <div class="bg-stone-50/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200/70">
                                 <div class="flex items-center justify-between mb-1.5">
-                                    <label for="input-custom-desc" class="text-xs sm:text-sm font-gowun font-bold text-stone-700">부모님 한 줄 편지 (서브 문구)</label>
+                                    <label for="input-custom-desc" class="text-xs sm:text-sm font-gowun font-bold text-stone-700">한 줄 메시지</label>
                                     <button type="button" id="btn-toggle-desc" onclick="toggleTextPart('desc')" class="px-2.5 py-0.5 rounded-full text-xs font-gowun font-bold transition-all border">
                                         표시 안 함
                                     </button>
                                 </div>
-                                <input type="text" id="input-custom-desc" maxlength="45" placeholder="아이에게 남기고 싶은 따뜻한 한 줄 문구를 적어보세요"
-                                    class="w-full px-3.5 py-2 rounded-xl border border-stone-300 bg-white text-xs sm:text-sm font-gowun text-stone-800 focus:outline-none focus:border-stone-600 transition-colors">
+                                <input type="text" id="input-custom-desc" maxlength="45" placeholder="아이에게 남기고 싶은 따뜻한 한 줄"
+                                    class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-xs sm:text-sm font-gowun text-stone-800 focus:outline-none focus:border-stone-600 transition-colors">
                             </div>
 
-                            <!-- (4) 하단 월별 축복 문구 + 표시 안 함 버튼 -->
-                            <div class="bg-stone-50/70 p-3 rounded-2xl border border-stone-200/70">
+                            <!-- (4) 월별 축복 문구 -->
+                            <div class="bg-stone-50/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200/70">
                                 <div class="flex items-center justify-between mb-1.5">
-                                    <label for="select-blessing-month" class="text-xs sm:text-sm font-gowun font-bold text-stone-700">하단 월별 축복 문구</label>
+                                    <label for="select-blessing-month" class="text-xs sm:text-sm font-gowun font-bold text-stone-700">월별 축복 문구</label>
                                     <button type="button" id="btn-toggle-blessing" onclick="toggleTextPart('blessing')" class="px-2.5 py-0.5 rounded-full text-xs font-gowun font-bold transition-all border">
                                         표시 안 함
                                     </button>
@@ -388,21 +358,21 @@
                                     <option value="10">10월 · 가을 햇살처럼 깊고 따뜻한 사랑</option>
                                     <option value="11">11월 · 포근한 구름처럼 온화한 성품</option>
                                     <option value="12">12월 · 추운 겨울도 녹이는 우리의 행복</option>
-                                    <option value="none">표시 안 함 (깔끔하게 비우기)</option>
+                                    <option value="none">표시 안 함</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 2. 하단 패밀리 로고 스탬프 선택 (모바일 3열 컴팩트 그리드 + 표시 안 함 버튼) -->
+                    <!-- 2. 로고 스탬프 섹션 -->
                     <div class="bg-white rounded-2xl sm:rounded-3xl border border-stone-200/90 shadow-sm overflow-hidden">
-                        <div class="flex items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 bg-stone-50/70 border-b border-stone-100 cursor-pointer select-none" onclick="toggleSectionFold('logo')">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="award" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-600"></i>
-                                <h3 class="text-base sm:text-lg font-serif-kr font-bold text-stone-800">2. 패밀리 로고 스탬프</h3>
-                                <span id="badge-summary-logo" class="text-xs font-gowun px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold">구름 + 준삐와솔태</span>
+                        <div class="flex items-center justify-between px-4 py-3 bg-stone-50/70 border-b border-stone-100 cursor-pointer select-none" onclick="toggleSectionFold('logo')">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <i data-lucide="award" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>
+                                <h3 class="text-sm sm:text-base font-serif-kr font-bold text-stone-800 whitespace-nowrap">2. 로고 스탬프</h3>
+                                <span id="badge-summary-logo" class="text-[11px] font-gowun px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold whitespace-nowrap">함께 표시</span>
                             </div>
-                            <button type="button" class="px-2.5 py-1 rounded-xl text-xs font-gowun font-bold bg-white border border-stone-200 text-stone-600 hover:bg-stone-100 flex items-center gap-1">
+                            <button type="button" class="px-2.5 py-1 rounded-xl text-xs font-gowun font-bold bg-white border border-stone-200 text-stone-600 hover:bg-stone-100 flex items-center gap-1 flex-shrink-0">
                                 <span id="fold-label-logo">접기</span>
                                 <i data-lucide="chevron-up" id="fold-icon-logo" class="w-3.5 h-3.5"></i>
                             </button>
@@ -415,45 +385,45 @@
                                         <img data-logo="gureum" src="" alt="구름" class="h-7 w-auto object-contain">
                                         <img data-logo="parents" src="" alt="준삐와솔태" class="h-6 w-auto object-contain -ml-1">
                                     </div>
-                                    <span class="text-xs font-gowun font-bold text-stone-800 keep-all text-center">구름 + 준삐와솔태</span>
+                                    <span class="text-xs font-gowun font-bold text-stone-800 whitespace-nowrap">함께 표시</span>
                                 </button>
                                 <button type="button" onclick="setLogoMode('gureum')" data-mode="gureum" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
                                     <div class="flex items-center justify-center h-8 mb-1">
                                         <img data-logo="gureum" src="" alt="구름" class="h-7 w-auto object-contain">
                                     </div>
-                                    <span class="text-xs font-gowun font-bold text-stone-700">구름이 단독</span>
+                                    <span class="text-xs font-gowun font-bold text-stone-700 whitespace-nowrap">구름이</span>
                                 </button>
                                 <button type="button" onclick="setLogoMode('parents')" data-mode="parents" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
                                     <div class="flex items-center justify-center h-8 mb-1">
                                         <img data-logo="parents" src="" alt="준삐와솔태" class="h-7 w-auto object-contain">
                                     </div>
-                                    <span class="text-xs font-gowun font-bold text-stone-700">준삐♥와솔태</span>
+                                    <span class="text-xs font-gowun font-bold text-stone-700 whitespace-nowrap">준삐♥와솔태</span>
                                 </button>
                                 <button type="button" onclick="setLogoMode('text')" data-mode="text" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
                                     <div class="flex items-center justify-center h-8 mb-1 text-stone-600 font-serif-kr text-xs font-bold">
                                         ABC
                                     </div>
-                                    <span class="text-xs font-gowun font-bold text-stone-700">영문 레터링만</span>
+                                    <span class="text-xs font-gowun font-bold text-stone-700 whitespace-nowrap">영문 텍스트</span>
                                 </button>
                                 <button type="button" onclick="setLogoMode('none')" data-mode="none" class="logo-mode-btn col-span-2 sm:col-span-1 flex flex-col items-center justify-center p-2 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
                                     <div class="flex items-center justify-center h-8 mb-1 text-rose-500">
                                         <i data-lucide="eye-off" class="w-4 h-4"></i>
                                     </div>
-                                    <span class="text-xs font-gowun font-bold text-stone-700">표시 안 함</span>
+                                    <span class="text-xs font-gowun font-bold text-stone-700 whitespace-nowrap">표시 안 함</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 3. 계절 배경 테마 선택 (접기/펼치기 지원 + 배경 표시 안 함 시 사진 비율 자동 확장) -->
+                    <!-- 3. 배경 테마 선택 섹션 -->
                     <div class="bg-white rounded-2xl sm:rounded-3xl border border-stone-200/90 shadow-sm overflow-hidden">
-                        <div class="flex items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 bg-stone-50/70 border-b border-stone-100 cursor-pointer select-none" onclick="toggleSectionFold('bg')">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="palette" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-600"></i>
-                                <h3 class="text-base sm:text-lg font-serif-kr font-bold text-stone-800">3. 액자 배경 아트워크</h3>
-                                <span id="badge-summary-bg" class="text-xs font-gowun px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold">계절 배경</span>
+                        <div class="flex items-center justify-between px-4 py-3 bg-stone-50/70 border-b border-stone-100 cursor-pointer select-none" onclick="toggleSectionFold('bg')">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <i data-lucide="palette" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>
+                                <h3 class="text-sm sm:text-base font-serif-kr font-bold text-stone-800 whitespace-nowrap">3. 배경 테마</h3>
+                                <span id="badge-summary-bg" class="text-[11px] font-gowun px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold whitespace-nowrap">배경 적용됨</span>
                             </div>
-                            <button type="button" class="px-2.5 py-1 rounded-xl text-xs font-gowun font-bold bg-white border border-stone-200 text-stone-600 hover:bg-stone-100 flex items-center gap-1">
+                            <button type="button" class="px-2.5 py-1 rounded-xl text-xs font-gowun font-bold bg-white border border-stone-200 text-stone-600 hover:bg-stone-100 flex items-center gap-1 flex-shrink-0">
                                 <span id="fold-label-bg">접기</span>
                                 <i data-lucide="chevron-up" id="fold-icon-bg" class="w-3.5 h-3.5"></i>
                             </button>
@@ -461,26 +431,24 @@
 
                         <div id="section-body-bg" class="p-3.5 sm:p-5">
                             <p class="text-xs font-gowun text-stone-500 mb-2.5">
-                                💡 <b>[표시 안 함]</b>을 선택하면 바깥 배경 여백만큼 <b>아이 사진 분할 영역이 자동으로 커집니다.</b>
+                                배경을 <b>표시 안 함</b>으로 선택하면 여백만큼 사진 영역이 넓어집니다.
                             </p>
 
-                            <!-- 커스텀 배경 이미지 업로드용 Input (숨김) -->
                             <input type="file" id="custom-bg-input" accept="image/*" class="hidden" />
 
-                            <!-- 배경 선택 버튼 컨테이너 (계절 3종 + 내 배경 + 표시 안 함) -->
                             <div id="bg-theme-buttons" class="grid grid-cols-3 sm:grid-cols-5 gap-2 w-full">
                                 <!-- JS에서 동적 렌더링 -->
                             </div>
                         </div>
                     </div>
 
-                    <!-- 다운로드 및 재시작 버튼 -->
-                    <div class="flex flex-row gap-2.5 pt-1">
-                        <button type="button" id="download-btn" onclick="openModal('download')" class="flex-1 flex items-center justify-center gap-2 py-3.5 sm:py-4 px-5 rounded-2xl font-serif-kr text-base sm:text-xl font-bold text-white transition-all duration-300 active:scale-95 hover:shadow-lg shadow-md">
-                            <i data-lucide="download" class="w-5 h-5"></i> 고화질 성장 액자 저장
+                    <!-- 다운로드 및 처음으로 버튼 -->
+                    <div class="flex flex-row gap-2 pt-1">
+                        <button type="button" id="download-btn" onclick="openModal('download')" class="flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl font-serif-kr text-base sm:text-lg font-bold text-white transition-all duration-300 active:scale-95 hover:shadow-lg shadow-md">
+                            <i data-lucide="download" class="w-5 h-5"></i> 액자 이미지 저장
                         </button>
-                        <button type="button" onclick="openModal('reset')" class="flex items-center justify-center gap-1.5 py-3.5 sm:py-4 px-4 rounded-2xl font-gowun text-xs sm:text-base font-bold bg-white border border-stone-300 text-stone-700 hover:bg-stone-100 transition-colors active:scale-95">
-                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> 처음부터
+                        <button type="button" onclick="openModal('reset')" class="flex items-center justify-center gap-1.5 py-3.5 px-4 rounded-2xl font-gowun text-xs sm:text-sm font-bold bg-white border border-stone-300 text-stone-700 hover:bg-stone-100 transition-colors active:scale-95 whitespace-nowrap">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> 처음으로
                         </button>
                     </div>
                 </div>
@@ -505,12 +473,12 @@
         <div class="bg-white rounded-[1.5rem] w-full max-w-md max-h-[90dvh] flex flex-col overflow-hidden shadow-2xl transform transition-all animate-fade-up border border-stone-100">
             <div class="p-5 sm:p-6 text-center overflow-y-auto">
                 <div id="modal-icon-container" class="w-14 h-14 rounded-full bg-amber-50 mx-auto flex items-center justify-center mb-3"></div>
-                <h3 id="modal-title" class="text-lg sm:text-2xl font-serif-kr text-stone-800 mb-2.5 font-bold">안내</h3>
-                <div id="modal-desc" class="text-stone-600 font-gowun text-xs sm:text-base leading-relaxed keep-all text-left whitespace-pre-line"></div>
+                <h3 id="modal-title" class="text-lg sm:text-xl font-serif-kr text-stone-800 mb-2 font-bold">안내</h3>
+                <div id="modal-desc" class="text-stone-600 font-gowun text-xs sm:text-sm leading-relaxed keep-all text-left whitespace-pre-line"></div>
             </div>
             <div class="flex border-t border-stone-100 bg-stone-50/60 flex-shrink-0">
-                <button type="button" id="modal-cancel-btn" onclick="closeModal()" class="flex-1 py-3.5 text-stone-600 font-gowun text-sm sm:text-base font-bold hover:bg-stone-100 transition-colors active:bg-stone-200">취소</button>
-                <button type="button" id="modal-confirm-btn" onclick="handleModalConfirm()" class="flex-1 py-3.5 text-amber-800 font-bold font-gowun text-sm sm:text-base border-l border-stone-100 hover:bg-white transition-colors active:bg-stone-50">확인</button>
+                <button type="button" id="modal-cancel-btn" onclick="closeModal()" class="flex-1 py-3.5 text-stone-600 font-gowun text-sm font-bold hover:bg-stone-100 transition-colors active:bg-stone-200">취소</button>
+                <button type="button" id="modal-confirm-btn" onclick="handleModalConfirm()" class="flex-1 py-3.5 text-amber-800 font-bold font-gowun text-sm border-l border-stone-100 hover:bg-white transition-colors active:bg-stone-50">확인</button>
             </div>
         </div>
     </div>
@@ -520,13 +488,13 @@
         <div class="flex items-start gap-3">
             <img data-logo="gureum" src="" alt="구름" class="w-10 h-10 object-contain flex-shrink-0">
             <div class="flex-1">
-                <h4 class="font-bold text-sm sm:text-base font-serif-kr">이전에 만들던 구름이 액자가 있어요</h4>
-                <p class="text-xs sm:text-sm text-stone-300 font-gowun mt-0.5">마지막으로 작업하던 사진과 문구 설정을 그대로 불러올까요?</p>
+                <h4 class="font-bold text-sm font-serif-kr">이전에 만들던 액자가 있어요</h4>
+                <p class="text-xs text-stone-300 font-gowun mt-0.5">마지막으로 작업하던 사진과 문구를 불러올까요?</p>
             </div>
         </div>
         <div class="flex gap-2 justify-end">
-            <button type="button" onclick="clearSavedState()" class="px-3 py-1.5 text-xs sm:text-sm text-stone-400 hover:text-white transition-colors font-gowun">새로 만들기</button>
-            <button type="button" onclick="restoreAppState()" class="px-3.5 py-1.5 text-xs sm:text-sm bg-amber-400 text-stone-950 rounded-xl font-bold hover:bg-amber-300 transition-colors font-gowun">이어서 꾸미기</button>
+            <button type="button" onclick="clearSavedState()" class="px-3 py-1.5 text-xs text-stone-400 hover:text-white transition-colors font-gowun">새로 만들기</button>
+            <button type="button" onclick="restoreAppState()" class="px-3.5 py-1.5 text-xs bg-amber-400 text-stone-950 rounded-xl font-bold hover:bg-amber-300 transition-colors font-gowun">이어서 꾸미기</button>
         </div>
     </div>
 
@@ -571,7 +539,7 @@
             spring: { 
                 id: 'spring',
                 name: '봄, 설레는 시작',
-                subTitle: 'Spring Blossom',
+                subTitle: 'Spring',
                 textColor: '#9c4f66',
                 accent: '#eab8c8',
                 icon: 'flower-2',
@@ -579,13 +547,13 @@
                 defaultTitle: '구름이의 따스한 봄날',
                 defaultMilestone: '봄볕 아래 피어난 웃음 · 우리의 첫 계절',
                 desc: '따스한 봄 햇살처럼 포근하게 피어난 우리 구름이의 설레는 순간',
-                bgLabels: ['분홍 벚꽃 하늘', '노란 봄꽃 들판', '다채로운 튤립'],
+                bgLabels: ['벚꽃 하늘', '노란 봄꽃', '튤립 정원'],
                 bgOptions: []
             },
             summer: { 
                 id: 'summer',
                 name: '여름, 푸른 성장',
-                subTitle: 'Summer Breeze',
+                subTitle: 'Summer',
                 textColor: '#36634d',
                 accent: '#8fc5a5',
                 icon: 'sun',
@@ -593,13 +561,13 @@
                 defaultTitle: '구름이의 싱그러운 여름',
                 defaultMilestone: '초록빛 성장 기록 · 씩씩하게 자라는 날',
                 desc: '싱그러운 초록 잎사귀처럼 매일매일 씩씩하게 자라나는 여름날의 기록',
-                bgLabels: ['푸른 여름 숲', '해바라기 꽃밭', '에메랄드 바다'],
+                bgLabels: ['푸른 여름 숲', '해바라기', '푸른 바다'],
                 bgOptions: []
             },
             autumn: { 
                 id: 'autumn',
-                name: '가을, 깊어지는 사랑',
-                subTitle: 'Autumn Harvest',
+                name: '가을, 깊은 사랑',
+                subTitle: 'Autumn',
                 textColor: '#824b35',
                 accent: '#deb086',
                 icon: 'leaf',
@@ -607,13 +575,13 @@
                 defaultTitle: '구름이의 포근한 가을',
                 defaultMilestone: '가을 햇살 가득한 날 · 한 뼘 더 자란 오늘',
                 desc: '깊어가는 가을 햇살 아래 한 뼘 더 자란 구름이의 따뜻한 미소',
-                bgLabels: ['단풍 숲 산책로', '붉은 단풍잎', '가을 플라워'],
+                bgLabels: ['단풍 산책로', '붉은 단풍', '가을 들꽃'],
                 bgOptions: []
             },
             winter: { 
                 id: 'winter',
                 name: '겨울, 포근한 기적',
-                subTitle: 'Winter Starlight',
+                subTitle: 'Winter',
                 textColor: '#435a70',
                 accent: '#9fb9d4',
                 icon: 'snowflake',
@@ -621,19 +589,19 @@
                 defaultTitle: '구름이의 포근한 겨울',
                 defaultMilestone: '별빛 내리는 겨울 · 품 안에 안긴 기적',
                 desc: '하얀 눈꽃과 별빛처럼 맑고 포근하게 품어온 우리 가족의 겨울 이야기',
-                bgLabels: ['눈 덮인 설경', '크리스마스 트리', '눈 내리는 밤거리'],
+                bgLabels: ['하얀 설경', '성탄 트리', '겨울 밤거리'],
                 bgOptions: []
             }
         };
 
-        // 성장 앨범 특화 프레임 레이아웃
+        // 간결하고 직관적인 프레임 레이아웃 명칭
         const LAYOUT_DATA = [
-            { id: '1-portrait', count: 1, name: '1장 (세로 베스트컷)', sub: '단독 프로필 · 전신', orientation: 'portrait', icon: '<div class="w-[62%] h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15 mx-auto"></div>' },
-            { id: '1-landscape', count: 1, name: '1장 (가로 와이드컷)', sub: '가족사진 · 넓은 풍경', orientation: 'landscape', icon: '<div class="w-full h-[62%] bg-amber-200/70 rounded shadow-sm border border-amber-900/15 my-auto"></div>' },
-            { id: '2-horizontal', count: 2, name: '2장 (상하 성장 비교)', sub: '그때와 지금 (Before & After)', orientation: 'portrait', icon: '<div class="flex flex-col gap-[3px] w-full h-full"><div class="w-full h-1/2 bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-full h-1/2 bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div>' },
-            { id: '2-vertical', count: 2, name: '2장 (좌우 나란히)', sub: '짝꿍 컷 · 표정 변화', orientation: 'portrait', icon: '<div class="flex gap-[3px] w-full h-full"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div>' },
-            { id: '3-top', count: 3, name: '3장 (세 걸음 성장기)', sub: '메인 1컷 + 서브 2컷', orientation: 'portrait', icon: '<div class="flex flex-col gap-[3px] w-full h-full"><div class="w-full h-1/2 bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="flex gap-[3px] w-full h-1/2"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div></div>' },
-            { id: '4-grid', count: 4, name: '4장 (구름이 성장 네컷)', sub: '4단계 성장 · 표정 모음', orientation: 'portrait', icon: '<div class="flex flex-col gap-[3px] w-full h-full"><div class="flex gap-[3px] w-full h-1/2"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div><div class="flex gap-[3px] w-full h-1/2"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div></div>' }
+            { id: '1-portrait', count: 1, name: '1장 · 세로형', sub: '단독 · 전신 사진', orientation: 'portrait', icon: '<div class="w-[62%] h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15 mx-auto"></div>' },
+            { id: '1-landscape', count: 1, name: '1장 · 가로형', sub: '가족 · 풍경 사진', orientation: 'landscape', icon: '<div class="w-full h-[62%] bg-amber-200/70 rounded shadow-sm border border-amber-900/15 my-auto"></div>' },
+            { id: '2-horizontal', count: 2, name: '2장 · 상하 분할', sub: '위·아래 2컷 배치', orientation: 'portrait', icon: '<div class="flex flex-col gap-[3px] w-full h-full"><div class="w-full h-1/2 bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-full h-1/2 bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div>' },
+            { id: '2-vertical', count: 2, name: '2장 · 좌우 분할', sub: '좌·우 2컷 배치', orientation: 'portrait', icon: '<div class="flex gap-[3px] w-full h-full"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div>' },
+            { id: '3-top', count: 3, name: '3장 · 복합 분할', sub: '상단 1컷 + 하단 2컷', orientation: 'portrait', icon: '<div class="flex flex-col gap-[3px] w-full h-full"><div class="w-full h-1/2 bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="flex gap-[3px] w-full h-1/2"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div></div>' },
+            { id: '4-grid', count: 4, name: '4장 · 네컷 분할', sub: '2×2 네컷 배치', orientation: 'portrait', icon: '<div class="flex flex-col gap-[3px] w-full h-full"><div class="flex gap-[3px] w-full h-1/2"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div><div class="flex gap-[3px] w-full h-1/2"><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div><div class="w-1/2 h-full bg-amber-200/70 rounded shadow-sm border border-amber-900/15"></div></div></div>' }
         ];
 
         const STORAGE_KEY = 'gureum_growth_album_v2';
@@ -645,14 +613,13 @@
         let selectedPhotos = []; 
         let hasPromptedUpload = false; 
         
-        let selectedBgUrl = null; // URL 문자열 또는 'none' (배경 표시 안 함)
+        let selectedBgUrl = null;
         let customUploadedBgSrc = null; 
         let generatedImageUrl = null;
         let modalPendingAction = null; 
         let isGenerating = false;
         let renderDebounceTimer = null;
 
-        // 사용자 맞춤 텍스트 & 개별 표시 여부 상태
         let customTitleText = '구름이의 자라나는 시간';
         let customMilestoneText = '2026. 10 · 사랑으로 자라는 날들';
         let customDescText = '';
@@ -662,22 +629,18 @@
         let showTitle = true;
         let showMilestone = true;
         let showDesc = true;
-        let selectedLogoMode = 'both'; // 'both' | 'gureum' | 'parents' | 'text' | 'none'
+        let selectedLogoMode = 'both';
 
-        // 모바일 미리보기 컴팩트 고정 모드 상태
         let isMobilePreviewCompact = false;
-
-        // 첫 터치 시 자동 전체화면(주소창 자동 숨김) 활성화 상태 (기본값: 켜짐)
         let autoFullscreenEnabled = localStorage.getItem(AUTO_FS_KEY) !== 'false';
 
-        // 섹션 접기/펼치기 상태
         const sectionFoldState = {
             text: false,
             logo: false,
             bg: false
         };
 
-        // 모바일에서 첫 터치 시 상단 주소창을 자동으로 숨기는 리스너
+        // 모바일 첫 터치 시 자동 전체화면 전환
         function tryAutoEnterFullscreen() {
             if (!autoFullscreenEnabled) return;
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || window.navigator.standalone;
@@ -710,7 +673,6 @@
             }
         }
 
-        // 전체화면(주소창 숨기기) 수동 토글 함수
         function toggleFullscreenMode() {
             const docEl = document.documentElement;
             const isFull = document.fullscreenElement || document.webkitFullscreenElement;
@@ -737,31 +699,35 @@
             const labelEl = document.getElementById('fullscreen-btn-label');
             if (!labelEl) return;
             const isFull = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
-            labelEl.innerText = isFull ? '화면 복귀' : '주소창 숨김';
+            labelEl.innerText = isFull ? '화면 복귀' : '전체화면';
         }
         document.addEventListener('fullscreenchange', updateFullscreenBtnUI);
         document.addEventListener('webkitfullscreenchange', updateFullscreenBtnUI);
 
-        // 모바일 상단 고정 미리보기 크기 조절 (작게 고정 / 기본 크기)
+        // 미리보기 크기 토글 (작게 / 기본)
         function toggleMobilePreviewSize() {
             isMobilePreviewCompact = !isMobilePreviewCompact;
             const finalImg = document.getElementById('final-image');
             const labelEl = document.getElementById('label-preview-size');
+            const iconEl = document.getElementById('icon-preview-size');
             const boxEl = document.getElementById('preview-box-container');
             if (!finalImg) return;
 
             if (isMobilePreviewCompact) {
-                finalImg.className = 'cursor-pointer w-auto h-auto max-h-[19vh] sm:max-h-[56vh] lg:max-h-[68vh] object-contain block relative z-10 drop-shadow-[0_8px_15px_rgba(0,0,0,0.14)] rounded-sm transition-all duration-300';
-                if (boxEl) boxEl.classList.replace('p-2', 'p-1.5');
+                finalImg.className = 'cursor-pointer w-auto h-auto max-h-[18vh] sm:max-h-[36vh] lg:max-h-[65vh] object-contain block relative z-10 drop-shadow-[0_6px_12px_rgba(0,0,0,0.12)] rounded-sm transition-all duration-300';
+                if (boxEl) boxEl.classList.replace('p-2.5', 'p-1.5');
                 if (labelEl) labelEl.innerText = '미리보기 크게';
+                if (iconEl) iconEl.setAttribute('data-lucide', 'maximize-2');
             } else {
-                finalImg.className = 'cursor-pointer w-auto h-auto max-h-[30vh] sm:max-h-[56vh] lg:max-h-[68vh] object-contain block relative z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] rounded-sm transition-all duration-300';
-                if (boxEl) boxEl.classList.replace('p-1.5', 'p-2');
+                finalImg.className = 'cursor-pointer w-auto h-auto max-h-[32vh] sm:max-h-[55vh] lg:max-h-[65vh] object-contain block relative z-10 drop-shadow-[0_8px_18px_rgba(0,0,0,0.14)] rounded-sm transition-all duration-300';
+                if (boxEl) boxEl.classList.replace('p-1.5', 'p-2.5');
                 if (labelEl) labelEl.innerText = '미리보기 작게';
+                if (iconEl) iconEl.setAttribute('data-lucide', 'minimize-2');
             }
+            lucide.createIcons();
         }
 
-        // 모바일 퀵 탭 클릭 시 선택한 섹션만 펼치고 나머지 두 섹션은 자동으로 접어 화면 비율 최적화
+        // 카테고리 탭 전환 (선택한 섹션만 열고 나머지는 접기)
         function focusSingleSection(targetKey) {
             ['text', 'logo', 'bg'].forEach(k => {
                 toggleSectionFold(k, k !== targetKey);
@@ -775,9 +741,9 @@
                 if (!tabBtn) return;
                 const isOpen = !sectionFoldState[k];
                 if (isOpen) {
-                    tabBtn.className = 'py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-amber-400 bg-amber-50 text-amber-900 flex items-center justify-center gap-1 transition-all shadow-sm';
+                    tabBtn.className = 'py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-amber-400 bg-amber-50 text-amber-900 flex items-center justify-center gap-1 transition-all shadow-sm whitespace-nowrap';
                 } else {
-                    tabBtn.className = 'py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-600 flex items-center justify-center gap-1 transition-all';
+                    tabBtn.className = 'py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-600 flex items-center justify-center gap-1 transition-all whitespace-nowrap';
                 }
             });
         }
@@ -820,7 +786,6 @@
             ['text', 'logo', 'bg'].forEach(k => toggleSectionFold(k, target));
         }
 
-        // 미리보기 확대 모달
         function openPreviewZoomModal() {
             if (!generatedImageUrl) return;
             const modal = document.getElementById('preview-zoom-modal');
@@ -833,7 +798,6 @@
             document.getElementById('preview-zoom-modal').classList.add('hidden');
         }
 
-        // 계절별 감성 수채화/보케 배경 아트워크 폴백 생성기
         function createSeasonalArtworkDataUrl(seasonId, variantIndex) {
             const c = document.createElement('canvas');
             c.width = 600;
@@ -887,7 +851,6 @@
             });
         }
 
-        // 예시 사진 생성기
         function createSampleBabyPhoto(index, season) {
             const c = document.createElement('canvas');
             c.width = 800;
@@ -935,7 +898,7 @@
 
             ctx.fillStyle = '#8c7f77';
             ctx.font = '26px "Gowun Dodum", sans-serif';
-            ctx.fillText('예시 이미지 (내 사진으로 교체 가능)', 400, 705);
+            ctx.fillText('예시 이미지', 400, 705);
 
             return c.toDataURL('image/jpeg', 0.88);
         }
@@ -950,7 +913,6 @@
             updatePhotoSelectionUI();
         }
 
-        // 스마트폰 메모리 보호를 위한 이미지 다운샘플링 (최대 1200px)
         function downsampleImage(base64Str, maxSide = 1200) {
             return new Promise((resolve) => {
                 const img = new Image();
@@ -997,9 +959,7 @@
             };
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-            } catch (e) {
-                console.warn("용량 한도 초과로 백업을 생략합니다.");
-            }
+            } catch (e) {}
         }
 
         function checkBackup() {
@@ -1042,7 +1002,7 @@
                     }
                 }
             } catch (e) {
-                showCustomAlert("복원 실패", "이전 작업을 복원하는 도중 문제가 발생했습니다.");
+                showCustomAlert("복원 실패", "이전 작업을 불러오는 중 문제가 발생했습니다.");
             }
             document.getElementById('restore-toast').classList.add('hidden');
         }
@@ -1060,19 +1020,19 @@
                 setStep(1);
             } else if (targetStep === 2) {
                 if (!currentSeason) {
-                    showCustomAlert("계절 테마 선택", "먼저 구름이 사진에 어울리는 계절 테마를 선택해 주세요.");
+                    showCustomAlert("계절 선택 필요", "먼저 계절 테마를 선택해 주세요.");
                     return;
                 }
                 setStep(2);
             } else if (targetStep === 3) {
                 if (!currentSeason || !selectedLayout) {
-                    showCustomAlert("프레임 선택 필요", "계절 테마와 성장 프레임을 먼저 선택해 주세요.");
+                    showCustomAlert("프레임 선택 필요", "계절 테마와 프레임 구성을 먼저 선택해 주세요.");
                     return;
                 }
                 setStep(3);
             } else if (targetStep === 4) {
                 if (!currentSeason || !selectedLayout || selectedPhotos.length < selectedLayout.count) {
-                    showCustomAlert("사진을 모두 담아주세요", "선택한 프레임의 사진 개수를 모두 채우면 완성 단계로 이동할 수 있어요.");
+                    showCustomAlert("사진 선택 필요", "선택한 프레임의 사진 개수를 모두 채우면 완성 단계로 이동할 수 있어요.");
                     return;
                 }
                 initStep4();
@@ -1116,7 +1076,7 @@
         function applySeasonThemeToUI() {
             if (!currentSeason) return;
             document.getElementById('step2-title').style.color = currentSeason.textColor;
-            document.getElementById('step2-season-badge').innerText = `${currentSeason.name} 테마`;
+            document.getElementById('step2-season-badge').innerText = currentSeason.name;
             document.getElementById('step3-title').style.color = currentSeason.textColor;
             document.getElementById('upload-box-empty').style.borderColor = currentSeason.accent;
             document.getElementById('upload-bg-tint').style.backgroundColor = currentSeason.textColor;
@@ -1125,11 +1085,10 @@
 
             if (selectedLayout) {
                 document.getElementById('step3-layout-badge').innerText = `${currentSeason.name.split(',')[0]} · ${selectedLayout.name}`;
-                document.getElementById('upload-instruction-text').innerText = `선택하신 [${selectedLayout.name}] 프레임에 맞춰 구름이의 사진 ${selectedLayout.count}장을 담아주세요.`;
+                document.getElementById('upload-instruction-text').innerText = `${selectedLayout.name} 프레임에 들어갈 사진 ${selectedLayout.count}장을 선택해 주세요.`;
             }
         }
 
-        // STEP 1에서 계절 선택 시
         function handleSeasonSelect(seasonId) {
             tryAutoEnterFullscreen();
             currentSeason = SEASON_DATA[seasonId];
@@ -1146,7 +1105,6 @@
             setStep(2);
         }
 
-        // STEP 2에서 레이아웃 선택 시
         function handleLayoutSelect(layoutId) {
             tryAutoEnterFullscreen();
             selectedLayout = LAYOUT_DATA.find(l => l.id === layoutId);
@@ -1158,7 +1116,6 @@
             setStep(3);
         }
 
-        // 맞춤 문구 개별 표시/숨김 토글
         function toggleTextPart(part) {
             if (part === 'title') {
                 showTitle = !showTitle;
@@ -1178,7 +1135,6 @@
             updatePreviewFrame(selectedBgUrl || currentSeason.bgOptions[0]);
         }
 
-        // 맞춤 문구 전체 한 번에 표시 안 함 / 켜기
         function toggleAllCustomTexts() {
             const anyShown = showTitle || showMilestone || showDesc || (selectedBlessingMonth !== 'none');
             if (anyShown) {
@@ -1201,14 +1157,14 @@
             if (!btnEl) return;
             if (isVisible) {
                 btnEl.innerText = '표시 안 함';
-                btnEl.className = 'px-2.5 py-0.5 rounded-full text-xs font-gowun font-bold transition-all border border-stone-300 bg-white text-stone-600 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200';
+                btnEl.className = 'px-2.5 py-0.5 rounded-full text-xs font-gowun font-bold transition-all border border-stone-300 bg-white text-stone-600 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200 whitespace-nowrap';
                 if (inputEl) {
                     inputEl.disabled = false;
                     inputEl.classList.remove('opacity-45', 'bg-stone-100', 'line-through');
                 }
             } else {
-                btnEl.innerText = '✓ 표시 안 함 (켜기)';
-                btnEl.className = 'px-2.5 py-0.5 rounded-full text-xs font-gowun font-bold transition-all border border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100';
+                btnEl.innerText = '✓ 숨김 (켜기)';
+                btnEl.className = 'px-2.5 py-0.5 rounded-full text-xs font-gowun font-bold transition-all border border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100 whitespace-nowrap';
                 if (inputEl) {
                     inputEl.disabled = true;
                     inputEl.classList.add('opacity-45', 'bg-stone-100', 'line-through');
@@ -1235,12 +1191,12 @@
             const activeCount = [showTitle, showMilestone, showDesc, selectedBlessingMonth !== 'none'].filter(Boolean).length;
             const summaryTextBadge = document.getElementById('badge-summary-text');
             if (summaryTextBadge) {
-                summaryTextBadge.innerText = activeCount === 0 ? '전체 숨김' : `${activeCount}개 표시 중`;
+                summaryTextBadge.innerText = activeCount === 0 ? '전체 숨김' : `${activeCount}개 표시`;
             }
 
             const allToggleLabel = document.getElementById('label-toggle-all-text');
             if (allToggleLabel) {
-                allToggleLabel.innerText = activeCount > 0 ? '문구 전체 표시 안 함 (사진만 크게)' : '문구 전체 다시 표시하기';
+                allToggleLabel.innerText = activeCount > 0 ? '문구 전체 숨기기' : '문구 전체 켜기';
             }
 
             updateLogoModeButtonsUI();
@@ -1274,14 +1230,14 @@
 
         function updateLogoModeButtonsUI() {
             const modeLabels = {
-                both: '구름+부모님',
-                gureum: '구름이 단독',
+                both: '함께 표시',
+                gureum: '구름이',
                 parents: '준삐♥와솔태',
-                text: '영문 레터링',
+                text: '영문 텍스트',
                 none: '표시 안 함'
             };
             const summaryLogo = document.getElementById('badge-summary-logo');
-            if (summaryLogo) summaryLogo.innerText = modeLabels[selectedLogoMode] || '구름+부모님';
+            if (summaryLogo) summaryLogo.innerText = modeLabels[selectedLogoMode] || '함께 표시';
 
             document.querySelectorAll('.logo-mode-btn').forEach(btn => {
                 const m = btn.getAttribute('data-mode');
@@ -1309,7 +1265,6 @@
             if (!currentSeason) currentSeason = SEASON_DATA.spring;
             document.getElementById('download-btn').style.backgroundColor = currentSeason.textColor;
             syncCustomInputsFromState();
-            // 모바일에서는 처음 Step 4 진입 시 1번(맞춤 문구)만 펼치고 2, 3번은 접어두어 한 화면에 미리보기+편집창이 깔끔하게 보이도록 설정
             if (window.innerWidth < 1024) {
                 focusSingleSection('text');
             }
@@ -1324,16 +1279,16 @@
 
             const summaryBg = document.getElementById('badge-summary-bg');
             if (summaryBg) {
-                summaryBg.innerText = selectedBgUrl === 'none' ? '배경 없음(사진 확대)' : '배경 적용됨';
+                summaryBg.innerText = selectedBgUrl === 'none' ? '표시 안 함' : '배경 적용됨';
             }
             
             currentSeason.bgOptions.forEach((url, idx) => {
                 const isSelected = (selectedBgUrl === url);
-                const label = currentSeason.bgLabels[idx] || `테마 ${idx + 1}`;
+                const label = currentSeason.bgLabels[idx] || `배경 ${idx + 1}`;
                 bgContainer.innerHTML += `
                     <button type="button" onclick="selectBgOption(${idx})" style="background-color: ${currentSeason.fallbackColor}" class="group relative rounded-2xl overflow-hidden aspect-[4/3] sm:aspect-square border-2 ${isSelected ? 'border-stone-800 shadow-md ring-2 ring-stone-800/20' : 'border-stone-200'} hover:opacity-90 transition-all">
                         <img src="${url}" alt="${label}" class="w-full h-full object-cover">
-                        <div class="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-[2px] text-white text-[11px] sm:text-xs font-gowun font-bold py-1 z-10 truncate px-1">${label}</div>
+                        <div class="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-[2px] text-white text-[11px] font-gowun font-bold py-1 z-10 truncate px-1">${label}</div>
                     </button>
                 `;
             });
@@ -1343,7 +1298,7 @@
                 bgContainer.innerHTML += `
                     <div class="relative rounded-2xl overflow-hidden aspect-[4/3] sm:aspect-square border-2 ${isSelected ? 'border-stone-800 shadow-md ring-2 ring-stone-800/20' : 'border-stone-200'} transition-all flex flex-col group">
                         <img src="${customUploadedBgSrc}" alt="내 배경" class="w-full h-full object-cover cursor-pointer hover:opacity-85 transition-opacity" onclick="selectCustomBg()">
-                        <button type="button" onclick="document.getElementById('custom-bg-input').click()" class="absolute inset-x-0 bottom-0 bg-amber-700/90 hover:bg-amber-800 text-white text-[11px] sm:text-xs font-gowun font-bold py-1 text-center cursor-pointer flex justify-center items-center gap-1 transition-colors z-10">
+                        <button type="button" onclick="document.getElementById('custom-bg-input').click()" class="absolute inset-x-0 bottom-0 bg-amber-700/90 hover:bg-amber-800 text-white text-[11px] font-gowun font-bold py-1 text-center cursor-pointer flex justify-center items-center gap-1 transition-colors z-10">
                             <i data-lucide="refresh-cw" class="w-3 h-3"></i> 배경 변경
                         </button>
                     </div>
@@ -1352,18 +1307,16 @@
                 bgContainer.innerHTML += `
                     <button type="button" onclick="document.getElementById('custom-bg-input').click()" class="group relative flex flex-col items-center justify-center rounded-2xl overflow-hidden aspect-[4/3] sm:aspect-square border-2 border-dashed border-stone-300 bg-stone-50 hover:bg-stone-100 hover:border-stone-400 transition-all text-stone-600 p-1">
                         <i data-lucide="image-plus" class="w-5 h-5 mb-0.5 text-stone-400 group-hover:text-stone-700 transition-colors"></i>
-                        <span class="text-xs font-bold font-gowun keep-all text-center">내 배경 추가</span>
+                        <span class="text-xs font-bold font-gowun whitespace-nowrap">내 배경 추가</span>
                     </button>
                 `;
             }
 
-            // 5번째 버튼: 배경 표시 안 함 (선택 시 여백만큼 사진 비율 자동 확장)
             const isNoneSelected = (selectedBgUrl === 'none');
             bgContainer.innerHTML += `
                 <button type="button" onclick="selectNoBgOption()" class="group relative flex flex-col items-center justify-center rounded-2xl overflow-hidden aspect-[4/3] sm:aspect-square border-2 ${isNoneSelected ? 'border-rose-600 bg-rose-50/70 shadow-md ring-2 ring-rose-500/20' : 'border-stone-200 bg-white hover:bg-stone-50'} transition-all p-1">
                     <i data-lucide="maximize" class="w-5 h-5 mb-0.5 ${isNoneSelected ? 'text-rose-600' : 'text-stone-500'}"></i>
-                    <span class="text-xs font-bold font-gowun keep-all text-center ${isNoneSelected ? 'text-rose-700' : 'text-stone-700'}">표시 안 함</span>
-                    <span class="text-[10px] font-gowun text-stone-400 keep-all">사진 크게 채움</span>
+                    <span class="text-xs font-bold font-gowun whitespace-nowrap ${isNoneSelected ? 'text-rose-700' : 'text-stone-700'}">표시 안 함</span>
                 </button>
             `;
 
@@ -1424,14 +1377,14 @@
                 const filesToAdd = files.slice(0, remainingSlots);
 
                 if (files.length > remainingSlots) {
-                    showCustomAlert("사진 개수 안내", `선택하신 [${selectedLayout.name}] 프레임에는 최대 ${selectedLayout.count}장까지 담을 수 있어, 처음 ${remainingSlots}장만 추가되었습니다.`);
+                    showCustomAlert("사진 개수 안내", `선택하신 프레임에는 최대 ${selectedLayout.count}장까지 담을 수 있어, 처음 ${remainingSlots}장만 추가되었습니다.`);
                 }
                 
                 const grid = document.getElementById('photo-grid');
                 grid.innerHTML = `
                     <div class="col-span-full py-10 flex flex-col items-center justify-center gap-3 animate-fade-up">
                         <div class="w-10 h-10 border-4 border-stone-200 border-t-stone-800 rounded-full animate-spin"></div>
-                        <p class="text-stone-700 font-serif-kr text-base sm:text-lg font-bold">구름이 사진을 고화질 액자 규격으로 다듬는 중...</p>
+                        <p class="text-stone-700 font-serif-kr text-base font-bold">사진을 불러오는 중...</p>
                     </div>
                 `;
                 document.getElementById('photo-selection-ui').classList.remove('hidden');
@@ -1493,7 +1446,7 @@
                         <div class="relative aspect-square rounded-2xl overflow-hidden border border-stone-200 shadow-sm group bg-white">
                             <img src="${src}" alt="선택된 사진 ${idx + 1}" class="w-full h-full object-cover" />
                             <div class="absolute top-2 left-2 bg-stone-900/75 text-white text-xs font-gowun font-bold px-2.5 py-0.5 rounded-full backdrop-blur-sm">
-                                ${idx + 1}번 컷
+                                ${idx + 1}번
                             </div>
                             <button type="button" onclick="removePhoto(${idx})" class="absolute top-2 right-2 bg-black/65 text-white rounded-full p-1.5 hover:bg-red-600 transition-colors backdrop-blur-sm" title="사진 삭제">
                                 <i data-lucide="x" class="w-4 h-4"></i>
@@ -1516,7 +1469,7 @@
                     grid.innerHTML += `
                         <button type="button" onclick="openFreshFilePicker()" class="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-stone-300 bg-white hover:bg-stone-50 transition-colors text-stone-600 shadow-sm">
                             <i data-lucide="plus" class="w-7 h-7 mb-1 text-stone-400"></i>
-                            <span class="text-sm sm:text-base font-gowun font-bold">사진 추가</span>
+                            <span class="text-sm font-gowun font-bold">사진 추가</span>
                             <span class="text-xs text-stone-400">(${selectedPhotos.length}/${selectedLayout.count})</span>
                         </button>
                     `;
@@ -1571,7 +1524,6 @@
             ctx.strokeRect(boxX, boxY, boxW, boxH);
         }
 
-        // 핵심: CP1500 규격 맞춤형 성장 액자 Canvas 합성 (배경 및 문구 표시 여부에 따라 사진 분할 비율 자동 확장)
         async function updatePreviewFrame(bgSrc) {
             if (isGenerating || !currentSeason || !selectedLayout) return; 
             isGenerating = true;
@@ -1592,7 +1544,6 @@
 
                 const isLandscape = selectedLayout.orientation === 'landscape';
                 
-                // CP1500 Postcard 300dpi 인쇄 표준 해상도 (100x148mm)
                 const CP1500_WIDTH = 1182;
                 const CP1500_HEIGHT = 1748;
 
@@ -1604,7 +1555,6 @@
                 canvas.width = cw;
                 canvas.height = ch;
 
-                // 1) 배경 아트워크 및 화이트 매트 보더 렌더링 (배경 표시 안 함 선택 시 여백 제거하여 사진 영역 확장)
                 const matteMargin = isBgHidden ? 0 : 82;
                 const photoMargin = isBgHidden ? 42 : 56;
 
@@ -1635,7 +1585,6 @@
                     ctx.lineWidth = 2;
                     ctx.strokeRect(matteMargin + 16, matteMargin + 16, cw - matteMargin * 2 - 32, ch - matteMargin * 2 - 32);
                 } else {
-                    // 배경 표시 안 함: 전체 캔버스를 화이트 카드화하여 사진 영역을 바깥 배경만큼 확장
                     ctx.fillStyle = '#ffffff';
                     ctx.fillRect(0, 0, cw, ch);
                     ctx.strokeStyle = currentSeason.accent + "77";
@@ -1643,7 +1592,6 @@
                     ctx.strokeRect(18, 18, cw - 36, ch - 36);
                 }
 
-                // 2) 활성화된 하단 문구 및 로고 스탬프 항목 확인 (숨긴 항목만큼 사진 높이를 자동 확장)
                 const titleText = (customTitleText || currentSeason.defaultTitle).trim();
                 const milestoneText = (customMilestoneText || '').trim();
                 const descText = (customDescText || currentSeason.desc).trim();
@@ -1713,14 +1661,12 @@
                     layouts.push({ x: targetX + boxW + gap, y: targetY + boxH + gap, w: boxW, h: boxH });
                 }
 
-                // 3) 각 슬롯에 아이 사진 렌더링
                 userImgs.forEach((img, idx) => {
                     if (layouts[idx]) {
                         drawImageCover(ctx, img, layouts[idx].x, layouts[idx].y, layouts[idx].w, layouts[idx].h);
                     }
                 });
 
-                // 4) 활성화된 맞춤 타이포그래피만 순차 렌더링
                 let cursorY = targetY + targetH + (isLandscape ? 16 : 22);
                 ctx.textAlign = 'center';
 
@@ -1768,7 +1714,6 @@
                     cursorY += (isLandscape ? 10 : 14);
                 }
 
-                // 5) 하단 패밀리 로고 스탬프 렌더링 ('none'이 아닐 때만 표시)
                 if (activeLogo) {
                     const footerBottomY = ch - matteMargin - bottomPad;
                     const hasGureum = gureumLogoEl && gureumLogoEl.complete && gureumLogoEl.naturalWidth > 0;
@@ -1821,14 +1766,13 @@
             }
         }
 
-        // 깃허브 페이지용 manifest.json 파일 다운로드 도우미 (PWABuilder 및 크롬 정식 앱 설치 시 주소창 완전 제거용)
         function downloadManifestFile() {
             const iconSrc = window.generatedAppIconUrl || document.getElementById('asset-logo-gureum').src;
             const manifestObj = {
                 id: "./index.html",
-                name: "구름이의 사계절 성장 기록관",
+                name: "구름이의 성장 기록관",
                 short_name: "구름이 성장앨범",
-                description: "준삐♥와솔태가 기록하는 구름이의 사계절 성장 사진 액자 스튜디오",
+                description: "준삐♥와솔태가 기록하는 구름이의 사계절 성장 앨범",
                 start_url: "./index.html",
                 scope: "./",
                 display: "fullscreen",
@@ -1856,7 +1800,6 @@
             URL.revokeObjectURL(url);
         }
 
-        // 깃허브 페이지용 서비스워커(sw.js) 다운로드 도우미 (크롬에서 '바로가기'가 아닌 진짜 '앱 설치(WebAPK)'를 활성화하여 주소창을 100% 영구 제거)
         function downloadServiceWorkerFile() {
             const swCode = `const CACHE_NAME = 'gureum-album-v2';
 self.addEventListener('install', (e) => {
@@ -1880,7 +1823,6 @@ self.addEventListener('fetch', (e) => {
             URL.revokeObjectURL(url);
         }
 
-        // 모달 제어 함수
         function openModal(type) {
             const modal = document.getElementById('custom-modal');
             const mTitle = document.getElementById('modal-title');
@@ -1892,28 +1834,28 @@ self.addEventListener('fetch', (e) => {
             cancelBtn.classList.remove('hidden');
 
             if (type === 'upload') {
-                mTitle.innerText = '구름이 사진 불러오기';
-                mDesc.innerText = `선택하신 [${selectedLayout ? selectedLayout.name : '성장 프레임'}] 비율에 맞춰 사진이 중앙 정렬로 예쁘게 담깁니다. 스마트폰 고해상도 사진도 끊김 없이 자동 최적화됩니다.`;
+                mTitle.innerText = '사진 불러오기';
+                mDesc.innerText = `선택한 [${selectedLayout ? selectedLayout.name : '프레임'}] 구성에 맞춰 사진을 불러옵니다.`;
                 iconContainer.innerHTML = '<i data-lucide="camera" class="w-7 h-7 text-amber-600"></i>';
-                confirmBtn.innerText = '사진 선택하기';
-                confirmBtn.className = 'flex-1 py-3.5 text-amber-800 font-bold font-gowun text-sm sm:text-base border-l border-stone-100 hover:bg-white transition-colors';
+                confirmBtn.innerText = '사진 선택';
+                confirmBtn.className = 'flex-1 py-3.5 text-amber-800 font-bold font-gowun text-sm border-l border-stone-100 hover:bg-white transition-colors';
                 modalPendingAction = 'upload';
             } else if (type === 'download') {
-                mTitle.innerText = '고화질 성장 액자 저장';
-                mDesc.innerText = '캐논 셀피 CP1500 포토프린터 엽서 규격(300dpi) 고화질 PNG 이미지로 저장합니다. 지금 바로 앨범에 간직해 보세요!';
+                mTitle.innerText = '성장 액자 저장';
+                mDesc.innerText = '완성된 구름이 성장 액자를 고화질 이미지로 저장합니다.';
                 iconContainer.innerHTML = '<i data-lucide="download" class="w-7 h-7 text-emerald-600"></i>';
                 confirmBtn.innerText = '저장하기';
-                confirmBtn.className = 'flex-1 py-3.5 text-emerald-700 font-bold font-gowun text-sm sm:text-base border-l border-stone-100 hover:bg-white transition-colors';
+                confirmBtn.className = 'flex-1 py-3.5 text-emerald-700 font-bold font-gowun text-sm border-l border-stone-100 hover:bg-white transition-colors';
                 modalPendingAction = 'download';
             } else if (type === 'reset') {
-                mTitle.innerText = '처음부터 다시 만들까요?';
-                mDesc.innerText = '현재 선택한 사진과 입력한 맞춤 문구가 초기화되고 계절 테마 선택 화면으로 돌아갑니다.';
+                mTitle.innerText = '처음으로 돌아갈까요?';
+                mDesc.innerText = '현재 선택한 사진과 입력한 문구가 초기화되고 첫 화면으로 이동합니다.';
                 iconContainer.innerHTML = '<i data-lucide="rotate-ccw" class="w-7 h-7 text-rose-500"></i>';
                 confirmBtn.innerText = '초기화';
-                confirmBtn.className = 'flex-1 py-3.5 text-rose-600 font-bold font-gowun text-sm sm:text-base border-l border-stone-100 hover:bg-white transition-colors';
+                confirmBtn.className = 'flex-1 py-3.5 text-rose-600 font-bold font-gowun text-sm border-l border-stone-100 hover:bg-white transition-colors';
                 modalPendingAction = 'reset';
             } else if (type === 'install-guide') {
-                mTitle.innerText = '상단 주소창 영구 제거 완벽 가이드';
+                mTitle.innerText = '전체화면 및 앱 설치 안내';
                 const autoFsLabel = autoFullscreenEnabled ? '✓ 첫 터치 시 자동 전체화면: 켜짐' : '첫 터치 시 자동 전체화면: 꺼짐';
                 const autoFsClass = autoFullscreenEnabled
                     ? 'w-full py-2.5 rounded-xl bg-emerald-700 text-white font-bold text-xs sm:text-sm hover:bg-emerald-800 transition-colors'
@@ -1922,23 +1864,23 @@ self.addEventListener('fetch', (e) => {
                 mDesc.innerHTML = `
                     <div class="space-y-3 text-xs sm:text-sm">
                         <div class="p-3 rounded-2xl bg-stone-100 border border-stone-200 space-y-2">
-                            <div class="font-bold text-stone-900">1. 앱 내부 자동 전체화면 (즉시 작동 중)</div>
-                            <p class="text-stone-600 leading-snug">계절 카드나 버튼을 터치하는 순간 브라우저 주소창이 자동으로 숨겨지도록 설정되어 있습니다.</p>
+                            <div class="font-bold text-stone-900">1. 앱 내부 자동 전체화면</div>
+                            <p class="text-stone-600 leading-snug">화면을 터치하면 상단 주소창이 자동으로 숨겨집니다.</p>
                             <button type="button" onclick="closeModal(); toggleFullscreenMode();" class="w-full py-2 rounded-xl bg-stone-800 text-white font-bold text-xs sm:text-sm hover:bg-stone-700">지금 바로 전체화면 켜기</button>
                             <button type="button" id="auto-fs-status-btn" onclick="toggleAutoFullscreenSetting()" class="${autoFsClass}">${autoFsLabel}</button>
                         </div>
 
-                        <div class="p-3 rounded-2xl bg-amber-50/90 border border-amber-200 space-y-2">
-                            <div class="font-bold text-amber-950">2. PWABuilder APK에서 주소창이 안 사라지는 이유와 1분 해결법</div>
-                            <p class="text-stone-700 leading-snug">PWABuilder 기본값(<b>TWA 모드</b>)은 디지털 인증파일(<code>assetlinks.json</code>)이 없으면 보안상 무조건 상단 주소창을 띄웁니다.<br/><b>해결법 A (가장 쉬움):</b> PWABuilder에서 Android Package 생성 시 <b>Other Options → App behavior</b>를 <code>TWA</code> 대신 <b><code>WebView</code></b>로 선택해 APK를 받으시면 인증 설정 없이도 주소창이 100% 영구히 사라집니다.<br/><b>해결법 B:</b> PWABuilder ZIP 안의 <code>assetlinks.json</code> 파일을 깃허브 저장소의 <code>.well-known/assetlinks.json</code> 경로에 업로드하세요.</p>
+                        <div class="p-3 rounded-2xl bg-amber-50/90 border border-amber-200 space-y-1.5">
+                            <div class="font-bold text-amber-950">2. PWABuilder APK에서 주소창 없애기</div>
+                            <p class="text-stone-700 leading-snug">PWABuilder에서 Android Package 생성 시 <b>Other Options → App behavior</b>를 <code>TWA</code> 대신 <b><code>WebView</code></b>로 선택해 APK를 만들면 상단 주소창이 영구히 나타나지 않습니다.</p>
                         </div>
 
                         <div class="p-3 rounded-2xl bg-blue-50/70 border border-blue-200 space-y-2">
-                            <div class="font-bold text-blue-950">3. APK 없이 크롬 [앱 설치]로 주소창 영구 제거</div>
-                            <p class="text-stone-700 leading-snug">아래 2개 파일을 받아 깃허브에 <code>index.html</code>과 같은 폴더에 올리면, 크롬 메뉴(⋮)에 <b>[앱 설치]</b>가 활성화되어 주소창이 영구히 없는 정식 앱으로 설치됩니다.</p>
+                            <div class="font-bold text-blue-950">3. 크롬 [앱 설치]용 파일 받기</div>
+                            <p class="text-stone-700 leading-snug">아래 두 파일을 깃허브에 <code>index.html</code>과 함께 올리면 크롬 메뉴(⋮)의 <b>[앱 설치]</b>로 주소창 없는 앱을 설치할 수 있습니다.</p>
                             <div class="grid grid-cols-2 gap-1.5">
-                                <button type="button" onclick="downloadManifestFile()" class="py-2 px-2 rounded-xl bg-amber-600 text-white font-bold text-xs hover:bg-amber-700">깃허브 업로드용 manifest.json 다운로드</button>
-                                <button type="button" onclick="downloadServiceWorkerFile()" class="py-2 px-2 rounded-xl bg-blue-700 text-white font-bold text-xs hover:bg-blue-800">sw.js 파일 다운로드</button>
+                                <button type="button" onclick="downloadManifestFile()" class="py-2 px-2 rounded-xl bg-amber-600 text-white font-bold text-xs hover:bg-amber-700">manifest.json 받기</button>
+                                <button type="button" onclick="downloadServiceWorkerFile()" class="py-2 px-2 rounded-xl bg-blue-700 text-white font-bold text-xs hover:bg-blue-800">sw.js 받기</button>
                             </div>
                         </div>
                     </div>
@@ -1947,7 +1889,7 @@ self.addEventListener('fetch', (e) => {
                 iconContainer.innerHTML = `<img src="${iconSrc}" alt="구름이 앱 아이콘" class="w-12 h-12 rounded-2xl shadow-md object-cover border border-amber-200">`;
                 cancelBtn.classList.add('hidden');
                 confirmBtn.innerText = '닫기';
-                confirmBtn.className = 'flex-1 py-3.5 text-amber-800 font-bold font-gowun text-sm sm:text-base hover:bg-white transition-colors';
+                confirmBtn.className = 'flex-1 py-3.5 text-amber-800 font-bold font-gowun text-sm hover:bg-white transition-colors';
                 modalPendingAction = null;
             }
 
@@ -2001,7 +1943,7 @@ self.addEventListener('fetch', (e) => {
             iconContainer.innerHTML = '<i data-lucide="sparkles" class="w-7 h-7 text-amber-500"></i>';
             cancelBtn.classList.add('hidden');
             confirmBtn.innerText = '확인';
-            confirmBtn.className = 'flex-1 py-3.5 text-stone-800 font-bold font-gowun text-sm sm:text-base hover:bg-white active:bg-stone-50';
+            confirmBtn.className = 'flex-1 py-3.5 text-stone-800 font-bold font-gowun text-sm hover:bg-white active:bg-stone-50';
             modalPendingAction = null; 
             
             lucide.createIcons();
@@ -2019,7 +1961,6 @@ self.addEventListener('fetch', (e) => {
             document.body.removeChild(link);
         }
 
-        // 이벤트 리스너 바인딩
         document.getElementById('custom-bg-input').addEventListener('change', handleFreshPhotoUpload);
 
         ['input-custom-title', 'input-custom-milestone', 'input-custom-desc'].forEach(id => {
@@ -2061,7 +2002,6 @@ self.addEventListener('fetch', (e) => {
             }
         }
 
-        // 구름이 로고를 512x512 정사각형 앱 아이콘으로 렌더링하여 PWA 매니페스트 및 서비스워커 등록
         function initPwaAppSetup() {
             if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
                 navigator.serviceWorker.register('./sw.js').catch(() => {});
@@ -2107,16 +2047,14 @@ self.addEventListener('fetch', (e) => {
                     if (manifestLink) {
                         applyDynamicManifest(manifestLink, appIconUrl);
                     }
-                } catch (e) {
-                    console.warn("PWA 아이콘 초기화 생략:", e);
-                }
+                } catch (e) {}
             };
 
             const applyDynamicManifest = (manifestLink, appIconUrl) => {
                 const manifestObj = {
-                    name: "구름이의 사계절 성장 기록관",
+                    name: "구름이의 성장 기록관",
                     short_name: "구름이 성장앨범",
-                    description: "준삐♥와솔태가 기록하는 구름이의 사계절 성장 사진 액자 스튜디오",
+                    description: "준삐♥와솔태가 기록하는 구름이의 사계절 성장 앨범",
                     start_url: ".",
                     display: "fullscreen",
                     display_override: ["fullscreen", "standalone", "minimal-ui"],
@@ -2142,7 +2080,6 @@ self.addEventListener('fetch', (e) => {
             }
         }
 
-        // 어플리케이션 초기화
         window.onload = function() {
             const gSrc = document.getElementById('asset-logo-gureum').src;
             const pSrc = document.getElementById('asset-logo-parents').src;
@@ -2151,7 +2088,6 @@ self.addEventListener('fetch', (e) => {
             initPwaAppSetup();
             initSeasonalBackgrounds();
 
-            // STEP 1: 모바일 2x2 한 화면 비율에 맞춘 계절 카드 렌더링
             const seasonContainer = document.getElementById('season-buttons');
             seasonContainer.innerHTML = '';
             Object.values(SEASON_DATA).forEach(season => {
@@ -2164,14 +2100,13 @@ self.addEventListener('fetch', (e) => {
                                 <i data-lucide="${season.icon}" stroke-width="1.8" class="w-4 h-4 sm:w-6 sm:h-6 text-white"></i>
                             </div>
                             <span class="text-[10px] sm:text-xs uppercase tracking-widest text-white/85 font-gowun font-bold">${season.subTitle}</span>
-                            <span class="text-base sm:text-2xl font-serif-kr font-bold mb-0.5 sm:mb-1.5 tracking-wide text-white drop-shadow-sm keep-all">${season.name}</span>
+                            <span class="text-sm sm:text-2xl font-serif-kr font-bold mb-0.5 sm:mb-1.5 tracking-wide text-white drop-shadow-sm whitespace-nowrap">${season.name}</span>
                             <span class="hidden sm:webkit-box text-xs sm:text-sm text-white/95 keep-all leading-relaxed font-gowun px-1 line-clamp-2">${season.desc}</span>
                         </div>
                     </button>
                 `;
             });
 
-            // STEP 2: 모바일 2x3 한 화면 비율에 맞춘 프레임 레이아웃 카드 렌더링
             const layoutContainer = document.getElementById('layout-buttons');
             layoutContainer.innerHTML = '';
             LAYOUT_DATA.forEach(layout => {
@@ -2180,8 +2115,8 @@ self.addEventListener('fetch', (e) => {
                         <div class="w-14 h-14 sm:w-22 sm:h-22 p-2 sm:p-3 bg-stone-50 rounded-xl mb-2 sm:mb-3 flex items-center justify-center group-hover:bg-amber-50/50 transition-colors">
                             ${layout.icon}
                         </div>
-                        <span class="font-serif-kr text-xs sm:text-lg text-stone-800 font-bold tracking-wide mb-0.5 keep-all">${layout.name}</span>
-                        <span class="font-gowun text-[11px] sm:text-sm text-stone-500 font-bold keep-all">${layout.sub}</span>
+                        <span class="font-serif-kr text-xs sm:text-lg text-stone-800 font-bold tracking-wide mb-0.5 whitespace-nowrap">${layout.name}</span>
+                        <span class="font-gowun text-[11px] sm:text-sm text-stone-500 font-bold whitespace-nowrap">${layout.sub}</span>
                     </button>
                 `;
             });
