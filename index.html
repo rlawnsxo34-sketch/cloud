@@ -79,6 +79,66 @@
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* 사진 초점·위치 및 확대 조절 모달 스타일 */
+        .crop-stage-wrap {
+            position: relative;
+            width: 100%;
+            height: 290px;
+            background: #1c1917;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            box-shadow: inset 0 2px 12px rgba(0,0,0,0.45);
+        }
+        .crop-viewport {
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 0 9999px rgba(12, 10, 9, 0.62);
+            cursor: grab;
+            touch-action: none;
+        }
+        .crop-viewport:active {
+            cursor: grabbing;
+        }
+        .crop-grid-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(to right, rgba(255,255,255,0.38) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.38) 1px, transparent 1px);
+            background-size: 33.333% 33.333%;
+        }
+        .crop-center-cross {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 18px;
+            height: 18px;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        .crop-center-cross::before,
+        .crop-center-cross::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 1px;
+        }
+        .crop-center-cross::before {
+            top: 8px; left: 0; width: 18px; height: 2px;
+        }
+        .crop-center-cross::after {
+            left: 8px; top: 0; width: 2px; height: 18px;
+        }
     </style>
 </head>
 <body class="bg-[#efeae4] min-h-[100dvh] flex items-stretch sm:items-center justify-center p-0 sm:p-4 md:p-6 relative">
@@ -195,7 +255,7 @@
 
                 <!-- 사진 선택 후 그리드 UI -->
                 <div id="photo-selection-ui" class="hidden w-full max-w-2xl mx-auto flex-col items-center">
-                    <p class="text-xs text-stone-500 font-gowun mb-2.5">◀ ▶ 버튼으로 사진 순서를 바꿀 수 있어요.</p>
+                    <p class="text-xs text-stone-600 font-gowun mb-2.5 keep-all">사진의 <b>[초점·위치]</b>를 눌러 프레임 안에서 보일 구름이 위치를 직접 움직여 맞출 수 있어요. (◀ ▶ 순서 변경)</p>
                     <div id="photo-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 w-full mb-4 sm:mb-6"></div>
                     <div class="flex flex-col sm:flex-row gap-2.5 w-full max-w-md mx-auto">
                         <button type="button" id="btn-next-step4" onclick="initStep4()" style="display:none;" class="flex-1 py-3.5 px-5 rounded-2xl font-serif-kr text-base sm:text-lg text-white font-bold transition-all active:scale-95 shadow-md hover:shadow-lg justify-center items-center gap-2">
@@ -222,7 +282,10 @@
                             <i data-lucide="minimize-2" id="icon-preview-size" class="w-3.5 h-3.5 text-stone-600"></i>
                             <span id="label-preview-size">미리보기 작게</span>
                         </button>
-                        <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1 flex-wrap justify-end">
+                            <button type="button" onclick="openPhotoCropModal(0)" class="text-xs font-gowun font-bold text-amber-950 bg-amber-100/90 hover:bg-amber-200 px-2.5 py-1 rounded-full border border-amber-300 flex items-center gap-1 shadow-sm active:scale-95 transition-all">
+                                <i data-lucide="move" class="w-3.5 h-3.5 text-amber-800"></i> 초점·위치
+                            </button>
                             <button type="button" onclick="openPreviewZoomModal()" class="text-xs font-gowun font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-full border border-amber-200 flex items-center gap-1">
                                 <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i> 크게 보기
                             </button>
@@ -468,6 +531,80 @@
         <img id="zoom-modal-image" src="" alt="확대된 성장 액자" class="max-w-full max-h-[82vh] object-contain rounded shadow-2xl" onclick="event.stopPropagation()" />
     </div>
 
+    <!-- 사진 초점·위치 및 확대 조절 모달 -->
+    <div id="photo-crop-modal" class="hidden fixed inset-0 bg-black/75 z-[130] flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-[1.5rem] w-full max-w-md max-h-[92dvh] flex flex-col overflow-hidden shadow-2xl border border-stone-200 animate-fade-up" onclick="event.stopPropagation()">
+            <!-- 모달 헤더 -->
+            <div class="px-4 py-3 border-b border-stone-200 flex items-center justify-between bg-stone-50">
+                <div>
+                    <h3 class="font-serif-kr text-base sm:text-lg text-stone-800 font-bold flex items-center gap-1.5">
+                        <i data-lucide="move" class="w-4 h-4 text-amber-700"></i>
+                        <span>사진 초점·위치 조절</span>
+                    </h3>
+                    <p class="text-[11px] sm:text-xs text-stone-500 font-gowun mt-0.5">프레임 안에서 보일 구름이 위치를 손가락이나 마우스로 밀어 맞춰보세요</p>
+                </div>
+                <button type="button" onclick="closePhotoCropModal()" class="p-1.5 rounded-full text-stone-500 hover:bg-stone-200/70 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- 사진 전환 탭 (2장 이상일 때 각 슬롯 전환) -->
+            <div id="crop-slot-tabs" class="px-4 py-2 bg-stone-100/80 border-b border-stone-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            </div>
+
+            <!-- 인터랙티브 드래그 & 줌 스테이지 -->
+            <div class="p-3.5 sm:p-4 overflow-y-auto space-y-3 flex-1 bg-white">
+                <div id="crop-stage-wrap" class="crop-stage-wrap">
+                    <div id="crop-viewport" class="crop-viewport">
+                        <canvas id="crop-preview-canvas" class="block w-full h-full pointer-events-none"></canvas>
+                        <div class="crop-grid-overlay"></div>
+                        <div class="crop-center-cross"></div>
+                    </div>
+                    <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 bg-black/70 text-white text-[11px] font-gowun font-bold px-3 py-1 rounded-full pointer-events-none flex items-center gap-1 whitespace-nowrap shadow">
+                        <i data-lucide="hand" class="w-3.5 h-3.5 text-amber-300"></i> 사진을 드래그하여 원하는 위치에 맞춰주세요
+                    </div>
+                </div>
+
+                <!-- 확대/축소 슬라이더 및 빠른 위치 버튼 -->
+                <div class="bg-stone-50 p-3 rounded-2xl border border-stone-200/90 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-gowun font-bold text-stone-700 flex items-center gap-1">
+                            <i data-lucide="zoom-in" class="w-3.5 h-3.5 text-amber-700"></i> 사진 확대 배율
+                        </span>
+                        <span id="crop-zoom-label" class="text-xs font-gowun font-bold text-amber-900 bg-amber-100/80 px-2 py-0.5 rounded-md border border-amber-200">100%</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="stepCropZoom(-0.1)" class="w-7 h-7 rounded-lg bg-white border border-stone-300 flex items-center justify-center text-stone-700 font-bold hover:bg-stone-100 active:scale-95 flex-shrink-0">-</button>
+                        <input type="range" id="crop-zoom-slider" min="100" max="250" step="2" value="100" oninput="onCropZoomSliderInput(this.value)" class="w-full accent-amber-700 h-2 bg-stone-200 rounded-lg cursor-pointer">
+                        <button type="button" onclick="stepCropZoom(0.1)" class="w-7 h-7 rounded-lg bg-white border border-stone-300 flex items-center justify-center text-stone-700 font-bold hover:bg-stone-100 active:scale-95 flex-shrink-0">+</button>
+                    </div>
+
+                    <div class="pt-2 border-t border-stone-200/80 flex items-center justify-between gap-1.5 flex-wrap">
+                        <span class="text-[11px] font-gowun font-bold text-stone-500">빠른 초점 이동</span>
+                        <div class="flex items-center gap-1 flex-wrap">
+                            <button type="button" onclick="setCropPreset(0.5, 0.15)" class="px-2 py-1 rounded-lg bg-white border border-stone-300 text-[11px] font-gowun font-bold text-stone-700 hover:bg-amber-50">위쪽</button>
+                            <button type="button" onclick="setCropPreset(0.5, 0.5)" class="px-2 py-1 rounded-lg bg-white border border-stone-300 text-[11px] font-gowun font-bold text-stone-700 hover:bg-amber-50">정중앙</button>
+                            <button type="button" onclick="setCropPreset(0.5, 0.85)" class="px-2 py-1 rounded-lg bg-white border border-stone-300 text-[11px] font-gowun font-bold text-stone-700 hover:bg-amber-50">아래쪽</button>
+                            <button type="button" onclick="setCropPreset(0.15, 0.5)" class="px-2 py-1 rounded-lg bg-white border border-stone-300 text-[11px] font-gowun font-bold text-stone-700 hover:bg-amber-50">왼쪽</button>
+                            <button type="button" onclick="setCropPreset(0.85, 0.5)" class="px-2 py-1 rounded-lg bg-white border border-stone-300 text-[11px] font-gowun font-bold text-stone-700 hover:bg-amber-50">오른쪽</button>
+                            <button type="button" onclick="resetCurrentPhotoCrop()" class="px-2 py-1 rounded-lg bg-stone-200/80 text-[11px] font-gowun font-bold text-stone-700 hover:bg-stone-300 flex items-center gap-0.5">
+                                <i data-lucide="rotate-ccw" class="w-3 h-3"></i> 초기화
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 모달 푸터 -->
+            <div class="px-4 py-3 border-t border-stone-200 bg-stone-50 flex items-center justify-between gap-2">
+                <span id="crop-slot-ratio-hint" class="text-[11px] font-gowun text-stone-500">선택한 프레임 칸 비율과 동일하게 표시됩니다</span>
+                <button type="button" onclick="closePhotoCropModal()" class="px-5 py-2 rounded-xl bg-amber-800 hover:bg-amber-900 text-white text-xs sm:text-sm font-gowun font-bold shadow-sm active:scale-95 transition-all whitespace-nowrap">
+                    초점 적용 완료
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 커스텀 팝업 (모달) -->
     <div id="custom-modal" class="hidden fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-[1.5rem] w-full max-w-md max-h-[90dvh] flex flex-col overflow-hidden shadow-2xl transform transition-all animate-fade-up border border-stone-100">
@@ -611,6 +748,7 @@
         let currentSeason = null;
         let selectedLayout = null;
         let selectedPhotos = []; 
+        let photoTransforms = []; // 각 사진별 { panX: 0.5, panY: 0.5, zoom: 1.0 }
         let hasPromptedUpload = false; 
         
         let selectedBgUrl = null;
@@ -798,6 +936,293 @@
             document.getElementById('preview-zoom-modal').classList.add('hidden');
         }
 
+        // ==========================================
+        // 사진 초점·위치 및 확대 조절 모달 제어
+        // ==========================================
+        let cropModalState = {
+            photoIndex: 0,
+            imgObj: null,
+            viewportW: 240,
+            viewportH: 200,
+            isDragging: false,
+            startX: 0,
+            startY: 0,
+            startPanX: 0.5,
+            startPanY: 0.5,
+            pinchStartDist: null,
+            pinchStartZoom: 1.0
+        };
+
+        async function openPhotoCropModal(index = 0) {
+            if (!selectedPhotos || selectedPhotos.length === 0) {
+                showCustomAlert("사진 선택 필요", "먼저 사진을 선택한 뒤 초점과 위치를 조절할 수 있어요.");
+                return;
+            }
+            const safeIdx = Math.max(0, Math.min(selectedPhotos.length - 1, index));
+            cropModalState.photoIndex = safeIdx;
+
+            const modal = document.getElementById('photo-crop-modal');
+            modal.classList.remove('hidden');
+
+            renderCropModalTabs();
+            await loadCropModalTargetPhoto();
+            lucide.createIcons();
+        }
+
+        function closePhotoCropModal() {
+            const modal = document.getElementById('photo-crop-modal');
+            modal.classList.add('hidden');
+            updatePhotoSelectionUI();
+            if (currentStep === 4) {
+                updatePreviewFrame();
+            }
+        }
+
+        function renderCropModalTabs() {
+            const tabsEl = document.getElementById('crop-slot-tabs');
+            if (!tabsEl) return;
+            if (selectedPhotos.length <= 1) {
+                tabsEl.classList.add('hidden');
+                return;
+            }
+            tabsEl.classList.remove('hidden');
+            let html = '';
+            selectedPhotos.forEach((_, idx) => {
+                const isActive = (idx === cropModalState.photoIndex);
+                const adjusted = isTransformAdjusted(getPhotoTransform(idx));
+                html += `
+                    <button type="button" onclick="switchCropModalPhoto(${idx})"
+                        class="px-3 py-1.5 rounded-xl text-xs font-gowun font-bold transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                            isActive
+                                ? 'bg-amber-800 text-white shadow-sm'
+                                : 'bg-white text-stone-700 border border-stone-300 hover:bg-amber-50'
+                        }">
+                        <span>${idx + 1}번 사진</span>
+                        ${adjusted ? `<span class="w-1.5 h-1.5 rounded-full ${isActive ? 'bg-amber-300' : 'bg-amber-600'}"></span>` : ''}
+                    </button>
+                `;
+            });
+            tabsEl.innerHTML = html;
+        }
+
+        async function switchCropModalPhoto(idx) {
+            cropModalState.photoIndex = idx;
+            renderCropModalTabs();
+            await loadCropModalTargetPhoto();
+        }
+
+        async function loadCropModalTargetPhoto() {
+            const idx = cropModalState.photoIndex;
+            const src = selectedPhotos[idx];
+            cropModalState.imgObj = await loadImg(src);
+
+            const slots = computeFrameSlotBoxes();
+            const slotBox = slots[idx] || slots[0] || { w: 1000, h: 1000 };
+            const ratio = slotBox.w / slotBox.h;
+
+            const maxW = 268;
+            const maxH = 228;
+            let vw, vh;
+            if (ratio >= maxW / maxH) {
+                vw = maxW;
+                vh = Math.round(maxW / ratio);
+            } else {
+                vh = maxH;
+                vw = Math.round(maxH * ratio);
+            }
+            vw = Math.max(105, vw);
+            vh = Math.max(105, vh);
+
+            cropModalState.viewportW = vw;
+            cropModalState.viewportH = vh;
+
+            const vp = document.getElementById('crop-viewport');
+            if (vp) {
+                vp.style.width = vw + 'px';
+                vp.style.height = vh + 'px';
+            }
+
+            const cvs = document.getElementById('crop-preview-canvas');
+            if (cvs) {
+                cvs.width = vw * 2;
+                cvs.height = vh * 2;
+            }
+
+            const hintEl = document.getElementById('crop-slot-ratio-hint');
+            if (hintEl && selectedLayout) {
+                hintEl.textContent = `${selectedLayout.name} · ${idx + 1}번 칸 비율에 맞춰 미리보기가 표시됩니다`;
+            }
+
+            syncCropModalZoomUI();
+            drawCropModalCanvas();
+        }
+
+        function syncCropModalZoomUI() {
+            const tf = getPhotoTransform(cropModalState.photoIndex);
+            const zoomPct = Math.round((tf.zoom || 1.0) * 100);
+            const slider = document.getElementById('crop-zoom-slider');
+            const label = document.getElementById('crop-zoom-label');
+            if (slider) slider.value = zoomPct;
+            if (label) label.textContent = zoomPct + '%';
+        }
+
+        function drawCropModalCanvas() {
+            const cvs = document.getElementById('crop-preview-canvas');
+            if (!cvs || !cropModalState.imgObj) return;
+            const ctx = cvs.getContext('2d');
+            ctx.clearRect(0, 0, cvs.width, cvs.height);
+            const tf = getPhotoTransform(cropModalState.photoIndex);
+            drawImageCover(ctx, cropModalState.imgObj, 0, 0, cvs.width, cvs.height, tf);
+        }
+
+        function onCropZoomSliderInput(val) {
+            const tf = getPhotoTransform(cropModalState.photoIndex);
+            tf.zoom = Math.max(1.0, Math.min(2.5, parseInt(val, 10) / 100));
+            syncCropModalZoomUI();
+            drawCropModalCanvas();
+            saveAppState();
+        }
+
+        function stepCropZoom(delta) {
+            const tf = getPhotoTransform(cropModalState.photoIndex);
+            tf.zoom = Math.max(1.0, Math.min(2.5, Math.round(((tf.zoom || 1.0) + delta) * 100) / 100));
+            syncCropModalZoomUI();
+            drawCropModalCanvas();
+            saveAppState();
+        }
+
+        function setCropPreset(px, py) {
+            const tf = getPhotoTransform(cropModalState.photoIndex);
+            tf.panX = px;
+            tf.panY = py;
+            drawCropModalCanvas();
+            saveAppState();
+        }
+
+        function resetCurrentPhotoCrop() {
+            photoTransforms[cropModalState.photoIndex] = { panX: 0.5, panY: 0.5, zoom: 1.0 };
+            syncCropModalZoomUI();
+            drawCropModalCanvas();
+            saveAppState();
+        }
+
+        // 마우스 드래그 / 터치 드래그 / 두 손가락 핀치 줌 이벤트 연결
+        (function setupCropStageEvents() {
+            window.addEventListener('DOMContentLoaded', () => {
+                const stage = document.getElementById('crop-stage-wrap');
+                if (!stage) return;
+
+                function applyDragOffset(dxPx, dyPx) {
+                    if (!cropModalState.imgObj) return;
+                    const tf = getPhotoTransform(cropModalState.photoIndex);
+                    const imgW = cropModalState.imgObj.naturalWidth || cropModalState.imgObj.width || 800;
+                    const imgH = cropModalState.imgObj.naturalHeight || cropModalState.imgObj.height || 600;
+                    const vw = cropModalState.viewportW;
+                    const vh = cropModalState.viewportH;
+
+                    const crop = computeSourceCropRect(imgW, imgH, vw, vh, tf);
+                    const srcDX = -dxPx * (crop.sW / vw);
+                    const srcDY = -dyPx * (crop.sH / vh);
+
+                    if (crop.maxX > 0.5) {
+                        const newSX = Math.max(0, Math.min(crop.maxX, crop.maxX * cropModalState.startPanX + srcDX));
+                        tf.panX = newSX / crop.maxX;
+                    } else {
+                        tf.panX = 0.5;
+                    }
+
+                    if (crop.maxY > 0.5) {
+                        const newSY = Math.max(0, Math.min(crop.maxY, crop.maxY * cropModalState.startPanY + srcDY));
+                        tf.panY = newSY / crop.maxY;
+                    } else {
+                        tf.panY = 0.5;
+                    }
+
+                    drawCropModalCanvas();
+                    saveAppState();
+                }
+
+                stage.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    const tf = getPhotoTransform(cropModalState.photoIndex);
+                    cropModalState.isDragging = true;
+                    cropModalState.startX = e.clientX;
+                    cropModalState.startY = e.clientY;
+                    cropModalState.startPanX = tf.panX ?? 0.5;
+                    cropModalState.startPanY = tf.panY ?? 0.5;
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!cropModalState.isDragging) return;
+                    const dx = e.clientX - cropModalState.startX;
+                    const dy = e.clientY - cropModalState.startY;
+                    applyDragOffset(dx, dy);
+                });
+
+                window.addEventListener('mouseup', () => {
+                    cropModalState.isDragging = false;
+                });
+
+                stage.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    stepCropZoom(e.deltaY < 0 ? 0.08 : -0.08);
+                }, { passive: false });
+
+                stage.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 1) {
+                        const tf = getPhotoTransform(cropModalState.photoIndex);
+                        cropModalState.isDragging = true;
+                        cropModalState.startX = e.touches[0].clientX;
+                        cropModalState.startY = e.touches[0].clientY;
+                        cropModalState.startPanX = tf.panX ?? 0.5;
+                        cropModalState.startPanY = tf.panY ?? 0.5;
+                        cropModalState.pinchStartDist = null;
+                    } else if (e.touches.length === 2) {
+                        cropModalState.isDragging = false;
+                        const dx = e.touches[0].clientX - e.touches[1].clientX;
+                        const dy = e.touches[0].clientY - e.touches[1].clientY;
+                        cropModalState.pinchStartDist = Math.hypot(dx, dy);
+                        const tf = getPhotoTransform(cropModalState.photoIndex);
+                        cropModalState.pinchStartZoom = tf.zoom || 1.0;
+                    }
+                }, { passive: true });
+
+                stage.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    if (e.touches.length === 1 && cropModalState.isDragging) {
+                        const dx = e.touches[0].clientX - cropModalState.startX;
+                        const dy = e.touches[0].clientY - cropModalState.startY;
+                        applyDragOffset(dx, dy);
+                    } else if (e.touches.length === 2 && cropModalState.pinchStartDist) {
+                        const dx = e.touches[0].clientX - e.touches[1].clientX;
+                        const dy = e.touches[0].clientY - e.touches[1].clientY;
+                        const dist = Math.hypot(dx, dy);
+                        const scale = dist / cropModalState.pinchStartDist;
+                        const tf = getPhotoTransform(cropModalState.photoIndex);
+                        tf.zoom = Math.max(1.0, Math.min(2.5, Math.round(cropModalState.pinchStartZoom * scale * 100) / 100));
+                        syncCropModalZoomUI();
+                        drawCropModalCanvas();
+                        saveAppState();
+                    }
+                }, { passive: false });
+
+                stage.addEventListener('touchend', (e) => {
+                    if (e.touches.length === 0) {
+                        cropModalState.isDragging = false;
+                        cropModalState.pinchStartDist = null;
+                    } else if (e.touches.length === 1) {
+                        const tf = getPhotoTransform(cropModalState.photoIndex);
+                        cropModalState.isDragging = true;
+                        cropModalState.startX = e.touches[0].clientX;
+                        cropModalState.startY = e.touches[0].clientY;
+                        cropModalState.startPanX = tf.panX ?? 0.5;
+                        cropModalState.startPanY = tf.panY ?? 0.5;
+                        cropModalState.pinchStartDist = null;
+                    }
+                });
+            });
+        })();
+
         function createSeasonalArtworkDataUrl(seasonId, variantIndex) {
             const c = document.createElement('canvas');
             c.width = 600;
@@ -907,8 +1332,10 @@
             if (!selectedLayout) return;
             const count = selectedLayout.count;
             selectedPhotos = [];
+            photoTransforms = [];
             for (let i = 0; i < count; i++) {
                 selectedPhotos.push(createSampleBabyPhoto(i, currentSeason));
+                photoTransforms.push({ panX: 0.5, panY: 0.5, zoom: 1.0 });
             }
             updatePhotoSelectionUI();
         }
@@ -946,6 +1373,7 @@
                 seasonId: currentSeason ? currentSeason.id : null,
                 layoutId: selectedLayout ? selectedLayout.id : null,
                 photos: selectedPhotos,
+                photoTransforms: photoTransforms,
                 customBg: customUploadedBgSrc,
                 selectedBgIsNone: selectedBgUrl === 'none',
                 customTitleText,
@@ -982,6 +1410,9 @@
                     currentSeason = SEASON_DATA[state.seasonId] || SEASON_DATA.spring;
                     selectedLayout = LAYOUT_DATA.find(l => l.id === state.layoutId) || LAYOUT_DATA[0];
                     selectedPhotos = state.photos || [];
+                    photoTransforms = Array.isArray(state.photoTransforms)
+                        ? state.photoTransforms
+                        : selectedPhotos.map(() => ({ panX: 0.5, panY: 0.5, zoom: 1.0 }));
                     customUploadedBgSrc = state.customBg || null;
                     customTitleText = state.customTitleText ?? currentSeason.defaultTitle;
                     customMilestoneText = state.customMilestoneText ?? currentSeason.defaultMilestone;
@@ -1111,6 +1542,7 @@
             applySeasonThemeToUI();
             resetFileInput();
             selectedPhotos = []; 
+            photoTransforms = [];
             customUploadedBgSrc = null; 
             updatePhotoSelectionUI();
             setStep(3);
@@ -1402,6 +1834,9 @@
                         });
                     }));
                     selectedPhotos = selectedPhotos.concat(optimizedSrcs);
+                    optimizedSrcs.forEach(() => {
+                        photoTransforms.push({ panX: 0.5, panY: 0.5, zoom: 1.0 });
+                    });
                 } catch (error) { 
                     console.error("파일 처리 실패:", error); 
                 }
@@ -1411,12 +1846,29 @@
             e.target.value = "";
         }
 
+        function getPhotoTransform(idx) {
+            if (!photoTransforms[idx]) {
+                photoTransforms[idx] = { panX: 0.5, panY: 0.5, zoom: 1.0 };
+            }
+            return photoTransforms[idx];
+        }
+
+        function isTransformAdjusted(tf) {
+            if (!tf) return false;
+            return Math.abs((tf.panX ?? 0.5) - 0.5) > 0.01 || Math.abs((tf.panY ?? 0.5) - 0.5) > 0.01 || Math.abs((tf.zoom ?? 1.0) - 1.0) > 0.01;
+        }
+
         function movePhotoOrder(index, direction) {
             const targetIdx = index + direction;
             if (targetIdx < 0 || targetIdx >= selectedPhotos.length) return;
             const temp = selectedPhotos[index];
             selectedPhotos[index] = selectedPhotos[targetIdx];
             selectedPhotos[targetIdx] = temp;
+
+            const tempTf = getPhotoTransform(index);
+            photoTransforms[index] = getPhotoTransform(targetIdx);
+            photoTransforms[targetIdx] = tempTf;
+
             updatePhotoSelectionUI();
         }
 
@@ -1442,25 +1894,42 @@
                 selectedPhotos.forEach((src, idx) => {
                     const canLeft = idx > 0;
                     const canRight = idx < selectedPhotos.length - 1;
+                    const tf = getPhotoTransform(idx);
+                    const adjusted = isTransformAdjusted(tf);
+                    const objPos = `${((tf.panX ?? 0.5) * 100).toFixed(1)}% ${((tf.panY ?? 0.5) * 100).toFixed(1)}%`;
+                    const zoomVal = tf.zoom ?? 1.0;
                     grid.innerHTML += `
                         <div class="relative aspect-square rounded-2xl overflow-hidden border border-stone-200 shadow-sm group bg-white">
-                            <img src="${src}" alt="선택된 사진 ${idx + 1}" class="w-full h-full object-cover" />
-                            <div class="absolute top-2 left-2 bg-stone-900/75 text-white text-xs font-gowun font-bold px-2.5 py-0.5 rounded-full backdrop-blur-sm">
-                                ${idx + 1}번
+                            <img src="${src}" onclick="openPhotoCropModal(${idx})" alt="선택된 사진 ${idx + 1}" class="w-full h-full object-cover cursor-pointer transition-transform duration-150" style="object-position: ${objPos}; transform: scale(${zoomVal}); transform-origin: ${objPos};" title="터치하여 초점·위치 조절" />
+                            <div class="absolute top-2 left-2 flex items-center gap-1 pointer-events-none">
+                                <span class="bg-stone-900/75 text-white text-xs font-gowun font-bold px-2.5 py-0.5 rounded-full backdrop-blur-sm">
+                                    ${idx + 1}번
+                                </span>
+                                ${adjusted ? `
+                                <span class="bg-amber-500/90 text-white text-[10px] font-gowun font-bold px-2 py-0.5 rounded-full backdrop-blur-sm shadow-sm">
+                                    초점 맞춤
+                                </span>
+                                ` : ''}
                             </div>
                             <button type="button" onclick="removePhoto(${idx})" class="absolute top-2 right-2 bg-black/65 text-white rounded-full p-1.5 hover:bg-red-600 transition-colors backdrop-blur-sm" title="사진 삭제">
                                 <i data-lucide="x" class="w-4 h-4"></i>
                             </button>
-                            ${selectedPhotos.length > 1 ? `
-                            <div class="absolute bottom-2 inset-x-2 flex justify-between pointer-events-none">
-                                <button type="button" onclick="movePhotoOrder(${idx}, -1)" ${!canLeft ? 'disabled' : ''} class="pointer-events-auto p-1.5 rounded-full bg-white/90 text-stone-800 shadow hover:bg-white disabled:opacity-30 transition-opacity">
+                            <div class="absolute bottom-2 inset-x-2 flex items-center justify-between gap-1 pointer-events-none">
+                                ${selectedPhotos.length > 1 ? `
+                                <button type="button" onclick="movePhotoOrder(${idx}, -1)" ${!canLeft ? 'disabled' : ''} class="pointer-events-auto p-1.5 rounded-full bg-white/90 text-stone-800 shadow hover:bg-white disabled:opacity-30 transition-opacity flex-shrink-0">
                                     <i data-lucide="chevron-left" class="w-4 h-4"></i>
                                 </button>
-                                <button type="button" onclick="movePhotoOrder(${idx}, 1)" ${!canRight ? 'disabled' : ''} class="pointer-events-auto p-1.5 rounded-full bg-white/90 text-stone-800 shadow hover:bg-white disabled:opacity-30 transition-opacity">
+                                ` : '<span></span>'}
+                                <button type="button" onclick="openPhotoCropModal(${idx})" class="pointer-events-auto px-2.5 py-1 rounded-full bg-stone-900/80 hover:bg-stone-900 text-white text-[11px] font-gowun font-bold shadow flex items-center gap-1 backdrop-blur-sm active:scale-95 transition-all">
+                                    <i data-lucide="move" class="w-3 h-3 text-amber-300"></i>
+                                    <span>초점·위치</span>
+                                </button>
+                                ${selectedPhotos.length > 1 ? `
+                                <button type="button" onclick="movePhotoOrder(${idx}, 1)" ${!canRight ? 'disabled' : ''} class="pointer-events-auto p-1.5 rounded-full bg-white/90 text-stone-800 shadow hover:bg-white disabled:opacity-30 transition-opacity flex-shrink-0">
                                     <i data-lucide="chevron-right" class="w-4 h-4"></i>
                                 </button>
+                                ` : '<span></span>'}
                             </div>
-                            ` : ''}
                         </div>
                     `;
                 });
@@ -1488,6 +1957,7 @@
 
         function removePhoto(index) {
             selectedPhotos.splice(index, 1);
+            photoTransforms.splice(index, 1);
             updatePhotoSelectionUI();
         }
 
@@ -1504,21 +1974,121 @@
             });
         };
 
-        function drawImageCover(ctx, img, boxX, boxY, boxW, boxH) {
+        // 사진 원본 크기와 슬롯 크기 및 사용자 초점(panX, panY, zoom)을 바탕으로 크롭 영역 계산
+        function computeSourceCropRect(imgW, imgH, boxW, boxH, transform) {
+            const panX = (transform && typeof transform.panX === 'number') ? Math.max(0, Math.min(1, transform.panX)) : 0.5;
+            const panY = (transform && typeof transform.panY === 'number') ? Math.max(0, Math.min(1, transform.panY)) : 0.5;
+            const zoom = (transform && typeof transform.zoom === 'number') ? Math.max(1.0, Math.min(3.0, transform.zoom)) : 1.0;
+
+            const imgRatio = imgW / imgH;
+            const targetRatio = boxW / boxH;
+            let baseSW, baseSH;
+            if (imgRatio > targetRatio) {
+                baseSH = imgH;
+                baseSW = imgH * targetRatio;
+            } else {
+                baseSW = imgW;
+                baseSH = imgW / targetRatio;
+            }
+
+            const sW = baseSW / zoom;
+            const sH = baseSH / zoom;
+            const maxX = Math.max(0, imgW - sW);
+            const maxY = Math.max(0, imgH - sH);
+            const sX = maxX * panX;
+            const sY = maxY * panY;
+
+            return { sX, sY, sW, sH, maxX, maxY, baseSW, baseSH };
+        }
+
+        // 현재 선택된 프레임 레이아웃에서 각 사진 슬롯의 정확한 크기/비율 계산
+        function computeFrameSlotBoxes() {
+            if (!selectedLayout) return [{ x: 0, y: 0, w: 990, h: 1180 }];
+            const isBgHidden = (selectedBgUrl === 'none');
+            const isLandscape = selectedLayout.orientation === 'landscape';
+            const CP1500_WIDTH = 1182;
+            const CP1500_HEIGHT = 1748;
+            const cw = isLandscape ? CP1500_HEIGHT : CP1500_WIDTH;
+            const ch = isLandscape ? CP1500_WIDTH : CP1500_HEIGHT;
+            const matteMargin = isBgHidden ? 0 : 82;
+            const photoMargin = isBgHidden ? 42 : 56;
+
+            const seasonRef = currentSeason || SEASON_DATA.spring;
+            const titleText = (customTitleText || seasonRef.defaultTitle).trim();
+            const milestoneText = (customMilestoneText || '').trim();
+            const descText = (customDescText || seasonRef.desc).trim();
+            const blessingText = (selectedBlessingMonth !== 'none' && MONTHLY_BLESSINGS[selectedBlessingMonth]) ? MONTHLY_BLESSINGS[selectedBlessingMonth] : '';
+
+            const activeTitle = showTitle && Boolean(titleText);
+            const activeMilestone = showMilestone && Boolean(milestoneText);
+            const activeDesc = showDesc && Boolean(descText);
+            const activeBlessing = Boolean(blessingText);
+            const activeLogo = (selectedLogoMode !== 'none');
+
+            const logoMaxH = isLandscape ? 78 : 104;
+            const stepTitleH = isLandscape ? 66 : 82;
+            const stepMileH = isLandscape ? 46 : 56;
+            const stepDescH = isLandscape ? 48 : 58;
+            const stepBlessH = isLandscape ? 42 : 52;
+            const stepLogoH = (selectedLogoMode === 'text') ? (isLandscape ? 48 : 58) : (logoMaxH + (isLandscape ? 22 : 30));
+
+            const anyBottomContent = activeTitle || activeMilestone || activeDesc || activeBlessing || activeLogo;
+            const bottomPad = isLandscape ? 24 : 34;
+
+            let bottomTextSpace = photoMargin;
+            if (anyBottomContent) {
+                bottomTextSpace = (isLandscape ? 20 : 28) + bottomPad;
+                if (activeTitle) bottomTextSpace += stepTitleH;
+                if (activeMilestone) bottomTextSpace += stepMileH;
+                if (activeDesc) bottomTextSpace += stepDescH;
+                if (activeBlessing) bottomTextSpace += stepBlessH;
+                if (activeLogo) bottomTextSpace += stepLogoH;
+            }
+
+            const targetX = matteMargin + photoMargin;
+            const targetY = matteMargin + photoMargin;
+            const targetW = cw - matteMargin * 2 - photoMargin * 2;
+            const targetH = ch - matteMargin * 2 - photoMargin - bottomTextSpace;
+            const gap = isBgHidden ? 22 : 26;
+            const layouts = [];
+
+            if (selectedLayout.id === '1-portrait' || selectedLayout.id === '1-landscape') {
+                layouts.push({ x: targetX, y: targetY, w: targetW, h: targetH });
+            } else if (selectedLayout.id === '2-horizontal') {
+                const boxH = (targetH - gap) / 2;
+                layouts.push({ x: targetX, y: targetY, w: targetW, h: boxH });
+                layouts.push({ x: targetX, y: targetY + boxH + gap, w: targetW, h: boxH });
+            } else if (selectedLayout.id === '2-vertical') {
+                const boxW = (targetW - gap) / 2;
+                layouts.push({ x: targetX, y: targetY, w: boxW, h: targetH });
+                layouts.push({ x: targetX + boxW + gap, y: targetY, w: boxW, h: targetH });
+            } else if (selectedLayout.id === '3-top') {
+                const boxH = (targetH - gap) / 2;
+                const boxW_half = (targetW - gap) / 2;
+                layouts.push({ x: targetX, y: targetY, w: targetW, h: boxH });
+                layouts.push({ x: targetX, y: targetY + boxH + gap, w: boxW_half, h: boxH });
+                layouts.push({ x: targetX + boxW_half + gap, y: targetY + boxH + gap, w: boxW_half, h: boxH });
+            } else if (selectedLayout.id === '4-grid') {
+                const boxW = (targetW - gap) / 2;
+                const boxH = (targetH - gap) / 2;
+                layouts.push({ x: targetX, y: targetY, w: boxW, h: boxH });
+                layouts.push({ x: targetX + boxW + gap, y: targetY, w: boxW, h: boxH });
+                layouts.push({ x: targetX, y: targetY + boxH + gap, w: boxW, h: boxH });
+                layouts.push({ x: targetX + boxW + gap, y: targetY + boxH + gap, w: boxW, h: boxH });
+            }
+            return layouts;
+        }
+
+        function drawImageCover(ctx, img, boxX, boxY, boxW, boxH, transform) {
             if (!img) {
                 ctx.fillStyle = '#f3f4f6';
                 ctx.fillRect(boxX, boxY, boxW, boxH);
                 return;
             }
-            const imgRatio = img.width / img.height;
-            const targetRatio = boxW / boxH;
-            let sX, sY, sW, sH;
-            if (imgRatio > targetRatio) {
-                sH = img.height; sW = img.height * targetRatio; sX = (img.width - sW) / 2; sY = 0;
-            } else {
-                sW = img.width; sH = img.width / targetRatio; sX = 0; sY = (img.height - sH) / 2;
-            }
-            ctx.drawImage(img, sX, sY, sW, sH, boxX, boxY, boxW, boxH);
+            const imgW = img.naturalWidth || img.width || 800;
+            const imgH = img.naturalHeight || img.height || 600;
+            const crop = computeSourceCropRect(imgW, imgH, boxW, boxH, transform);
+            ctx.drawImage(img, crop.sX, crop.sY, crop.sW, crop.sH, boxX, boxY, boxW, boxH);
             ctx.strokeStyle = "rgba(0,0,0,0.08)";
             ctx.lineWidth = 1.5;
             ctx.strokeRect(boxX, boxY, boxW, boxH);
@@ -1663,7 +2233,7 @@
 
                 userImgs.forEach((img, idx) => {
                     if (layouts[idx]) {
-                        drawImageCover(ctx, img, layouts[idx].x, layouts[idx].y, layouts[idx].w, layouts[idx].h);
+                        drawImageCover(ctx, img, layouts[idx].x, layouts[idx].y, layouts[idx].w, layouts[idx].h, getPhotoTransform(idx));
                     }
                 });
 
@@ -1980,6 +2550,7 @@ self.addEventListener('fetch', (e) => {
         function handleReset() {
             clearSavedState();
             selectedPhotos = [];
+            photoTransforms = [];
             customUploadedBgSrc = null;
             selectedBgUrl = null;
             currentSeason = null;
