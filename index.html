@@ -152,8 +152,8 @@
             <div class="flex items-center justify-between w-full lg:w-auto gap-2">
                 <button type="button" onclick="confirmHeaderHome()" class="flex items-center gap-2 text-left group focus:outline-none flex-shrink-0">
                     <div class="relative flex items-center flex-shrink-0">
-                        <img id="header-logo-gureum" data-logo="gureum" src="" alt="구름 로고" class="h-7 sm:h-10 w-auto object-contain drop-shadow-sm">
-                        <img id="header-logo-parents" data-logo="parents" src="" alt="준삐와솔태 로고" class="h-6 sm:h-8 w-auto object-contain -ml-1.5 mt-0.5 drop-shadow-sm">
+                        <img id="header-logo-gureum" data-logo="gureum" src="" alt="구름 로고" class="h-8 sm:h-11 w-auto object-contain drop-shadow-sm">
+                        <img id="header-logo-parents" data-logo="parents" src="" alt="준삐와솔태 로고" class="h-7 sm:h-9 w-auto object-contain -ml-1.5 mt-0.5 drop-shadow-sm">
                     </div>
                     <span class="font-serif-kr font-bold text-stone-800 text-[15px] sm:text-xl tracking-tight whitespace-nowrap">구름이의 성장 기록관</span>
                 </button>
@@ -441,39 +441,58 @@
                             </button>
                         </div>
 
-                        <div id="section-body-logo" class="p-3.5 sm:p-5">
+                        <div id="section-body-logo" class="p-3.5 sm:p-5 space-y-3">
                             <div class="grid grid-cols-3 sm:grid-cols-5 gap-2" id="logo-mode-buttons">
-                                <button type="button" onclick="setLogoMode('both')" data-mode="both" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-2xl border-2 border-stone-800 bg-stone-50 transition-all">
-                                    <div class="flex items-center justify-center h-8 mb-1">
-                                        <img data-logo="gureum" src="" alt="구름" class="h-7 w-auto object-contain">
-                                        <img data-logo="parents" src="" alt="준삐와솔태" class="h-6 w-auto object-contain -ml-1">
+                                <button type="button" onclick="setLogoMode('both')" data-mode="both" class="logo-mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-stone-800 bg-stone-50 transition-all">
+                                    <div class="flex items-center justify-center h-11 mb-1">
+                                        <img data-logo="gureum" src="" alt="구름" class="h-10 w-auto object-contain drop-shadow-sm">
+                                        <img data-logo="parents" src="" alt="준삐와솔태" class="h-9 w-auto object-contain -ml-1 drop-shadow-sm">
                                     </div>
                                     <span class="text-xs font-gowun font-bold text-stone-800 whitespace-nowrap">함께 표시</span>
                                 </button>
-                                <button type="button" onclick="setLogoMode('gureum')" data-mode="gureum" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
-                                    <div class="flex items-center justify-center h-8 mb-1">
-                                        <img data-logo="gureum" src="" alt="구름" class="h-7 w-auto object-contain">
+                                <button type="button" onclick="setLogoMode('gureum')" data-mode="gureum" class="logo-mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
+                                    <div class="flex items-center justify-center h-11 mb-1">
+                                        <img data-logo="gureum" src="" alt="구름" class="h-10 w-auto object-contain drop-shadow-sm">
                                     </div>
                                     <span class="text-xs font-gowun font-bold text-stone-700 whitespace-nowrap">구름이</span>
                                 </button>
-                                <button type="button" onclick="setLogoMode('parents')" data-mode="parents" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
-                                    <div class="flex items-center justify-center h-8 mb-1">
-                                        <img data-logo="parents" src="" alt="준삐와솔태" class="h-7 w-auto object-contain">
+                                <button type="button" onclick="setLogoMode('parents')" data-mode="parents" class="logo-mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
+                                    <div class="flex items-center justify-center h-11 mb-1">
+                                        <img data-logo="parents" src="" alt="준삐와솔태" class="h-10 w-auto object-contain drop-shadow-sm">
                                     </div>
                                     <span class="text-xs font-gowun font-bold text-stone-700 whitespace-nowrap">준삐♥와솔태</span>
                                 </button>
-                                <button type="button" onclick="setLogoMode('text')" data-mode="text" class="logo-mode-btn flex flex-col items-center justify-center p-2 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
-                                    <div class="flex items-center justify-center h-8 mb-1 text-stone-600 font-serif-kr text-xs font-bold">
+                                <button type="button" onclick="setLogoMode('text')" data-mode="text" class="logo-mode-btn flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
+                                    <div class="flex items-center justify-center h-11 mb-1 text-stone-600 font-serif-kr text-sm font-bold">
                                         ABC
                                     </div>
                                     <span class="text-xs font-gowun font-bold text-stone-700 whitespace-nowrap">영문 텍스트</span>
                                 </button>
-                                <button type="button" onclick="setLogoMode('none')" data-mode="none" class="logo-mode-btn col-span-2 sm:col-span-1 flex flex-col items-center justify-center p-2 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
-                                    <div class="flex items-center justify-center h-8 mb-1 text-rose-500">
-                                        <i data-lucide="eye-off" class="w-4 h-4"></i>
+                                <button type="button" onclick="setLogoMode('none')" data-mode="none" class="logo-mode-btn col-span-2 sm:col-span-1 flex flex-col items-center justify-center p-2.5 rounded-2xl border-2 border-stone-200 hover:border-stone-300 bg-white transition-all">
+                                    <div class="flex items-center justify-center h-11 mb-1 text-rose-500">
+                                        <i data-lucide="eye-off" class="w-5 h-5"></i>
                                     </div>
                                     <span class="text-xs font-gowun font-bold text-stone-700 whitespace-nowrap">표시 안 함</span>
                                 </button>
+                            </div>
+
+                            <!-- 하단 로고 크기 조절 컨트롤 -->
+                            <div id="logo-size-control-box" class="bg-stone-50/90 p-3 rounded-2xl border border-stone-200/80 space-y-2">
+                                <div class="flex items-center justify-between gap-2 flex-wrap">
+                                    <span class="text-xs font-gowun font-bold text-stone-700 flex items-center gap-1">
+                                        <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-amber-700"></i> 하단 로고 크기 조절
+                                    </span>
+                                    <div class="flex items-center gap-1">
+                                        <button type="button" onclick="setLogoScale(0.8)" data-scale="0.8" class="logo-scale-btn px-2 py-0.5 rounded-lg border border-stone-300 bg-white text-[11px] font-gowun font-bold text-stone-600 hover:bg-amber-50 transition-all">작게</button>
+                                        <button type="button" onclick="setLogoScale(1.0)" data-scale="1" class="logo-scale-btn px-2 py-0.5 rounded-lg border border-stone-300 bg-white text-[11px] font-gowun font-bold text-stone-600 hover:bg-amber-50 transition-all">보통</button>
+                                        <button type="button" onclick="setLogoScale(1.2)" data-scale="1.2" class="logo-scale-btn px-2 py-0.5 rounded-lg border border-amber-600 bg-amber-50 text-[11px] font-gowun font-bold text-amber-900 transition-all">크게</button>
+                                        <button type="button" onclick="setLogoScale(1.45)" data-scale="1.45" class="logo-scale-btn px-2 py-0.5 rounded-lg border border-stone-300 bg-white text-[11px] font-gowun font-bold text-stone-600 hover:bg-amber-50 transition-all">특대</button>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2.5">
+                                    <input type="range" id="logo-scale-slider" min="75" max="160" step="5" value="120" oninput="onLogoScaleSliderInput(this.value)" class="w-full accent-amber-700 h-2 bg-stone-200 rounded-lg cursor-pointer">
+                                    <span id="logo-scale-label" class="text-xs font-gowun font-bold text-amber-900 bg-white px-2 py-0.5 rounded-md border border-stone-200 min-w-[46px] text-center">120%</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -768,6 +787,7 @@
         let showMilestone = true;
         let showDesc = true;
         let selectedLogoMode = 'both';
+        let selectedLogoScale = 1.2; // 하단 로고 크기 배율 (0.75 ~ 1.60)
 
         let isMobilePreviewCompact = false;
         let autoFullscreenEnabled = localStorage.getItem(AUTO_FS_KEY) !== 'false';
@@ -1383,7 +1403,8 @@
                 showTitle,
                 showMilestone,
                 showDesc,
-                selectedLogoMode
+                selectedLogoMode,
+                selectedLogoScale
             };
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -1422,6 +1443,7 @@
                     showMilestone = state.showMilestone !== undefined ? state.showMilestone : true;
                     showDesc = state.showDesc !== undefined ? state.showDesc : true;
                     selectedLogoMode = state.selectedLogoMode || 'both';
+                    selectedLogoScale = typeof state.selectedLogoScale === 'number' ? state.selectedLogoScale : 1.2;
                     selectedBgUrl = state.selectedBgIsNone ? 'none' : (customUploadedBgSrc || currentSeason.bgOptions[0]);
 
                     applySeasonThemeToUI();
@@ -1660,6 +1682,18 @@
             updatePreviewFrame(selectedBgUrl || currentSeason.bgOptions[0]);
         }
 
+        function setLogoScale(scaleVal) {
+            selectedLogoScale = Math.max(0.75, Math.min(1.6, scaleVal));
+            updateLogoModeButtonsUI();
+            updatePreviewFrame(selectedBgUrl || currentSeason.bgOptions[0]);
+        }
+
+        function onLogoScaleSliderInput(pctVal) {
+            selectedLogoScale = Math.max(0.75, Math.min(1.6, parseInt(pctVal, 10) / 100));
+            updateLogoModeButtonsUI();
+            triggerDebouncedPreview();
+        }
+
         function updateLogoModeButtonsUI() {
             const modeLabels = {
                 both: '함께 표시',
@@ -1668,8 +1702,13 @@
                 text: '영문 텍스트',
                 none: '표시 안 함'
             };
+            const pct = Math.round((selectedLogoScale || 1.2) * 100);
             const summaryLogo = document.getElementById('badge-summary-logo');
-            if (summaryLogo) summaryLogo.innerText = modeLabels[selectedLogoMode] || '함께 표시';
+            if (summaryLogo) {
+                summaryLogo.innerText = selectedLogoMode === 'none'
+                    ? '표시 안 함'
+                    : `${modeLabels[selectedLogoMode] || '함께 표시'} · ${pct}%`;
+            }
 
             document.querySelectorAll('.logo-mode-btn').forEach(btn => {
                 const m = btn.getAttribute('data-mode');
@@ -1679,6 +1718,31 @@
                 } else {
                     btn.classList.remove('border-stone-800', 'bg-stone-100', 'shadow-sm');
                     btn.classList.add('border-stone-200', 'bg-white');
+                }
+            });
+
+            const sizeBox = document.getElementById('logo-size-control-box');
+            if (sizeBox) {
+                if (selectedLogoMode === 'none') {
+                    sizeBox.classList.add('hidden');
+                } else {
+                    sizeBox.classList.remove('hidden');
+                }
+            }
+
+            const slider = document.getElementById('logo-scale-slider');
+            const label = document.getElementById('logo-scale-label');
+            if (slider) slider.value = pct;
+            if (label) label.textContent = pct + '%';
+
+            document.querySelectorAll('.logo-scale-btn').forEach(btn => {
+                const targetScale = parseFloat(btn.getAttribute('data-scale'));
+                if (Math.abs((selectedLogoScale || 1.2) - targetScale) < 0.04) {
+                    btn.classList.add('border-amber-600', 'bg-amber-50', 'text-amber-900');
+                    btn.classList.remove('border-stone-300', 'bg-white', 'text-stone-600');
+                } else {
+                    btn.classList.remove('border-amber-600', 'bg-amber-50', 'text-amber-900');
+                    btn.classList.add('border-stone-300', 'bg-white', 'text-stone-600');
                 }
             });
         }
@@ -2025,12 +2089,18 @@
             const activeBlessing = Boolean(blessingText);
             const activeLogo = (selectedLogoMode !== 'none');
 
-            const logoMaxH = isLandscape ? 78 : 104;
+            const scaleFactor = typeof selectedLogoScale === 'number' ? selectedLogoScale : 1.2;
+            const baseLogoH = isLandscape ? 124 : 162;
+            const logoMaxH = Math.round(baseLogoH * scaleFactor);
+            const singleLogoMult = (selectedLogoMode === 'gureum' || selectedLogoMode === 'parents') ? 1.08 : 1.0;
+            const effectiveLogoH = Math.round(logoMaxH * singleLogoMult);
             const stepTitleH = isLandscape ? 66 : 82;
             const stepMileH = isLandscape ? 46 : 56;
             const stepDescH = isLandscape ? 48 : 58;
             const stepBlessH = isLandscape ? 42 : 52;
-            const stepLogoH = (selectedLogoMode === 'text') ? (isLandscape ? 48 : 58) : (logoMaxH + (isLandscape ? 22 : 30));
+            const stepLogoH = (selectedLogoMode === 'text')
+                ? Math.round((isLandscape ? 54 : 66) * scaleFactor)
+                : (effectiveLogoH + (isLandscape ? 24 : 32));
 
             const anyBottomContent = activeTitle || activeMilestone || activeDesc || activeBlessing || activeLogo;
             const bottomPad = isLandscape ? 24 : 34;
@@ -2177,13 +2247,19 @@
                 const mileSize = isLandscape ? 26 : 30;
                 const bodySize = isLandscape ? 32 : 38;
                 const subSize = isLandscape ? 25 : 29;
-                const logoMaxH = isLandscape ? 78 : 104;
+                const scaleFactor = typeof selectedLogoScale === 'number' ? selectedLogoScale : 1.2;
+                const baseLogoH = isLandscape ? 124 : 162;
+                const logoMaxH = Math.round(baseLogoH * scaleFactor);
+                const singleLogoMult = (selectedLogoMode === 'gureum' || selectedLogoMode === 'parents') ? 1.08 : 1.0;
+                const effectiveLogoH = Math.round(logoMaxH * singleLogoMult);
 
                 const stepTitleH = isLandscape ? 66 : 82;
                 const stepMileH = isLandscape ? 46 : 56;
                 const stepDescH = isLandscape ? 48 : 58;
                 const stepBlessH = isLandscape ? 42 : 52;
-                const stepLogoH = (selectedLogoMode === 'text') ? (isLandscape ? 48 : 58) : (logoMaxH + (isLandscape ? 22 : 30));
+                const stepLogoH = (selectedLogoMode === 'text')
+                    ? Math.round((isLandscape ? 54 : 66) * scaleFactor)
+                    : (effectiveLogoH + (isLandscape ? 24 : 32));
 
                 const anyBottomContent = activeTitle || activeMilestone || activeDesc || activeBlessing || activeLogo;
                 const bottomPad = isLandscape ? 24 : 34;
@@ -2285,34 +2361,42 @@
                 }
 
                 if (activeLogo) {
-                    const footerBottomY = ch - matteMargin - bottomPad;
+                    const footerBottomY = ch - matteMargin - Math.max(16, bottomPad - 6);
                     const hasGureum = gureumLogoEl && gureumLogoEl.complete && gureumLogoEl.naturalWidth > 0;
                     const hasParents = parentsLogoEl && parentsLogoEl.complete && parentsLogoEl.naturalWidth > 0;
+
+                    ctx.save();
+                    ctx.shadowColor = "rgba(44, 34, 30, 0.12)";
+                    ctx.shadowBlur = 10;
+                    ctx.shadowOffsetY = 3;
 
                     if (selectedLogoMode === 'both' && hasGureum && hasParents) {
                         const gH = logoMaxH;
                         const gW = gureumLogoEl.naturalWidth * (gH / gureumLogoEl.naturalHeight);
-                        const pH = logoMaxH * 0.92;
+                        const pH = logoMaxH * 0.95;
                         const pW = parentsLogoEl.naturalWidth * (pH / parentsLogoEl.naturalHeight);
-                        const spacing = 22;
+                        const spacing = Math.round(24 * scaleFactor);
                         const totalW = gW + spacing + pW;
                         const startX = (cw - totalW) / 2;
 
                         ctx.drawImage(gureumLogoEl, startX, footerBottomY - gH, gW, gH);
                         ctx.drawImage(parentsLogoEl, startX + gW + spacing, footerBottomY - pH - 2, pW, pH);
                     } else if (selectedLogoMode === 'gureum' && hasGureum) {
-                        const gH = logoMaxH * 1.05;
+                        const gH = effectiveLogoH;
                         const gW = gureumLogoEl.naturalWidth * (gH / gureumLogoEl.naturalHeight);
                         ctx.drawImage(gureumLogoEl, cw / 2 - gW / 2, footerBottomY - gH, gW, gH);
                     } else if (selectedLogoMode === 'parents' && hasParents) {
-                        const pH = logoMaxH * 1.02;
+                        const pH = effectiveLogoH;
                         const pW = parentsLogoEl.naturalWidth * (pH / parentsLogoEl.naturalHeight);
                         ctx.drawImage(parentsLogoEl, cw / 2 - pW / 2, footerBottomY - pH, pW, pH);
                     } else if (selectedLogoMode === 'text') {
-                        ctx.font = '600 26px "Pretendard", sans-serif';
-                        ctx.fillStyle = '#9ca3af';
+                        ctx.shadowColor = "transparent";
+                        const textFontPx = Math.round((isLandscape ? 30 : 34) * scaleFactor);
+                        ctx.font = `700 ${textFontPx}px "Pretendard", sans-serif`;
+                        ctx.fillStyle = '#6b6560';
                         ctx.fillText('GUREUM GROWTH ARCHIVE · JUNPPI ♥ SOLTAE', cw / 2, footerBottomY - 14);
                     }
+                    ctx.restore();
                 }
 
                 generatedImageUrl = canvas.toDataURL('image/png', 1.0);
@@ -2559,6 +2643,7 @@ self.addEventListener('fetch', (e) => {
             showMilestone = true;
             showDesc = true;
             selectedLogoMode = 'both';
+            selectedLogoScale = 1.2;
             updatePhotoSelectionUI();
             setStep(1);
         }
