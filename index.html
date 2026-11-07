@@ -301,8 +301,11 @@
                             <div class="text-stone-800 font-serif-kr text-xs sm:text-sm font-bold mt-2">액자 그리는 중...</div>
                         </div>
                         
-                        <img id="final-image" onclick="openPreviewZoomModal()" src="" alt="미리보기 성장 앨범 액자" title="터치하여 크게 보기" class="cursor-pointer w-auto h-auto max-h-[32vh] sm:max-h-[55vh] lg:max-h-[65vh] object-contain block relative z-10 drop-shadow-[0_8px_18px_rgba(0,0,0,0.14)] rounded-sm transition-all duration-300" />
+                        <img id="final-image" src="" alt="미리보기 성장 앨범 액자" draggable="false" class="select-none touch-none cursor-grab active:cursor-grabbing w-auto h-auto max-h-[32vh] sm:max-h-[55vh] lg:max-h-[65vh] object-contain block relative z-10 drop-shadow-[0_8px_18px_rgba(0,0,0,0.14)] rounded-sm transition-all duration-300" />
                     </div>
+                    <p id="preview-drag-hint" class="text-[11px] font-gowun text-stone-500 mt-1.5 text-center keep-all">
+                        💡 미리보기 액자 위에서 <b>스티커</b>나 <b>맞춤 문구</b>를 손가락·마우스로 직접 끌어 위치를 옮길 수 있어요
+                    </p>
                 </div>
 
                 <!-- 오른쪽(모바일 하단): 카테고리 탭 바 + 상세 꾸미기 패널 -->
@@ -310,18 +313,22 @@
                     
                     <!-- 원터치 카테고리 전환 탭 바 (절대 가려지지 않는 독립 카드) -->
                     <div class="bg-white p-2 rounded-2xl border border-stone-200/90 shadow-sm flex items-center gap-1.5">
-                        <div class="grid grid-cols-3 gap-1.5 flex-1">
-                            <button type="button" id="quick-tab-text" onclick="focusSingleSection('text')" class="py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-amber-400 bg-amber-50 text-amber-900 flex items-center justify-center gap-1 transition-all whitespace-nowrap">
-                                <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i>
+                        <div class="grid grid-cols-4 gap-1 flex-1">
+                            <button type="button" id="quick-tab-text" onclick="focusSingleSection('text')" class="py-2 px-1.5 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-amber-400 bg-amber-50 text-amber-900 flex items-center justify-center gap-1 transition-all whitespace-nowrap">
+                                <i data-lucide="pen-tool" class="w-3.5 h-3.5 hidden sm:inline"></i>
                                 <span>1. 문구</span>
                             </button>
-                            <button type="button" id="quick-tab-logo" onclick="focusSingleSection('logo')" class="py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-600 flex items-center justify-center gap-1 transition-all whitespace-nowrap">
-                                <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                            <button type="button" id="quick-tab-logo" onclick="focusSingleSection('logo')" class="py-2 px-1.5 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-600 flex items-center justify-center gap-1 transition-all whitespace-nowrap">
+                                <i data-lucide="award" class="w-3.5 h-3.5 hidden sm:inline"></i>
                                 <span>2. 로고</span>
                             </button>
-                            <button type="button" id="quick-tab-bg" onclick="focusSingleSection('bg')" class="py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-600 flex items-center justify-center gap-1 transition-all whitespace-nowrap">
-                                <i data-lucide="palette" class="w-3.5 h-3.5"></i>
+                            <button type="button" id="quick-tab-bg" onclick="focusSingleSection('bg')" class="py-2 px-1.5 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-600 flex items-center justify-center gap-1 transition-all whitespace-nowrap">
+                                <i data-lucide="palette" class="w-3.5 h-3.5 hidden sm:inline"></i>
                                 <span>3. 배경</span>
+                            </button>
+                            <button type="button" id="quick-tab-sticker" onclick="focusSingleSection('sticker')" class="py-2 px-1.5 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-600 flex items-center justify-center gap-1 transition-all whitespace-nowrap">
+                                <i data-lucide="smile" class="w-3.5 h-3.5 hidden sm:inline"></i>
+                                <span>4. 스티커</span>
                             </button>
                         </div>
                         <button type="button" id="btn-fold-all" onclick="toggleAllSectionsFold()" class="py-2 px-2.5 rounded-xl text-xs font-gowun font-bold bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors flex items-center gap-1 flex-shrink-0 whitespace-nowrap">
@@ -432,6 +439,72 @@
                                     <option value="none">표시 안 함</option>
                                 </select>
                             </div>
+
+                            <!-- (5) 맞춤 문구 위치 · 정렬 조절 -->
+                            <div class="bg-amber-50/60 p-3 rounded-2xl border border-amber-200/80 space-y-2.5">
+                                <div class="flex items-center justify-between gap-2 flex-wrap">
+                                    <span class="text-xs sm:text-sm font-gowun font-bold text-stone-800 flex items-center gap-1">
+                                        <i data-lucide="move" class="w-3.5 h-3.5 text-amber-700"></i> 문구 위치 · 정렬 조절
+                                    </span>
+                                    <button type="button" onclick="resetTextPosition()" class="px-2 py-0.5 rounded-lg bg-white border border-stone-300 text-[11px] font-gowun font-bold text-stone-600 hover:bg-stone-100 flex items-center gap-1">
+                                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> 위치 초기화
+                                    </button>
+                                </div>
+
+                                <!-- 배치 영역 (하단 여백 / 상단 여백 / 자유 이동) -->
+                                <div class="grid grid-cols-3 gap-1.5">
+                                    <button type="button" onclick="setTextPositionMode('bottom')" data-pos="bottom" class="text-pos-btn py-1.5 px-2 rounded-xl text-xs font-gowun font-bold border border-amber-600 bg-amber-100/80 text-amber-950 transition-all">
+                                        하단 배치 (기본)
+                                    </button>
+                                    <button type="button" onclick="setTextPositionMode('top')" data-pos="top" class="text-pos-btn py-1.5 px-2 rounded-xl text-xs font-gowun font-bold border border-stone-200 bg-white text-stone-700 hover:bg-stone-50 transition-all">
+                                        상단 배치 (헤더)
+                                    </button>
+                                    <button type="button" onclick="setTextPositionMode('free')" data-pos="free" class="text-pos-btn py-1.5 px-2 rounded-xl text-xs font-gowun font-bold border border-stone-200 bg-white text-stone-700 hover:bg-stone-50 transition-all">
+                                        자유 배치 (드래그)
+                                    </button>
+                                </div>
+
+                                <!-- 가로 정렬 (왼쪽 / 가운데 / 오른쪽) -->
+                                <div class="flex items-center justify-between gap-2 pt-0.5">
+                                    <span class="text-[11px] font-gowun font-bold text-stone-600">가로 정렬</span>
+                                    <div class="grid grid-cols-3 gap-1 flex-1 max-w-[220px]">
+                                        <button type="button" onclick="setTextAlignMode('left')" data-align="left" class="text-align-btn py-1 px-2 rounded-lg text-[11px] font-gowun font-bold border border-stone-200 bg-white text-stone-600">왼쪽</button>
+                                        <button type="button" onclick="setTextAlignMode('center')" data-align="center" class="text-align-btn py-1 px-2 rounded-lg text-[11px] font-gowun font-bold border border-amber-600 bg-amber-50 text-amber-900">가운데</button>
+                                        <button type="button" onclick="setTextAlignMode('right')" data-align="right" class="text-align-btn py-1 px-2 rounded-lg text-[11px] font-gowun font-bold border border-stone-200 bg-white text-stone-600">오른쪽</button>
+                                    </div>
+                                </div>
+
+                                <!-- 자유 배치 시 문구 배경 스타일 -->
+                                <div id="text-free-style-row" class="hidden items-center justify-between gap-2 pt-0.5">
+                                    <span class="text-[11px] font-gowun font-bold text-stone-600">문구 배경 효과</span>
+                                    <div class="grid grid-cols-3 gap-1 flex-1 max-w-[230px]">
+                                        <button type="button" onclick="setTextFreeBgStyle('card')" data-bgstyle="card" class="text-bgstyle-btn py-1 px-2 rounded-lg text-[11px] font-gowun font-bold border border-amber-600 bg-amber-50 text-amber-900">반투명 카드</button>
+                                        <button type="button" onclick="setTextFreeBgStyle('outline')" data-bgstyle="outline" class="text-bgstyle-btn py-1 px-2 rounded-lg text-[11px] font-gowun font-bold border border-stone-200 bg-white text-stone-600">흰색 외곽선</button>
+                                        <button type="button" onclick="setTextFreeBgStyle('none')" data-bgstyle="none" class="text-bgstyle-btn py-1 px-2 rounded-lg text-[11px] font-gowun font-bold border border-stone-200 bg-white text-stone-600">효과 없음</button>
+                                    </div>
+                                </div>
+
+                                <!-- 상하 / 좌우 미세 이동 슬라이더 -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-amber-200/60">
+                                    <div class="space-y-1">
+                                        <div class="flex justify-between text-[11px] font-gowun font-bold text-stone-600">
+                                            <span>상하 위치 미세 조절</span>
+                                            <span id="label-text-offset-y" class="text-amber-900">기본 (0)</span>
+                                        </div>
+                                        <input type="range" id="slider-text-offset-y" min="-220" max="220" step="5" value="0" oninput="onTextOffsetSliderInput('y', this.value)" class="w-full accent-amber-700 h-1.5 bg-stone-200 rounded-lg cursor-pointer">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <div class="flex justify-between text-[11px] font-gowun font-bold text-stone-600">
+                                            <span>좌우 위치 미세 조절</span>
+                                            <span id="label-text-offset-x" class="text-amber-900">기본 (0)</span>
+                                        </div>
+                                        <input type="range" id="slider-text-offset-x" min="-220" max="220" step="5" value="0" oninput="onTextOffsetSliderInput('x', this.value)" class="w-full accent-amber-700 h-1.5 bg-stone-200 rounded-lg cursor-pointer">
+                                    </div>
+                                </div>
+                                <p class="text-[11px] font-gowun text-stone-500">
+                                    💡 미리보기 액자 위에서 <b>문구 영역을 직접 손가락·마우스로 끌어서</b> 원하는 위치로 옮길 수도 있어요!
+                                </p>
+                            </div>
                         </div>
                     </div>
 
@@ -532,6 +605,79 @@
                         </div>
                     </div>
 
+                    <!-- 4. 꾸미기 스티커 섹션 -->
+                    <div class="bg-white rounded-2xl sm:rounded-3xl border border-stone-200/90 shadow-sm overflow-hidden">
+                        <div class="flex items-center justify-between px-4 py-3 bg-stone-50/70 border-b border-stone-100 cursor-pointer select-none" onclick="toggleSectionFold('sticker')">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <i data-lucide="smile" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>
+                                <h3 class="text-sm sm:text-base font-serif-kr font-bold text-stone-800 whitespace-nowrap">4. 꾸미기 스티커</h3>
+                                <span id="badge-summary-sticker" class="text-[11px] font-gowun px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-bold whitespace-nowrap">0개 사용 중</span>
+                            </div>
+                            <button type="button" class="px-2.5 py-1 rounded-xl text-xs font-gowun font-bold bg-white border border-stone-200 text-stone-600 hover:bg-stone-100 flex items-center gap-1 flex-shrink-0">
+                                <span id="fold-label-sticker">접기</span>
+                                <i data-lucide="chevron-up" id="fold-icon-sticker" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+
+                        <div id="section-body-sticker" class="p-3.5 sm:p-5 space-y-3">
+                            <p class="text-xs font-gowun text-stone-600 keep-all">
+                                원하는 스티커를 터치하면 액자에 추가됩니다. <b>미리보기 액자 위에서 스티커를 직접 드래그</b>해 원하는 위치에 놓아보세요!
+                            </p>
+
+                            <!-- 캐릭터 & 기념일 배지 스티커 -->
+                            <div>
+                                <div class="text-xs font-gowun font-bold text-stone-700 mb-1.5">구름이네 캐릭터 · 성장 배지 스티커</div>
+                                <div id="sticker-badge-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-1.5">
+                                    <!-- JS 렌더링 -->
+                                </div>
+                            </div>
+
+                            <!-- 감성 아이콘 데코 스티커 + 내 이미지 추가 -->
+                            <div>
+                                <div class="text-xs font-gowun font-bold text-stone-700 mb-1.5">감성 데코 스티커 · 내 스티커 추가</div>
+                                <div id="sticker-emoji-grid" class="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
+                                    <!-- JS 렌더링 -->
+                                </div>
+                                <input type="file" id="custom-sticker-input" accept="image/*" class="hidden" onchange="handleCustomStickerUpload(event)" />
+                            </div>
+
+                            <!-- 현재 배치된 스티커 편집 컨트롤 (스티커가 1개 이상일 때 표시) -->
+                            <div id="active-sticker-editor" class="hidden bg-amber-50/70 p-3 rounded-2xl border border-amber-200 space-y-2.5">
+                                <div class="flex items-center justify-between gap-2 flex-wrap">
+                                    <span class="text-xs font-gowun font-bold text-amber-950 flex items-center gap-1">
+                                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-700"></i>
+                                        <span id="selected-sticker-name-label">선택된 스티커 편집</span>
+                                    </span>
+                                    <div class="flex items-center gap-1">
+                                        <button type="button" onclick="duplicateSelectedSticker()" class="px-2 py-1 rounded-lg bg-white border border-stone-300 text-[11px] font-gowun font-bold text-stone-700 hover:bg-stone-100">복제</button>
+                                        <button type="button" onclick="deleteSelectedSticker()" class="px-2 py-1 rounded-lg bg-rose-50 border border-rose-200 text-[11px] font-gowun font-bold text-rose-700 hover:bg-rose-100">선택 삭제</button>
+                                        <button type="button" onclick="clearAllStickers()" class="px-2 py-1 rounded-lg bg-stone-200/80 text-[11px] font-gowun font-bold text-stone-700 hover:bg-stone-300">전체 비우기</button>
+                                    </div>
+                                </div>
+
+                                <!-- 부착된 스티커 전환 칩 -->
+                                <div id="placed-sticker-chips" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 border-t border-amber-200/70">
+                                    <div class="space-y-1">
+                                        <div class="flex justify-between text-[11px] font-gowun font-bold text-stone-700">
+                                            <span>스티커 크기</span>
+                                            <span id="label-sticker-scale" class="text-amber-900">100%</span>
+                                        </div>
+                                        <input type="range" id="slider-sticker-scale" min="45" max="240" step="5" value="100" oninput="onSelectedStickerTransformInput('scale', this.value)" class="w-full accent-amber-700 h-1.5 bg-stone-200 rounded-lg cursor-pointer">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <div class="flex justify-between text-[11px] font-gowun font-bold text-stone-700">
+                                            <span>스티커 회전 각도</span>
+                                            <span id="label-sticker-rot" class="text-amber-900">0°</span>
+                                        </div>
+                                        <input type="range" id="slider-sticker-rot" min="-60" max="60" step="2" value="0" oninput="onSelectedStickerTransformInput('rot', this.value)" class="w-full accent-amber-700 h-1.5 bg-stone-200 rounded-lg cursor-pointer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- 다운로드 및 처음으로 버튼 -->
                     <div class="flex flex-row gap-2 pt-1">
                         <button type="button" id="download-btn" onclick="openModal('download')" class="flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl font-serif-kr text-base sm:text-lg font-bold text-white transition-all duration-300 active:scale-95 hover:shadow-lg shadow-md">
@@ -547,15 +693,71 @@
         </main>
     </div>
 
-    <!-- 완성 액자 크게 보기 확대 모달 -->
-    <div id="preview-zoom-modal" onclick="closePreviewZoomModal()" class="hidden fixed inset-0 bg-black/85 z-[120] flex flex-col items-center justify-center p-4 backdrop-blur-md">
-        <div class="w-full max-w-2xl flex items-center justify-between text-white mb-3 px-2" onclick="event.stopPropagation()">
-            <span class="font-serif-kr text-base sm:text-lg font-bold">구름이 성장 액자 크게 보기</span>
-            <button type="button" onclick="closePreviewZoomModal()" class="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-sm font-gowun font-bold flex items-center gap-1">
-                <i data-lucide="x" class="w-4 h-4"></i> 닫기
+    <!-- 완성 액자 크게 보기 & 문구·스티커 위치 직접 편집 모달 -->
+    <div id="preview-zoom-modal" class="hidden fixed inset-0 bg-black/90 z-[120] flex flex-col items-center justify-between p-2.5 sm:p-4 backdrop-blur-md select-none">
+        <!-- 상단 헤더 -->
+        <div class="w-full max-w-2xl flex items-center justify-between text-white px-1 py-1 flex-shrink-0">
+            <div class="min-w-0">
+                <div class="font-serif-kr text-sm sm:text-lg font-bold flex items-center gap-1.5">
+                    <i data-lucide="move" class="w-4 h-4 text-amber-300 flex-shrink-0"></i>
+                    <span class="truncate">크게 보기 · 문구/스티커 위치 이동</span>
+                </div>
+                <p class="text-[11px] text-stone-300 font-gowun truncate">액자 위에서 문구와 스티커를 손가락·마우스로 직접 끌어 위치를 맞춰보세요</p>
+            </div>
+            <button type="button" onclick="closePreviewZoomModal()" class="px-3.5 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-gowun font-bold flex items-center gap-1 shadow-md flex-shrink-0 active:scale-95 transition-all">
+                <i data-lucide="check" class="w-4 h-4"></i> 완료 · 닫기
             </button>
         </div>
-        <img id="zoom-modal-image" src="" alt="확대된 성장 액자" class="max-w-full max-h-[82vh] object-contain rounded shadow-2xl" onclick="event.stopPropagation()" />
+
+        <!-- 중앙 대화면 인터랙티브 액자 이미지 -->
+        <div class="flex-1 w-full flex items-center justify-center overflow-hidden my-1">
+            <img id="zoom-modal-image" src="" alt="확대된 성장 액자" draggable="false" class="select-none touch-none cursor-grab active:cursor-grabbing max-w-full max-h-[60dvh] sm:max-h-[68dvh] object-contain rounded shadow-2xl" />
+        </div>
+
+        <!-- 하단 빠른 편집 툴바 (문구 배치 모드 + 빠른 스티커 추가 + 선택된 스티커 크기/회전/삭제) -->
+        <div class="w-full max-w-2xl bg-stone-900/95 border border-white/15 rounded-2xl p-2.5 sm:p-3 space-y-2 flex-shrink-0 text-white shadow-2xl">
+            <!-- (1) 문구 배치 빠른 전환 바 -->
+            <div class="flex items-center justify-between gap-1.5 flex-wrap">
+                <span class="text-[11px] font-gowun font-bold text-amber-300 flex items-center gap-1">
+                    <i data-lucide="type" class="w-3.5 h-3.5"></i> 문구 위치
+                </span>
+                <div class="flex items-center gap-1 flex-wrap">
+                    <button type="button" onclick="setTextPositionMode('bottom')" data-pos="bottom" class="zoom-text-pos-btn px-2.5 py-1 rounded-lg text-[11px] font-gowun font-bold bg-amber-600 text-white">하단 여백</button>
+                    <button type="button" onclick="setTextPositionMode('top')" data-pos="top" class="zoom-text-pos-btn px-2.5 py-1 rounded-lg text-[11px] font-gowun font-bold bg-white/10 text-stone-200 hover:bg-white/20">상단 여백</button>
+                    <button type="button" onclick="setTextPositionMode('free')" data-pos="free" class="zoom-text-pos-btn px-2.5 py-1 rounded-lg text-[11px] font-gowun font-bold bg-white/10 text-stone-200 hover:bg-white/20">자유 이동(드래그)</button>
+                    <button type="button" onclick="resetTextPosition()" class="px-2 py-1 rounded-lg text-[11px] font-gowun font-bold bg-white/10 text-stone-300 hover:bg-white/20">초기화</button>
+                </div>
+            </div>
+
+            <!-- (2) 빠른 스티커 추가 가로 스크롤 바 -->
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 border-t border-white/10">
+                <span class="text-[11px] font-gowun font-bold text-amber-300 flex-shrink-0 pr-1">+ 스티커:</span>
+                <button type="button" onclick="addStickerToFrame('char-gureum')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] font-gowun font-bold whitespace-nowrap flex-shrink-0">☁️ 구름이</button>
+                <button type="button" onclick="addStickerToFrame('char-parents')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] font-gowun font-bold whitespace-nowrap flex-shrink-0">💑 준삐♥솔태</button>
+                <button type="button" onclick="addStickerToFrame('badge-100')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] font-gowun font-bold whitespace-nowrap flex-shrink-0">🎉 백일배지</button>
+                <button type="button" onclick="addStickerToFrame('badge-1st')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] font-gowun font-bold whitespace-nowrap flex-shrink-0">🎂 첫돌배지</button>
+                <button type="button" onclick="addStickerToFrame('badge-love')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] font-gowun font-bold whitespace-nowrap flex-shrink-0">🧡 사랑해</button>
+                <button type="button" onclick="addStickerToFrame('emo-crown')" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-sm whitespace-nowrap flex-shrink-0">👑</button>
+                <button type="button" onclick="addStickerToFrame('emo-yheart')" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-sm whitespace-nowrap flex-shrink-0">💛</button>
+                <button type="button" onclick="addStickerToFrame('emo-pheart')" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-sm whitespace-nowrap flex-shrink-0">💖</button>
+                <button type="button" onclick="addStickerToFrame('emo-star')" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-sm whitespace-nowrap flex-shrink-0">✨</button>
+                <button type="button" onclick="addStickerToFrame('emo-cherry')" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-sm whitespace-nowrap flex-shrink-0">🌸</button>
+                <button type="button" onclick="addStickerToFrame('emo-bottle')" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-sm whitespace-nowrap flex-shrink-0">🍼</button>
+                <button type="button" onclick="addStickerToFrame('emo-ribbon')" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-sm whitespace-nowrap flex-shrink-0">🎀</button>
+            </div>
+
+            <!-- (3) 선택된 스티커 빠른 크기/회전/삭제 컨트롤 (스티커가 있을 때만 표시) -->
+            <div id="zoom-sticker-controls" class="hidden items-center justify-between gap-2 pt-1.5 border-t border-white/10 flex-wrap">
+                <span id="zoom-selected-sticker-label" class="text-[11px] font-gowun font-bold text-amber-200 truncate max-w-[120px]">선택 스티커</span>
+                <div class="flex items-center gap-1 flex-wrap">
+                    <button type="button" onclick="stepSelectedStickerTransform('scale', -0.12)" class="px-2 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-[11px] font-gowun font-bold">작게 -</button>
+                    <button type="button" onclick="stepSelectedStickerTransform('scale', 0.12)" class="px-2 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-[11px] font-gowun font-bold">크게 +</button>
+                    <button type="button" onclick="stepSelectedStickerTransform('rot', -12)" class="px-2 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-[11px] font-gowun font-bold">↺ 회전</button>
+                    <button type="button" onclick="stepSelectedStickerTransform('rot', 12)" class="px-2 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-[11px] font-gowun font-bold">↻ 회전</button>
+                    <button type="button" onclick="deleteSelectedSticker()" class="px-2 py-1 rounded-lg bg-rose-600/80 hover:bg-rose-600 text-white text-[11px] font-gowun font-bold">삭제</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- 사진 초점·위치 및 확대 조절 모달 -->
@@ -797,13 +999,59 @@
         let selectedLogoMode = 'both';
         let selectedLogoScale = 1.2; // 하단 로고 크기 배율 (0.75 ~ 1.60)
 
+        // 맞춤 문구 위치 및 정렬 상태
+        let textPositionMode = 'bottom'; // 'bottom' | 'top' | 'free'
+        let textAlignMode = 'center';    // 'left' | 'center' | 'right'
+        let textFreeBgStyle = 'card';    // 'card' | 'outline' | 'none'
+        let textOffsetX = 0;             // -220 ~ 220 (bottom/top 모드 미세 이동)
+        let textOffsetY = 0;             // -220 ~ 220 (bottom/top 모드 미세 이동)
+        let textFreeX = 0.5;             // 0.08 ~ 0.92 (free 모드 중심 X 비율)
+        let textFreeY = 0.78;            // 0.08 ~ 0.92 (free 모드 중심 Y 비율)
+        let lastTextHitBox = null;       // { x, y, w, h, cw, ch } 캔버스 상의 문구 영역 좌표
+
+        // 꾸미기 스티커 상태
+        let placedStickers = [];         // [{ uid, stickerId, type, x, y, scale, rot, customSrc, label }]
+        let selectedStickerUid = null;
+        let customStickerImgCache = {};  // uid -> HTMLImageElement
+        let isDraggingOnPreview = false;
+
+        const STICKER_BADGE_CATALOG = [
+            { id: 'char-gureum', type: 'asset', assetId: 'asset-logo-gureum', label: '구름이 캐릭터' },
+            { id: 'char-parents', type: 'asset', assetId: 'asset-logo-parents', label: '준삐♥와솔태' },
+            { id: 'badge-100', type: 'badge', title: 'D+100', sub: '백일 축하해', bg: '#fffbeb', border: '#d97706', color: '#92400e', label: '백일 배지' },
+            { id: 'badge-1st', type: 'badge', title: 'HAPPY 1st', sub: '첫돌 기념', bg: '#fff1f2', border: '#e11d48', color: '#9f1239', label: '첫돌 배지' },
+            { id: 'badge-angel', type: 'badge', title: 'MY ANGEL', sub: '우리집 천사', bg: '#fdf4ff', border: '#c026d3', color: '#86198f', label: '천사 배지' },
+            { id: 'badge-best', type: 'badge', title: 'BEST CUT', sub: '오늘의 베스트', bg: '#f0fdf4', border: '#16a34a', color: '#166534', label: '베스트컷' },
+            { id: 'badge-love', type: 'badge', title: 'LOVE YOU', sub: '사랑해 아가야', bg: '#fff7ed', border: '#ea580c', color: '#9a3412', label: '사랑해 배지' },
+            { id: 'badge-family', type: 'badge', title: 'GUREUM ♥', sub: '행복한 우리가족', bg: '#f0f9ff', border: '#0284c7', color: '#075985', label: '우리가족' }
+        ];
+
+        const STICKER_EMOJI_CATALOG = [
+            { id: 'emo-cloud', type: 'emoji', emoji: '☁️', label: '구름' },
+            { id: 'emo-crown', type: 'emoji', emoji: '👑', label: '왕관' },
+            { id: 'emo-yheart', type: 'emoji', emoji: '💛', label: '노란하트' },
+            { id: 'emo-pheart', type: 'emoji', emoji: '💖', label: '핑크하트' },
+            { id: 'emo-star', type: 'emoji', emoji: '✨', label: '반짝별' },
+            { id: 'emo-cherry', type: 'emoji', emoji: '🌸', label: '봄벚꽃' },
+            { id: 'emo-sunflower', type: 'emoji', emoji: '🌻', label: '해바라기' },
+            { id: 'emo-maple', type: 'emoji', emoji: '🍁', label: '단풍잎' },
+            { id: 'emo-snowman', type: 'emoji', emoji: '⛄', label: '눈사람' },
+            { id: 'emo-bottle', type: 'emoji', emoji: '🍼', label: '젖병' },
+            { id: 'emo-feet', type: 'emoji', emoji: '🐾', label: '발도장' },
+            { id: 'emo-ribbon', type: 'emoji', emoji: '🎀', label: '리본' },
+            { id: 'emo-balloon', type: 'emoji', emoji: '🎈', label: '풍선' },
+            { id: 'emo-cake', type: 'emoji', emoji: '🎂', label: '케이크' },
+            { id: 'emo-clover', type: 'emoji', emoji: '🍀', label: '네잎클로버' }
+        ];
+
         let isMobilePreviewCompact = false;
         let babyBirthDateStr = localStorage.getItem(BIRTHDATE_KEY) || '';
 
         const sectionFoldState = {
             text: false,
             logo: false,
-            bg: false
+            bg: false,
+            sticker: false
         };
 
         // 오늘 날짜 포맷 (YYYY. MM. DD)
@@ -1006,21 +1254,21 @@
 
         // 카테고리 탭 전환 (선택한 섹션만 열고 나머지는 접기)
         function focusSingleSection(targetKey) {
-            ['text', 'logo', 'bg'].forEach(k => {
+            ['text', 'logo', 'bg', 'sticker'].forEach(k => {
                 toggleSectionFold(k, k !== targetKey);
             });
             updateQuickTabStyles();
         }
 
         function updateQuickTabStyles() {
-            ['text', 'logo', 'bg'].forEach(k => {
+            ['text', 'logo', 'bg', 'sticker'].forEach(k => {
                 const tabBtn = document.getElementById(`quick-tab-${k}`);
                 if (!tabBtn) return;
                 const isOpen = !sectionFoldState[k];
                 if (isOpen) {
-                    tabBtn.className = 'py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-amber-400 bg-amber-50 text-amber-900 flex items-center justify-center gap-1 transition-all shadow-sm whitespace-nowrap';
+                    tabBtn.className = 'py-2 px-1.5 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-amber-400 bg-amber-50 text-amber-900 flex items-center justify-center gap-1 transition-all shadow-sm whitespace-nowrap';
                 } else {
-                    tabBtn.className = 'py-2 px-2 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-600 flex items-center justify-center gap-1 transition-all whitespace-nowrap';
+                    tabBtn.className = 'py-2 px-1.5 rounded-xl text-xs sm:text-sm font-gowun font-bold border border-stone-200 bg-stone-50 text-stone-600 flex items-center justify-center gap-1 transition-all whitespace-nowrap';
                 }
             });
         }
@@ -1047,7 +1295,7 @@
             if (labelEl) labelEl.innerText = isFolded ? '펼치기' : '접기';
             if (iconEl) iconEl.setAttribute('data-lucide', isFolded ? 'chevron-down' : 'chevron-up');
 
-            const allFolded = sectionFoldState.text && sectionFoldState.logo && sectionFoldState.bg;
+            const allFolded = sectionFoldState.text && sectionFoldState.logo && sectionFoldState.bg && sectionFoldState.sticker;
             const allLabel = document.getElementById('label-fold-all');
             const allIcon = document.getElementById('icon-fold-all');
             if (allLabel) allLabel.innerText = allFolded ? '모두 펼치기' : '모두 접기';
@@ -1058,9 +1306,9 @@
         }
 
         function toggleAllSectionsFold() {
-            const allFolded = sectionFoldState.text && sectionFoldState.logo && sectionFoldState.bg;
+            const allFolded = sectionFoldState.text && sectionFoldState.logo && sectionFoldState.bg && sectionFoldState.sticker;
             const target = !allFolded;
-            ['text', 'logo', 'bg'].forEach(k => toggleSectionFold(k, target));
+            ['text', 'logo', 'bg', 'sticker'].forEach(k => toggleSectionFold(k, target));
         }
 
         function openPreviewZoomModal() {
@@ -1068,7 +1316,10 @@
             const modal = document.getElementById('preview-zoom-modal');
             const img = document.getElementById('zoom-modal-image');
             img.src = generatedImageUrl;
+            updateTextPositionUI();
+            updateStickerEditorUI();
             modal.classList.remove('hidden');
+            lucide.createIcons();
         }
 
         function closePreviewZoomModal() {
@@ -1523,7 +1774,15 @@
                 showMilestone,
                 showDesc,
                 selectedLogoMode,
-                selectedLogoScale
+                selectedLogoScale,
+                textPositionMode,
+                textAlignMode,
+                textFreeBgStyle,
+                textOffsetX,
+                textOffsetY,
+                textFreeX,
+                textFreeY,
+                placedStickers
             };
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -1563,6 +1822,15 @@
                     showDesc = state.showDesc !== undefined ? state.showDesc : true;
                     selectedLogoMode = state.selectedLogoMode || 'both';
                     selectedLogoScale = typeof state.selectedLogoScale === 'number' ? state.selectedLogoScale : 1.2;
+                    textPositionMode = state.textPositionMode || 'bottom';
+                    textAlignMode = state.textAlignMode || 'center';
+                    textFreeBgStyle = state.textFreeBgStyle || 'card';
+                    textOffsetX = typeof state.textOffsetX === 'number' ? state.textOffsetX : 0;
+                    textOffsetY = typeof state.textOffsetY === 'number' ? state.textOffsetY : 0;
+                    textFreeX = typeof state.textFreeX === 'number' ? state.textFreeX : 0.5;
+                    textFreeY = typeof state.textFreeY === 'number' ? state.textFreeY : 0.78;
+                    placedStickers = Array.isArray(state.placedStickers) ? state.placedStickers : [];
+                    selectedStickerUid = placedStickers.length > 0 ? placedStickers[placedStickers.length - 1].uid : null;
                     selectedBgUrl = state.selectedBgIsNone ? 'none' : (customUploadedBgSrc || currentSeason.bgOptions[0]);
 
                     applySeasonThemeToUI();
@@ -1770,6 +2038,342 @@
             }
 
             updateLogoModeButtonsUI();
+            updateTextPositionUI();
+            updateStickerEditorUI();
+        }
+
+        // ==========================================
+        // 맞춤 문구 위치 · 정렬 제어 함수
+        // ==========================================
+        function setTextPositionMode(mode) {
+            textPositionMode = mode;
+            if (mode === 'free' && textOffsetX === 0 && textOffsetY === 0 && textFreeX === 0.5 && textFreeY === 0.78) {
+                textFreeX = 0.5;
+                textFreeY = 0.76;
+            }
+            updateTextPositionUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function setTextAlignMode(align) {
+            textAlignMode = align;
+            updateTextPositionUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function setTextFreeBgStyle(style) {
+            textFreeBgStyle = style;
+            updateTextPositionUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function onTextOffsetSliderInput(axis, val) {
+            const num = parseInt(val, 10) || 0;
+            if (textPositionMode === 'free') {
+                if (axis === 'x') {
+                    textFreeX = Math.max(0.08, Math.min(0.92, 0.5 + (num / 440)));
+                } else {
+                    textFreeY = Math.max(0.08, Math.min(0.92, 0.5 + (num / 440)));
+                }
+            } else {
+                if (axis === 'x') textOffsetX = num;
+                else textOffsetY = num;
+            }
+            updateTextPositionUI();
+            triggerDebouncedPreview();
+        }
+
+        function resetTextPosition() {
+            textPositionMode = 'bottom';
+            textAlignMode = 'center';
+            textFreeBgStyle = 'card';
+            textOffsetX = 0;
+            textOffsetY = 0;
+            textFreeX = 0.5;
+            textFreeY = 0.78;
+            updateTextPositionUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function updateTextPositionUI() {
+            document.querySelectorAll('.zoom-text-pos-btn').forEach(btn => {
+                const p = btn.getAttribute('data-pos');
+                if (p === textPositionMode) {
+                    btn.className = 'zoom-text-pos-btn px-2.5 py-1 rounded-lg text-[11px] font-gowun font-bold bg-amber-600 text-white shadow-sm';
+                } else {
+                    btn.className = 'zoom-text-pos-btn px-2.5 py-1 rounded-lg text-[11px] font-gowun font-bold bg-white/10 text-stone-200 hover:bg-white/20';
+                }
+            });
+            document.querySelectorAll('.text-pos-btn').forEach(btn => {
+                const p = btn.getAttribute('data-pos');
+                if (p === textPositionMode) {
+                    btn.className = 'text-pos-btn py-1.5 px-2 rounded-xl text-xs font-gowun font-bold border border-amber-600 bg-amber-100/80 text-amber-950 transition-all shadow-sm';
+                } else {
+                    btn.className = 'text-pos-btn py-1.5 px-2 rounded-xl text-xs font-gowun font-bold border border-stone-200 bg-white text-stone-700 hover:bg-stone-50 transition-all';
+                }
+            });
+
+            document.querySelectorAll('.text-align-btn').forEach(btn => {
+                const a = btn.getAttribute('data-align');
+                if (a === textAlignMode) {
+                    btn.className = 'text-align-btn py-1 px-2 rounded-lg text-[11px] font-gowun font-bold border border-amber-600 bg-amber-50 text-amber-900';
+                } else {
+                    btn.className = 'text-align-btn py-1 px-2 rounded-lg text-[11px] font-gowun font-bold border border-stone-200 bg-white text-stone-600';
+                }
+            });
+
+            const freeRow = document.getElementById('text-free-style-row');
+            if (freeRow) {
+                if (textPositionMode === 'free') {
+                    freeRow.classList.remove('hidden');
+                    freeRow.classList.add('flex');
+                } else {
+                    freeRow.classList.add('hidden');
+                    freeRow.classList.remove('flex');
+                }
+            }
+
+            document.querySelectorAll('.text-bgstyle-btn').forEach(btn => {
+                const s = btn.getAttribute('data-bgstyle');
+                if (s === textFreeBgStyle) {
+                    btn.className = 'text-bgstyle-btn py-1 px-2 rounded-lg text-[11px] font-gowun font-bold border border-amber-600 bg-amber-50 text-amber-900';
+                } else {
+                    btn.className = 'text-bgstyle-btn py-1 px-2 rounded-lg text-[11px] font-gowun font-bold border border-stone-200 bg-white text-stone-600';
+                }
+            });
+
+            const sx = document.getElementById('slider-text-offset-x');
+            const sy = document.getElementById('slider-text-offset-y');
+            const lx = document.getElementById('label-text-offset-x');
+            const ly = document.getElementById('label-text-offset-y');
+
+            const valX = textPositionMode === 'free' ? Math.round((textFreeX - 0.5) * 440) : textOffsetX;
+            const valY = textPositionMode === 'free' ? Math.round((textFreeY - 0.5) * 440) : textOffsetY;
+
+            if (sx) sx.value = valX;
+            if (sy) sy.value = valY;
+            if (lx) lx.textContent = valX === 0 ? '기본 (0)' : (valX > 0 ? `+${valX}` : `${valX}`);
+            if (ly) ly.textContent = valY === 0 ? '기본 (0)' : (valY > 0 ? `+${valY}` : `${valY}`);
+        }
+
+        // ==========================================
+        // 꾸미기 스티커 카탈로그 및 편집 제어 함수
+        // ==========================================
+        function renderStickerCatalogButtons() {
+            const badgeGrid = document.getElementById('sticker-badge-grid');
+            const emojiGrid = document.getElementById('sticker-emoji-grid');
+            if (!badgeGrid || !emojiGrid) return;
+
+            const gSrc = document.getElementById('asset-logo-gureum')?.src || '';
+            const pSrc = document.getElementById('asset-logo-parents')?.src || '';
+
+            badgeGrid.innerHTML = STICKER_BADGE_CATALOG.map(item => {
+                if (item.type === 'asset') {
+                    const imgSrc = item.id === 'char-gureum' ? gSrc : pSrc;
+                    return `
+                        <button type="button" onclick="addStickerToFrame('${item.id}')" class="flex flex-col items-center justify-center p-2 rounded-2xl border border-stone-200 bg-stone-50/70 hover:bg-amber-50 hover:border-amber-300 active:scale-95 transition-all">
+                            <img src="${imgSrc}" alt="${item.label}" class="h-9 w-auto object-contain mb-1 drop-shadow-sm">
+                            <span class="text-[11px] font-gowun font-bold text-stone-700 truncate w-full text-center">${item.label}</span>
+                        </button>
+                    `;
+                } else {
+                    return `
+                        <button type="button" onclick="addStickerToFrame('${item.id}')" class="flex flex-col items-center justify-center p-2 rounded-2xl border border-stone-200 bg-white hover:bg-amber-50 hover:border-amber-300 active:scale-95 transition-all">
+                            <div class="px-2 py-0.5 rounded-full text-[10px] font-extrabold mb-1 border" style="background:${item.bg}; border-color:${item.border}; color:${item.color};">
+                                ${item.title}
+                            </div>
+                            <span class="text-[11px] font-gowun font-bold text-stone-700 truncate w-full text-center">${item.sub}</span>
+                        </button>
+                    `;
+                }
+            }).join('');
+
+            emojiGrid.innerHTML = STICKER_EMOJI_CATALOG.map(item => `
+                <button type="button" onclick="addStickerToFrame('${item.id}')" class="flex flex-col items-center justify-center py-2 px-1 rounded-xl border border-stone-200 bg-white hover:bg-amber-50 hover:border-amber-300 active:scale-95 transition-all">
+                    <span class="text-xl leading-none mb-1">${item.emoji}</span>
+                    <span class="text-[10px] font-gowun font-bold text-stone-600 truncate w-full text-center">${item.label}</span>
+                </button>
+            `).join('') + `
+                <button type="button" onclick="document.getElementById('custom-sticker-input').click()" class="flex flex-col items-center justify-center py-2 px-1 rounded-xl border-2 border-dashed border-amber-400 bg-amber-50/60 hover:bg-amber-100/70 active:scale-95 transition-all text-amber-900">
+                    <i data-lucide="plus-circle" class="w-5 h-5 mb-0.5 text-amber-700"></i>
+                    <span class="text-[10px] font-gowun font-bold whitespace-nowrap">내 사진</span>
+                </button>
+            `;
+            lucide.createIcons();
+        }
+
+        function addStickerToFrame(catalogId) {
+            const catItem = [...STICKER_BADGE_CATALOG, ...STICKER_EMOJI_CATALOG].find(x => x.id === catalogId);
+            if (!catItem) return;
+
+            const offsetJitter = (placedStickers.length % 5) * 0.04 - 0.08;
+            const newSticker = {
+                uid: 'stk_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                stickerId: catItem.id,
+                type: catItem.type,
+                label: catItem.label,
+                x: Math.max(0.18, Math.min(0.82, 0.5 + offsetJitter)),
+                y: Math.max(0.18, Math.min(0.78, 0.42 + offsetJitter)),
+                scale: 1.0,
+                rot: 0
+            };
+            placedStickers.push(newSticker);
+            selectedStickerUid = newSticker.uid;
+            updateStickerEditorUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        async function handleCustomStickerUpload(e) {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async (ev) => {
+                const smallSrc = await downsampleImage(ev.target.result, 500);
+                const newSticker = {
+                    uid: 'stk_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                    stickerId: 'custom-image',
+                    type: 'custom-image',
+                    label: '내 이미지 스티커',
+                    customSrc: smallSrc,
+                    x: 0.5,
+                    y: 0.45,
+                    scale: 1.0,
+                    rot: 0
+                };
+                const imgObj = await loadImg(smallSrc);
+                if (imgObj) customStickerImgCache[newSticker.uid] = imgObj;
+                placedStickers.push(newSticker);
+                selectedStickerUid = newSticker.uid;
+                updateStickerEditorUI();
+                updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+            };
+            reader.readAsDataURL(file);
+            e.target.value = '';
+        }
+
+        function selectPlacedSticker(uid) {
+            selectedStickerUid = uid;
+            updateStickerEditorUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function duplicateSelectedSticker() {
+            const cur = placedStickers.find(s => s.uid === selectedStickerUid);
+            if (!cur) return;
+            const copy = {
+                ...cur,
+                uid: 'stk_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                x: Math.min(0.88, cur.x + 0.06),
+                y: Math.min(0.88, cur.y + 0.06)
+            };
+            if (cur.customSrc && customStickerImgCache[cur.uid]) {
+                customStickerImgCache[copy.uid] = customStickerImgCache[cur.uid];
+            }
+            placedStickers.push(copy);
+            selectedStickerUid = copy.uid;
+            updateStickerEditorUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function deleteSelectedSticker() {
+            if (!selectedStickerUid) return;
+            placedStickers = placedStickers.filter(s => s.uid !== selectedStickerUid);
+            selectedStickerUid = placedStickers.length > 0 ? placedStickers[placedStickers.length - 1].uid : null;
+            updateStickerEditorUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function clearAllStickers() {
+            placedStickers = [];
+            selectedStickerUid = null;
+            updateStickerEditorUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function stepSelectedStickerTransform(prop, delta) {
+            const cur = placedStickers.find(s => s.uid === selectedStickerUid);
+            if (!cur) return;
+            if (prop === 'scale') {
+                cur.scale = Math.max(0.4, Math.min(2.5, Math.round(((cur.scale || 1.0) + delta) * 100) / 100));
+            } else if (prop === 'rot') {
+                cur.rot = Math.max(-90, Math.min(90, Math.round((cur.rot || 0) + delta)));
+            }
+            updateStickerEditorUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function onSelectedStickerTransformInput(prop, val) {
+            const cur = placedStickers.find(s => s.uid === selectedStickerUid);
+            if (!cur) return;
+            if (prop === 'scale') {
+                cur.scale = Math.max(0.4, Math.min(2.5, parseInt(val, 10) / 100));
+            } else if (prop === 'rot') {
+                cur.rot = Math.max(-90, Math.min(90, parseInt(val, 10)));
+            }
+            updateStickerEditorUI();
+            triggerDebouncedPreview();
+        }
+
+        function updateStickerEditorUI() {
+            const summaryBadge = document.getElementById('badge-summary-sticker');
+            if (summaryBadge) {
+                summaryBadge.innerText = placedStickers.length === 0 ? '0개 사용 중' : `${placedStickers.length}개 부착됨`;
+            }
+
+            const editorBox = document.getElementById('active-sticker-editor');
+            if (!editorBox) return;
+
+            const zoomBar = document.getElementById('zoom-sticker-controls');
+            if (placedStickers.length === 0) {
+                editorBox.classList.add('hidden');
+                if (zoomBar) {
+                    zoomBar.classList.add('hidden');
+                    zoomBar.classList.remove('flex');
+                }
+                return;
+            }
+            editorBox.classList.remove('hidden');
+            if (zoomBar) {
+                zoomBar.classList.remove('hidden');
+                zoomBar.classList.add('flex');
+            }
+
+            let cur = placedStickers.find(s => s.uid === selectedStickerUid);
+            if (!cur) {
+                cur = placedStickers[placedStickers.length - 1];
+                selectedStickerUid = cur.uid;
+            }
+
+            const nameLabel = document.getElementById('selected-sticker-name-label');
+            if (nameLabel) nameLabel.textContent = `선택됨: ${cur.label}`;
+            const zoomStickerLabel = document.getElementById('zoom-selected-sticker-label');
+            if (zoomStickerLabel) zoomStickerLabel.textContent = `스티커: ${cur.label} (${Math.round((cur.scale || 1)*100)}%)`;
+
+            const chipsEl = document.getElementById('placed-sticker-chips');
+            if (chipsEl) {
+                chipsEl.innerHTML = placedStickers.map((s, idx) => {
+                    const active = s.uid === selectedStickerUid;
+                    return `
+                        <button type="button" onclick="selectPlacedSticker('${s.uid}')" class="px-2.5 py-1 rounded-xl text-[11px] font-gowun font-bold whitespace-nowrap transition-all ${
+                            active ? 'bg-amber-800 text-white shadow-sm' : 'bg-white text-stone-700 border border-stone-300 hover:bg-amber-50'
+                        }">
+                            #${idx + 1} ${s.label}
+                        </button>
+                    `;
+                }).join('');
+            }
+
+            const scalePct = Math.round((cur.scale || 1.0) * 100);
+            const rotDeg = Math.round(cur.rot || 0);
+            const sSlider = document.getElementById('slider-sticker-scale');
+            const rSlider = document.getElementById('slider-sticker-rot');
+            const sLabel = document.getElementById('label-sticker-scale');
+            const rLabel = document.getElementById('label-sticker-rot');
+
+            if (sSlider) sSlider.value = scalePct;
+            if (rSlider) rSlider.value = rotDeg;
+            if (sLabel) sLabel.textContent = `${scalePct}%`;
+            if (rLabel) rLabel.textContent = `${rotDeg}°`;
         }
 
         function resetCustomTextToSeasonDefault() {
@@ -2140,14 +2744,22 @@
             updatePhotoSelectionUI();
         }
 
+        const loadedImageMemoryCache = new Map();
         const loadImg = (src) => {
             return new Promise((resolve) => {
                 if (!src || src === 'none') { resolve(null); return; }
+                if (loadedImageMemoryCache.has(src)) {
+                    resolve(loadedImageMemoryCache.get(src));
+                    return;
+                }
                 const img = new Image();
                 if (src.startsWith('http')) {
                     img.crossOrigin = 'anonymous';
                 }
-                img.onload = () => resolve(img);
+                img.onload = () => {
+                    loadedImageMemoryCache.set(src, img);
+                    resolve(img);
+                };
                 img.onerror = () => resolve(null);
                 img.src = src;
             });
@@ -2217,23 +2829,40 @@
                 ? Math.round((isLandscape ? 54 : 66) * scaleFactor)
                 : (effectiveLogoH + (isLandscape ? 24 : 32));
 
-            const anyBottomContent = activeTitle || activeMilestone || activeDesc || activeBlessing || activeLogo;
+            const anyTextContent = activeTitle || activeMilestone || activeDesc || activeBlessing;
             const bottomPad = isLandscape ? 24 : 34;
 
+            let textBlockH = 0;
+            if (activeTitle) textBlockH += stepTitleH;
+            if (activeMilestone) textBlockH += stepMileH;
+            if (activeDesc) textBlockH += stepDescH;
+            if (activeBlessing) textBlockH += stepBlessH;
+
+            let topTextSpace = photoMargin;
             let bottomTextSpace = photoMargin;
-            if (anyBottomContent) {
-                bottomTextSpace = (isLandscape ? 20 : 28) + bottomPad;
-                if (activeTitle) bottomTextSpace += stepTitleH;
-                if (activeMilestone) bottomTextSpace += stepMileH;
-                if (activeDesc) bottomTextSpace += stepDescH;
-                if (activeBlessing) bottomTextSpace += stepBlessH;
-                if (activeLogo) bottomTextSpace += stepLogoH;
+
+            if (textPositionMode === 'top') {
+                if (anyTextContent) {
+                    topTextSpace = photoMargin + textBlockH + (isLandscape ? 16 : 24);
+                }
+                if (activeLogo) {
+                    bottomTextSpace = (isLandscape ? 18 : 24) + bottomPad + stepLogoH;
+                }
+            } else if (textPositionMode === 'free') {
+                if (activeLogo) {
+                    bottomTextSpace = (isLandscape ? 18 : 24) + bottomPad + stepLogoH;
+                }
+            } else {
+                // 'bottom' (기본)
+                if (anyTextContent || activeLogo) {
+                    bottomTextSpace = (isLandscape ? 20 : 28) + bottomPad + textBlockH + (activeLogo ? stepLogoH : 0);
+                }
             }
 
             const targetX = matteMargin + photoMargin;
-            const targetY = matteMargin + photoMargin;
+            const targetY = matteMargin + topTextSpace;
             const targetW = cw - matteMargin * 2 - photoMargin * 2;
-            const targetH = ch - matteMargin * 2 - photoMargin - bottomTextSpace;
+            const targetH = ch - matteMargin * 2 - topTextSpace - bottomTextSpace;
             const gap = isBgHidden ? 22 : 26;
             const layouts = [];
 
@@ -2286,7 +2915,9 @@
             if (bgSrc) selectedBgUrl = bgSrc;
             renderBgButtons(); 
             
-            document.getElementById('preview-loading').classList.remove('hidden');
+            if (!isDraggingOnPreview) {
+                document.getElementById('preview-loading').classList.remove('hidden');
+            }
 
             try {
                 await document.fonts.ready;
@@ -2376,23 +3007,39 @@
                     ? Math.round((isLandscape ? 54 : 66) * scaleFactor)
                     : (effectiveLogoH + (isLandscape ? 24 : 32));
 
-                const anyBottomContent = activeTitle || activeMilestone || activeDesc || activeBlessing || activeLogo;
+                const anyTextContent = activeTitle || activeMilestone || activeDesc || activeBlessing;
                 const bottomPad = isLandscape ? 24 : 34;
 
+                let textBlockH = 0;
+                if (activeTitle) textBlockH += stepTitleH;
+                if (activeMilestone) textBlockH += stepMileH;
+                if (activeDesc) textBlockH += stepDescH;
+                if (activeBlessing) textBlockH += stepBlessH;
+
+                let topTextSpace = photoMargin;
                 let bottomTextSpace = photoMargin;
-                if (anyBottomContent) {
-                    bottomTextSpace = (isLandscape ? 20 : 28) + bottomPad;
-                    if (activeTitle) bottomTextSpace += stepTitleH;
-                    if (activeMilestone) bottomTextSpace += stepMileH;
-                    if (activeDesc) bottomTextSpace += stepDescH;
-                    if (activeBlessing) bottomTextSpace += stepBlessH;
-                    if (activeLogo) bottomTextSpace += stepLogoH;
+
+                if (textPositionMode === 'top') {
+                    if (anyTextContent) {
+                        topTextSpace = photoMargin + textBlockH + (isLandscape ? 16 : 24);
+                    }
+                    if (activeLogo) {
+                        bottomTextSpace = (isLandscape ? 18 : 24) + bottomPad + stepLogoH;
+                    }
+                } else if (textPositionMode === 'free') {
+                    if (activeLogo) {
+                        bottomTextSpace = (isLandscape ? 18 : 24) + bottomPad + stepLogoH;
+                    }
+                } else {
+                    if (anyTextContent || activeLogo) {
+                        bottomTextSpace = (isLandscape ? 20 : 28) + bottomPad + textBlockH + (activeLogo ? stepLogoH : 0);
+                    }
                 }
 
                 const targetX = matteMargin + photoMargin;
-                const targetY = matteMargin + photoMargin;
+                const targetY = matteMargin + topTextSpace;
                 const targetW = cw - matteMargin * 2 - photoMargin * 2;
-                const targetH = ch - matteMargin * 2 - photoMargin - bottomTextSpace; 
+                const targetH = ch - matteMargin * 2 - topTextSpace - bottomTextSpace; 
 
                 const gap = isBgHidden ? 22 : 26; 
                 const layouts = [];
@@ -2428,53 +3075,7 @@
                     }
                 });
 
-                let cursorY = targetY + targetH + (isLandscape ? 16 : 22);
-                ctx.textAlign = 'center';
-
-                if (activeTitle) {
-                    cursorY += (isLandscape ? 52 : 66);
-                    ctx.fillStyle = currentSeason.textColor;
-                    ctx.font = `600 ${titleSize}px "Noto Serif KR", serif`;
-                    ctx.fillText(titleText, cw / 2, cursorY);
-                    cursorY += (isLandscape ? 14 : 16);
-                }
-
-                if (activeMilestone) {
-                    cursorY += (isLandscape ? 34 : 42);
-                    ctx.font = `400 ${mileSize}px "Gowun Dodum", sans-serif`;
-                    const textWidth = ctx.measureText(milestoneText).width;
-                    const lineHalf = Math.min(cw * 0.36, (textWidth / 2) + 80);
-
-                    ctx.strokeStyle = currentSeason.accent;
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(cw / 2 - lineHalf, cursorY - 9);
-                    ctx.lineTo(cw / 2 - (textWidth / 2) - 18, cursorY - 9);
-                    ctx.moveTo(cw / 2 + (textWidth / 2) + 18, cursorY - 9);
-                    ctx.lineTo(cw / 2 + lineHalf, cursorY - 9);
-                    ctx.stroke();
-
-                    ctx.fillStyle = currentSeason.textColor;
-                    ctx.fillText(milestoneText, cw / 2, cursorY);
-                    cursorY += (isLandscape ? 12 : 14);
-                }
-
-                if (activeDesc) {
-                    cursorY += (isLandscape ? 36 : 44);
-                    ctx.font = `400 ${bodySize}px "Gowun Dodum", sans-serif`;
-                    ctx.fillStyle = '#4b5563';
-                    ctx.fillText(descText, cw / 2, cursorY);
-                    cursorY += (isLandscape ? 12 : 14);
-                }
-
-                if (activeBlessing) {
-                    cursorY += (isLandscape ? 32 : 38);
-                    ctx.font = `400 ${subSize}px "Gowun Dodum", sans-serif`;
-                    ctx.fillStyle = '#8a8580';
-                    ctx.fillText(blessingText, cw / 2, cursorY);
-                    cursorY += (isLandscape ? 10 : 14);
-                }
-
+                // 1) 하단 로고 스탬프 그리기
                 if (activeLogo) {
                     const footerBottomY = ch - matteMargin - Math.max(16, bottomPad - 6);
                     const hasGureum = gureumLogoEl && gureumLogoEl.complete && gureumLogoEl.naturalWidth > 0;
@@ -2508,15 +3109,154 @@
                         ctx.shadowColor = "transparent";
                         const textFontPx = Math.round((isLandscape ? 30 : 34) * scaleFactor);
                         ctx.font = `700 ${textFontPx}px "Pretendard", sans-serif`;
+                        ctx.textAlign = 'center';
                         ctx.fillStyle = '#6b6560';
                         ctx.fillText('GUREUM GROWTH ARCHIVE · JUNPPI ♥ SOLTAE', cw / 2, footerBottomY - 14);
                     }
                     ctx.restore();
                 }
 
-                generatedImageUrl = canvas.toDataURL('image/png', 1.0);
+                // 2) 맞춤 문구 블록 그리기 (하단 / 상단 / 자유 이동 + 가로 정렬 + 오프셋 지원)
+                if (anyTextContent) {
+                    ctx.save();
+                    let baseTopY;
+                    let anchorX;
+
+                    if (textPositionMode === 'top') {
+                        baseTopY = matteMargin + photoMargin - (isLandscape ? 10 : 12) + textOffsetY;
+                    } else if (textPositionMode === 'free') {
+                        baseTopY = Math.round(ch * textFreeY - textBlockH / 2);
+                    } else {
+                        baseTopY = targetY + targetH + (isLandscape ? 16 : 22) + textOffsetY;
+                    }
+
+                    if (textPositionMode === 'free') {
+                        if (textAlignMode === 'left') {
+                            anchorX = Math.max(targetX + 24, Math.round(cw * textFreeX - targetW * 0.35));
+                        } else if (textAlignMode === 'right') {
+                            anchorX = Math.min(targetX + targetW - 24, Math.round(cw * textFreeX + targetW * 0.35));
+                        } else {
+                            anchorX = Math.round(cw * textFreeX);
+                        }
+                    } else {
+                        if (textAlignMode === 'left') {
+                            anchorX = targetX + 16 + textOffsetX;
+                        } else if (textAlignMode === 'right') {
+                            anchorX = targetX + targetW - 16 + textOffsetX;
+                        } else {
+                            anchorX = (cw / 2) + textOffsetX;
+                        }
+                    }
+
+                    const boxW = Math.min(targetW, isLandscape ? 1060 : 940);
+                    let boxLeftX = anchorX - boxW / 2;
+                    if (textAlignMode === 'left') boxLeftX = anchorX - 24;
+                    if (textAlignMode === 'right') boxLeftX = anchorX - boxW + 24;
+
+                    lastTextHitBox = {
+                        x: boxLeftX,
+                        y: baseTopY,
+                        w: boxW,
+                        h: textBlockH + 28,
+                        cw,
+                        ch
+                    };
+
+                    if (textPositionMode === 'free' && textFreeBgStyle === 'card') {
+                        ctx.save();
+                        ctx.fillStyle = 'rgba(255, 253, 250, 0.86)';
+                        ctx.shadowColor = 'rgba(0, 0, 0, 0.12)';
+                        ctx.shadowBlur = 20;
+                        ctx.shadowOffsetY = 6;
+                        ctx.beginPath();
+                        ctx.roundRect(boxLeftX, baseTopY + 6, boxW, textBlockH + 24, 28);
+                        ctx.fill();
+                        ctx.strokeStyle = currentSeason.accent + '99';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+
+                    const drawStyledTextLine = (txt, x, y, fillCol) => {
+                        if (textPositionMode === 'free' && textFreeBgStyle === 'outline') {
+                            ctx.save();
+                            ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
+                            ctx.lineWidth = 10;
+                            ctx.lineJoin = 'round';
+                            ctx.strokeText(txt, x, y);
+                            ctx.restore();
+                        }
+                        ctx.fillStyle = fillCol;
+                        ctx.fillText(txt, x, y);
+                    };
+
+                    let cursorY = baseTopY;
+                    ctx.textAlign = textAlignMode;
+
+                    if (activeTitle) {
+                        cursorY += (isLandscape ? 52 : 66);
+                        ctx.font = `600 ${titleSize}px "Noto Serif KR", serif`;
+                        drawStyledTextLine(titleText, anchorX, cursorY, currentSeason.textColor);
+                        cursorY += (isLandscape ? 14 : 16);
+                    }
+
+                    if (activeMilestone) {
+                        cursorY += (isLandscape ? 34 : 42);
+                        ctx.font = `400 ${mileSize}px "Gowun Dodum", sans-serif`;
+                        const textWidth = ctx.measureText(milestoneText).width;
+
+                        if (textAlignMode === 'center') {
+                            const lineHalf = Math.min(cw * 0.34, (textWidth / 2) + 75);
+                            ctx.save();
+                            ctx.strokeStyle = currentSeason.accent;
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.moveTo(anchorX - lineHalf, cursorY - 9);
+                            ctx.lineTo(anchorX - (textWidth / 2) - 18, cursorY - 9);
+                            ctx.moveTo(anchorX + (textWidth / 2) + 18, cursorY - 9);
+                            ctx.lineTo(anchorX + lineHalf, cursorY - 9);
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+
+                        drawStyledTextLine(milestoneText, anchorX, cursorY, currentSeason.textColor);
+                        cursorY += (isLandscape ? 12 : 14);
+                    }
+
+                    if (activeDesc) {
+                        cursorY += (isLandscape ? 36 : 44);
+                        ctx.font = `400 ${bodySize}px "Gowun Dodum", sans-serif`;
+                        drawStyledTextLine(descText, anchorX, cursorY, '#4b5563');
+                        cursorY += (isLandscape ? 12 : 14);
+                    }
+
+                    if (activeBlessing) {
+                        cursorY += (isLandscape ? 32 : 38);
+                        ctx.font = `400 ${subSize}px "Gowun Dodum", sans-serif`;
+                        drawStyledTextLine(blessingText, anchorX, cursorY, '#8a8580');
+                        cursorY += (isLandscape ? 10 : 14);
+                    }
+                    ctx.restore();
+                } else {
+                    lastTextHitBox = null;
+                }
+
+                // 3) 부착된 꾸미기 스티커 그리기
+                for (const stk of placedStickers) {
+                    await drawSingleStickerOnCanvas(ctx, stk, cw, ch, gureumLogoEl, parentsLogoEl);
+                }
+
+                generatedImageUrl = isDraggingOnPreview
+                    ? canvas.toDataURL('image/jpeg', 0.88)
+                    : canvas.toDataURL('image/png', 1.0);
                 document.getElementById('final-image').src = generatedImageUrl;
-                saveAppState();
+                const zoomImgEl = document.getElementById('zoom-modal-image');
+                if (zoomImgEl && !document.getElementById('preview-zoom-modal').classList.contains('hidden')) {
+                    zoomImgEl.src = generatedImageUrl;
+                }
+                if (!isDraggingOnPreview) {
+                    saveAppState();
+                }
 
             } catch (error) {
                 console.error("프레임 렌더링 중 오류:", error);
@@ -2525,6 +3265,270 @@
                 isGenerating = false;
             }
         }
+
+        async function drawSingleStickerOnCanvas(ctx, stk, cw, ch, gureumLogoEl, parentsLogoEl) {
+            const cx = stk.x * cw;
+            const cy = stk.y * ch;
+            const scale = stk.scale || 1.0;
+            const rotRad = ((stk.rot || 0) * Math.PI) / 180;
+
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(rotRad);
+            ctx.scale(scale, scale);
+
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.16)';
+            ctx.shadowBlur = 14;
+            ctx.shadowOffsetY = 4;
+
+            let hitRadius = 90;
+
+            if (stk.type === 'asset') {
+                const el = stk.stickerId === 'char-gureum' ? gureumLogoEl : parentsLogoEl;
+                if (el && el.complete && el.naturalWidth > 0) {
+                    const baseH = 190;
+                    const baseW = el.naturalWidth * (baseH / el.naturalHeight);
+                    ctx.drawImage(el, -baseW / 2, -baseH / 2, baseW, baseH);
+                    hitRadius = Math.max(baseW, baseH) * 0.52;
+                }
+            } else if (stk.type === 'custom-image' && stk.customSrc) {
+                let imgObj = customStickerImgCache[stk.uid];
+                if (!imgObj) {
+                    imgObj = await loadImg(stk.customSrc);
+                    if (imgObj) customStickerImgCache[stk.uid] = imgObj;
+                }
+                if (imgObj) {
+                    const maxSide = 210;
+                    const ratio = imgObj.width / imgObj.height;
+                    const w = ratio >= 1 ? maxSide : maxSide * ratio;
+                    const h = ratio >= 1 ? maxSide / ratio : maxSide;
+                    ctx.drawImage(imgObj, -w / 2, -h / 2, w, h);
+                    hitRadius = Math.max(w, h) * 0.52;
+                }
+            } else if (stk.type === 'badge') {
+                const cat = STICKER_BADGE_CATALOG.find(b => b.id === stk.stickerId);
+                if (cat) {
+                    const bw = 240;
+                    const bh = 112;
+                    ctx.fillStyle = cat.bg;
+                    ctx.beginPath();
+                    ctx.roundRect(-bw / 2, -bh / 2, bw, bh, 56);
+                    ctx.fill();
+
+                    ctx.shadowColor = 'transparent';
+                    ctx.lineWidth = 4.5;
+                    ctx.strokeStyle = cat.border;
+                    ctx.stroke();
+
+                    // 안쪽 점선 테두리
+                    ctx.save();
+                    ctx.setLineDash([6, 5]);
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.roundRect(-bw / 2 + 10, -bh / 2 + 10, bw - 20, bh - 20, 46);
+                    ctx.stroke();
+                    ctx.restore();
+
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = cat.color;
+                    ctx.font = '800 32px "Pretendard", sans-serif';
+                    ctx.fillText(cat.title, 0, -6);
+
+                    ctx.font = '700 24px "Gowun Dodum", sans-serif';
+                    ctx.fillText(cat.sub, 0, 30);
+                    hitRadius = 115;
+                }
+            } else if (stk.type === 'emoji') {
+                const cat = STICKER_EMOJI_CATALOG.find(e => e.id === stk.stickerId);
+                const emojiChar = cat ? cat.emoji : '✨';
+                ctx.font = '120px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(emojiChar, 0, 6);
+                hitRadius = 75;
+            }
+
+            // 드래그 중 선택된 스티커 가이드 테두리 표시
+            if (isDraggingOnPreview && stk.uid === selectedStickerUid) {
+                ctx.shadowColor = 'transparent';
+                ctx.strokeStyle = '#d97706';
+                ctx.lineWidth = 3;
+                ctx.setLineDash([8, 6]);
+                ctx.beginPath();
+                ctx.arc(0, 0, hitRadius, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            ctx.restore();
+            stk._hitRadiusPx = hitRadius * scale;
+        }
+
+        let fastDragRenderTimer = null;
+        function triggerFastDragPreview() {
+            if (fastDragRenderTimer) return;
+            fastDragRenderTimer = setTimeout(() => {
+                fastDragRenderTimer = null;
+                if (currentStep === 4 && currentSeason) {
+                    updatePreviewFrame(selectedBgUrl || currentSeason.bgOptions[0]);
+                }
+            }, 45);
+        }
+
+        // 미리보기 이미지(#final-image) 및 크게 보기 이미지(#zoom-modal-image) 위에서 스티커·맞춤 문구 직접 터치/마우스 드래그 이동
+        (function setupPreviewDirectDrag() {
+            window.addEventListener('DOMContentLoaded', () => {
+                const imgIds = ['final-image', 'zoom-modal-image'];
+
+                let activeImgEl = null;
+                let dragTarget = null; // { kind: 'sticker', sticker } | { kind: 'text' }
+                let startClientX = 0;
+                let startClientY = 0;
+                let initX = 0;
+                let initY = 0;
+                let moved = false;
+
+                function getCanvasCoordsFromClient(targetEl, clientX, clientY) {
+                    const rect = targetEl.getBoundingClientRect();
+                    if (!rect.width || !rect.height) return null;
+                    const isLandscape = selectedLayout && selectedLayout.orientation === 'landscape';
+                    const cw = isLandscape ? 1748 : 1182;
+                    const ch = isLandscape ? 1182 : 1748;
+                    const normX = (clientX - rect.left) / rect.width;
+                    const normY = (clientY - rect.top) / rect.height;
+                    return {
+                        normX,
+                        normY,
+                        cx: normX * cw,
+                        cy: normY * ch,
+                        cw,
+                        ch,
+                        rectW: rect.width,
+                        rectH: rect.height
+                    };
+                }
+
+                function hitTestPreview(targetEl, clientX, clientY) {
+                    const pt = getCanvasCoordsFromClient(targetEl, clientX, clientY);
+                    if (!pt) return null;
+
+                    // 1순위: 위쪽에 그려진 스티커부터 역순 히트 테스트
+                    for (let i = placedStickers.length - 1; i >= 0; i--) {
+                        const s = placedStickers[i];
+                        const sx = s.x * pt.cw;
+                        const sy = s.y * pt.ch;
+                        const r = (s._hitRadiusPx || 95) * 1.25;
+                        if (Math.hypot(pt.cx - sx, pt.cy - sy) <= r) {
+                            return { kind: 'sticker', sticker: s, pt };
+                        }
+                    }
+
+                    // 2순위: 맞춤 문구 영역 히트 테스트
+                    if (lastTextHitBox) {
+                        const b = lastTextHitBox;
+                        if (pt.cx >= b.x - 35 && pt.cx <= b.x + b.w + 35 && pt.cy >= b.y - 35 && pt.cy <= b.y + b.h + 35) {
+                            return { kind: 'text', pt };
+                        }
+                    }
+                    return null;
+                }
+
+                function startDrag(targetEl, clientX, clientY, e) {
+                    const hit = hitTestPreview(targetEl, clientX, clientY);
+                    if (!hit) return;
+                    if (e && e.cancelable) e.preventDefault();
+
+                    activeImgEl = targetEl;
+                    dragTarget = hit;
+                    isDraggingOnPreview = true;
+                    moved = false;
+                    startClientX = clientX;
+                    startClientY = clientY;
+
+                    if (hit.kind === 'sticker') {
+                        selectedStickerUid = hit.sticker.uid;
+                        initX = hit.sticker.x;
+                        initY = hit.sticker.y;
+                        updateStickerEditorUI();
+                        triggerFastDragPreview();
+                    } else if (hit.kind === 'text') {
+                        if (textPositionMode === 'free') {
+                            initX = textFreeX;
+                            initY = textFreeY;
+                        } else {
+                            initX = textOffsetX;
+                            initY = textOffsetY;
+                        }
+                    }
+                }
+
+                function moveDrag(clientX, clientY, e) {
+                    if (!dragTarget || !activeImgEl) return;
+                    if (e && e.cancelable) e.preventDefault();
+
+                    const rect = activeImgEl.getBoundingClientRect();
+                    if (!rect.width || !rect.height) return;
+
+                    const dxNorm = (clientX - startClientX) / rect.width;
+                    const dyNorm = (clientY - startClientY) / rect.height;
+                    if (Math.abs(clientX - startClientX) > 2 || Math.abs(clientY - startClientY) > 2) {
+                        moved = true;
+                    }
+
+                    if (dragTarget.kind === 'sticker') {
+                        dragTarget.sticker.x = Math.max(0.05, Math.min(0.95, initX + dxNorm));
+                        dragTarget.sticker.y = Math.max(0.05, Math.min(0.95, initY + dyNorm));
+                        triggerFastDragPreview();
+                    } else if (dragTarget.kind === 'text') {
+                        const isLandscape = selectedLayout && selectedLayout.orientation === 'landscape';
+                        const cw = isLandscape ? 1748 : 1182;
+                        const ch = isLandscape ? 1182 : 1748;
+                        if (textPositionMode === 'free') {
+                            textFreeX = Math.max(0.08, Math.min(0.92, initX + dxNorm));
+                            textFreeY = Math.max(0.08, Math.min(0.92, initY + dyNorm));
+                        } else {
+                            textOffsetX = Math.max(-220, Math.min(220, Math.round(initX + dxNorm * cw)));
+                            textOffsetY = Math.max(-220, Math.min(220, Math.round(initY + dyNorm * ch)));
+                        }
+                        updateTextPositionUI();
+                        triggerFastDragPreview();
+                    }
+                }
+
+                function endDrag() {
+                    if (!dragTarget) return;
+                    dragTarget = null;
+                    activeImgEl = null;
+                    isDraggingOnPreview = false;
+                    if (fastDragRenderTimer) {
+                        clearTimeout(fastDragRenderTimer);
+                        fastDragRenderTimer = null;
+                    }
+                    if (currentSeason) {
+                        updatePreviewFrame(selectedBgUrl || currentSeason.bgOptions[0]);
+                    }
+                }
+
+                imgIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    el.addEventListener('mousedown', (e) => startDrag(el, e.clientX, e.clientY, e));
+                    el.addEventListener('touchstart', (e) => {
+                        if (e.touches.length === 1) {
+                            startDrag(el, e.touches[0].clientX, e.touches[0].clientY, e);
+                        }
+                    }, { passive: false });
+                    el.addEventListener('touchmove', (e) => {
+                        if (e.touches.length === 1 && dragTarget) {
+                            moveDrag(e.touches[0].clientX, e.touches[0].clientY, e);
+                        }
+                    }, { passive: false });
+                    el.addEventListener('touchend', endDrag);
+                });
+
+                window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY, e));
+                window.addEventListener('mouseup', endDrag);
+            });
+        })();
 
         function handleAddPhotoClick() {
             if (!hasPromptedUpload) {
@@ -2671,8 +3675,8 @@
                             <div id="modal-dday-result-box" class="space-y-1.5 pt-0.5"></div>
                         </div>
 
-                        <!-- 2. 스마트폰 앱 설치 & 가족 공유 -->
-                        <div class="p-3.5 rounded-2xl bg-stone-100 border border-stone-200 space-y-2">
+                        <!-- 2. 스마트폰 앱 설치 (아이폰 Safari / 카톡 인앱 브라우저 맞춤 안내 포함) -->
+                        <div class="p-3.5 rounded-2xl bg-stone-100 border border-stone-200 space-y-2.5">
                             <div class="font-bold text-stone-900 flex items-center gap-1.5">
                                 <i data-lucide="smartphone" class="w-4 h-4 text-stone-700"></i>
                                 스마트폰 앱 설치 · 가족 공유
@@ -2683,36 +3687,32 @@
                                 </div>
                             ` : hasInstallPrompt ? `
                                 <button type="button" onclick="triggerNativePromptFromModal()" class="w-full py-2.5 px-3 rounded-xl bg-amber-800 hover:bg-amber-900 text-white font-bold text-xs sm:text-sm shadow-sm transition-colors">
-                                    📲 스마트폰에 앱 바로 설치하기
+                                    📲 갤럭시/안드로이드 앱 바로 설치하기
                                 </button>
-                            ` : `
-                                <p class="text-stone-600 leading-snug text-xs">
-                                    • <b>갤럭시/안드로이드</b>: 브라우저 메뉴(⋮) → <b>[앱 설치]</b> 또는 <b>[홈 화면에 추가]</b><br>
-                                    • <b>아이폰(Safari)</b>: 하단 <b>[공유]</b> 버튼 → <b>[홈 화면에 추가]</b>
+                            ` : ''}
+
+                            <!-- 아이폰(iOS) 홈 화면 설치 단계별 안내 박스 -->
+                            <div class="p-2.5 rounded-xl bg-white border border-stone-200/90 space-y-1.5 text-xs">
+                                <div class="font-bold text-stone-900 flex items-center gap-1">
+                                    <span>🍎 아이폰(iPhone)에서 홈 화면에 설치하는 방법</span>
+                                </div>
+                                <p class="text-stone-600 text-[11px] leading-relaxed">
+                                    아이폰은 애플 보안 정책상 화면 안의 버튼으로 자동 설치되지 않으며, <b>반드시 Safari(사파리) 브라우저</b>에서 아래 순서로 추가해야 실제 앱처럼 전체화면으로 설치됩니다.
                                 </p>
-                            `}
+                                <div class="bg-amber-50/80 p-2 rounded-lg border border-amber-200/70 text-[11px] text-stone-800 space-y-1">
+                                    <div><b>① 카카오톡에서 열렸다면?</b> 우측 하단 <b>[⋯]</b> 또는 <b>[공유]</b> → <b>[Safari로 열기]</b>를 먼저 눌러주세요. (카톡 창 안에서는 홈 화면 추가 메뉴가 보이지 않습니다)</div>
+                                    <div><b>② Safari 하단 가운데 [📤 공유] 아이콘</b>(네모 위 화살표)을 누릅니다.</div>
+                                    <div><b>③ 메뉴를 아래로 내려 [➕ 홈 화면에 추가]</b> → 우측 상단 <b>[추가]</b>를 누르면 구름이 아이콘으로 앱이 설치됩니다!</div>
+                                </div>
+                            </div>
+
                             <button type="button" id="btn-share-album-link" onclick="shareAlbumAppLink()" class="w-full py-2 px-3 rounded-xl bg-white border border-stone-300 hover:bg-stone-50 text-stone-800 font-bold text-xs transition-colors flex items-center justify-center gap-1.5">
                                 <i data-lucide="share-2" class="w-3.5 h-3.5 text-amber-700"></i>
-                                <span>가족에게 앨범 링크 공유 / 주소 복사</span>
+                                <span>가족에게 앨범 링크 공유 / Safari용 주소 복사</span>
                             </button>
                         </div>
 
-                        <!-- 3. 상단 상태표시줄(시간·와이파이) 표시 설정 파일 -->
-                        <div class="p-3 rounded-2xl bg-blue-50/60 border border-blue-200/80 space-y-1.5">
-                            <div class="font-bold text-blue-950 flex items-center gap-1.5 text-xs">
-                                <i data-lucide="wifi" class="w-3.5 h-3.5 text-blue-700"></i>
-                                상단 상태표시줄(시간·와이파이·배터리) 보이게 하기
-                            </div>
-                            <p class="text-stone-600 leading-snug text-[11px] sm:text-xs">
-                                주소창은 숨기면서 스마트폰 상단의 <b>시간·와이파이 상태표시줄</b>이 항상 보이도록 설정된 <code>manifest.json</code> 파일입니다. 깃허브에 덮어쓰기 후 앱을 다시 설치하면 바로 적용됩니다.
-                            </p>
-                            <button type="button" onclick="downloadStandaloneManifestFile()" class="w-full py-2 px-3 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-sm transition-colors flex items-center justify-center gap-1.5">
-                                <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                                <span>상태표시줄 표시용 manifest.json 받기</span>
-                            </button>
-                        </div>
-
-                        <!-- 4. 포토프린터 4x6 인화 꿀팁 -->
+                        <!-- 3. 포토프린터 4x6 인화 꿀팁 -->
                         <div class="p-3 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-1">
                             <div class="font-bold text-stone-800 flex items-center gap-1.5 text-xs">
                                 <i data-lucide="printer" class="w-3.5 h-3.5 text-amber-700"></i>
@@ -2768,6 +3768,15 @@
             showDesc = true;
             selectedLogoMode = 'both';
             selectedLogoScale = 1.2;
+            textPositionMode = 'bottom';
+            textAlignMode = 'center';
+            textFreeBgStyle = 'card';
+            textOffsetX = 0;
+            textOffsetY = 0;
+            textFreeX = 0.5;
+            textFreeY = 0.78;
+            placedStickers = [];
+            selectedStickerUid = null;
             updatePhotoSelectionUI();
             setStep(1);
         }
@@ -2860,9 +3869,9 @@
                     window.generatedAppIconUrl192 = appIcon192;
 
                     const favLink = document.getElementById('favicon-link');
-                    if (favLink && location.protocol !== 'https:') {
-                        favLink.href = appIcon192;
-                    }
+                    if (favLink) favLink.href = appIcon192;
+                    const appleLink = document.getElementById('apple-touch-icon-link');
+                    if (appleLink) appleLink.href = appIcon512;
                 } catch (e) {}
             };
 
@@ -2880,6 +3889,7 @@
             document.querySelectorAll('img[data-logo="parents"]').forEach(el => { el.src = pSrc; });
             initPwaAppSetup();
             initSeasonalBackgrounds();
+            renderStickerCatalogButtons();
 
             const seasonContainer = document.getElementById('season-buttons');
             seasonContainer.innerHTML = '';
