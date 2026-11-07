@@ -2,16 +2,16 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>구름이의 성장 기록관</title>
 
-    <!-- 스마트폰 전체화면 앱(PWA Fullscreen / Standalone) 및 아이콘 설정 -->
+    <!-- 스마트폰 앱(PWA Standalone - 주소창만 숨기고 상단 시간·와이파이 상태표시줄은 유지) 설정 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="구름이 성장앨범">
     <meta name="application-name" content="구름이 성장앨범">
-    <meta name="theme-color" content="#f7f4f0">
+    <meta name="theme-color" content="#ffffff">
     <link id="apple-touch-icon-link" rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
     <link id="favicon-link" rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link id="pwa-manifest-link" rel="manifest" href="manifest.json">
@@ -875,7 +875,7 @@
             }
 
             const installBtnLabel = document.getElementById('pwa-install-btn-label');
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || window.navigator.standalone;
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
             if (installBtnLabel) {
                 installBtnLabel.innerText = isStandalone ? '앱 안내' : '앱 설치';
             }
@@ -2560,6 +2560,54 @@
             return c.toDataURL('image/png');
         }
 
+        function downloadStandaloneManifestFile() {
+            const manifestObj = {
+                id: "./",
+                name: "구름이의 성장 기록관",
+                short_name: "구름이 성장앨범",
+                description: "준삐와 솔태가 기록하는 구름이의 사계절 성장 앨범",
+                lang: "ko",
+                dir: "ltr",
+                start_url: "./index.html",
+                scope: "./",
+                display: "standalone",
+                display_override: ["standalone"],
+                orientation: "portrait",
+                background_color: "#f7f4f0",
+                theme_color: "#ffffff",
+                categories: ["photo", "lifestyle"],
+                icons: [
+                    {
+                        src: "./icon-192.png",
+                        sizes: "192x192",
+                        type: "image/png",
+                        purpose: "any"
+                    },
+                    {
+                        src: "./icon-512.png",
+                        sizes: "512x512",
+                        type: "image/png",
+                        purpose: "any"
+                    },
+                    {
+                        src: "./icon-512.png",
+                        sizes: "512x512",
+                        type: "image/png",
+                        purpose: "maskable"
+                    }
+                ]
+            };
+            const blob = new Blob([JSON.stringify(manifestObj, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'manifest.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
         async function triggerNativePromptFromModal() {
             if (deferredInstallPrompt) {
                 deferredInstallPrompt.prompt();
@@ -2604,7 +2652,7 @@
                 modalPendingAction = 'reset';
             } else if (type === 'install-guide') {
                 mTitle.innerText = '구름이 기념일 & 앱 안내';
-                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || window.navigator.standalone;
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
                 const hasInstallPrompt = Boolean(deferredInstallPrompt);
 
                 mDesc.innerHTML = `
@@ -2649,7 +2697,22 @@
                             </button>
                         </div>
 
-                        <!-- 3. 포토프린터 4x6 인화 꿀팁 -->
+                        <!-- 3. 상단 상태표시줄(시간·와이파이) 표시 설정 파일 -->
+                        <div class="p-3 rounded-2xl bg-blue-50/60 border border-blue-200/80 space-y-1.5">
+                            <div class="font-bold text-blue-950 flex items-center gap-1.5 text-xs">
+                                <i data-lucide="wifi" class="w-3.5 h-3.5 text-blue-700"></i>
+                                상단 상태표시줄(시간·와이파이·배터리) 보이게 하기
+                            </div>
+                            <p class="text-stone-600 leading-snug text-[11px] sm:text-xs">
+                                주소창은 숨기면서 스마트폰 상단의 <b>시간·와이파이 상태표시줄</b>이 항상 보이도록 설정된 <code>manifest.json</code> 파일입니다. 깃허브에 덮어쓰기 후 앱을 다시 설치하면 바로 적용됩니다.
+                            </p>
+                            <button type="button" onclick="downloadStandaloneManifestFile()" class="w-full py-2 px-3 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-sm transition-colors flex items-center justify-center gap-1.5">
+                                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                                <span>상태표시줄 표시용 manifest.json 받기</span>
+                            </button>
+                        </div>
+
+                        <!-- 4. 포토프린터 4x6 인화 꿀팁 -->
                         <div class="p-3 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-1">
                             <div class="font-bold text-stone-800 flex items-center gap-1.5 text-xs">
                                 <i data-lucide="printer" class="w-3.5 h-3.5 text-amber-700"></i>
