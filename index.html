@@ -158,15 +158,15 @@
                     <span class="font-serif-kr font-bold text-stone-800 text-[15px] sm:text-xl tracking-tight whitespace-nowrap">구름이의 성장 기록관</span>
                 </button>
 
-                <!-- 우측 상단 버튼: 간결한 라벨로 타이틀이 절대 잘리지 않도록 구성 -->
+                <!-- 우측 상단 버튼: 구름이 D+기념일 계산기 & 앱 설치/공유 -->
                 <div class="flex items-center gap-1.5 flex-shrink-0">
-                    <button type="button" id="btn-fullscreen-toggle" onclick="toggleFullscreenMode()" class="px-2.5 py-1.5 rounded-full text-xs font-gowun font-bold bg-stone-800 text-white hover:bg-stone-700 active:scale-95 transition-all flex items-center gap-1 shadow-sm whitespace-nowrap">
-                        <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
-                        <span id="fullscreen-btn-label">전체화면</span>
+                    <button type="button" id="btn-dday-header" onclick="openModal('install-guide')" class="px-2.5 py-1.5 rounded-full text-xs font-gowun font-bold bg-stone-100 text-stone-800 border border-stone-200/90 hover:bg-amber-50 hover:border-amber-200 active:scale-95 transition-all flex items-center gap-1 shadow-sm whitespace-nowrap">
+                        <i data-lucide="cake" class="w-3.5 h-3.5 text-amber-700"></i>
+                        <span id="dday-header-label">D+기념일</span>
                     </button>
                     <button type="button" id="btn-pwa-install" onclick="handleInstallAppClick()" class="px-2.5 py-1.5 rounded-full text-xs font-gowun font-bold bg-amber-50 text-amber-900 border border-amber-200/90 hover:bg-amber-100 active:scale-95 transition-all flex items-center gap-1 shadow-sm whitespace-nowrap">
                         <i data-lucide="smartphone" class="w-3.5 h-3.5 text-amber-700"></i>
-                        <span>앱 설치</span>
+                        <span id="pwa-install-btn-label">앱 설치</span>
                     </button>
                 </div>
             </div>
@@ -377,8 +377,8 @@
                             </div>
 
                             <!-- (2) 날짜 · 성장 기록 -->
-                            <div class="bg-stone-50/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200/70">
-                                <div class="flex items-center justify-between mb-1.5">
+                            <div class="bg-stone-50/70 p-2.5 sm:p-3 rounded-2xl border border-stone-200/70 space-y-1.5">
+                                <div class="flex items-center justify-between">
                                     <label for="input-custom-milestone" class="text-xs sm:text-sm font-gowun font-bold text-stone-700">날짜 · 성장 기록</label>
                                     <button type="button" id="btn-toggle-milestone" onclick="toggleTextPart('milestone')" class="px-2.5 py-0.5 rounded-full text-xs font-gowun font-bold transition-all border">
                                         표시 안 함
@@ -386,6 +386,14 @@
                                 </div>
                                 <input type="text" id="input-custom-milestone" maxlength="30" placeholder="예: 2026.10 · 생후 D+100의 기록"
                                     class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-xs sm:text-sm font-gowun text-stone-800 focus:outline-none focus:border-stone-600 transition-colors">
+                                <div class="flex items-center gap-1.5 flex-wrap pt-0.5">
+                                    <button type="button" onclick="applyTodayDateMilestone()" class="px-2.5 py-1 rounded-lg bg-white border border-stone-200 hover:bg-amber-50 hover:border-amber-200 text-[11px] font-gowun font-bold text-stone-700 flex items-center gap-1 transition-colors">
+                                        <i data-lucide="calendar" class="w-3 h-3 text-amber-700"></i> 오늘 날짜 넣기
+                                    </button>
+                                    <button type="button" onclick="applyBabyDdayMilestone()" class="px-2.5 py-1 rounded-lg bg-amber-50/90 border border-amber-200 hover:bg-amber-100 text-[11px] font-gowun font-bold text-amber-900 flex items-center gap-1 transition-colors">
+                                        <i data-lucide="cake" class="w-3 h-3 text-amber-700"></i> 생후 D+일수 자동 입력
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- (3) 한 줄 메시지 -->
@@ -761,7 +769,7 @@
         ];
 
         const STORAGE_KEY = 'gureum_growth_album_v2';
-        const AUTO_FS_KEY = 'gureum_auto_fullscreen_v1';
+        const BIRTHDATE_KEY = 'gureum_birth_date_v1';
 
         let currentStep = 1;
         let currentSeason = null;
@@ -778,7 +786,7 @@
         let renderDebounceTimer = null;
 
         let customTitleText = '구름이의 자라나는 시간';
-        let customMilestoneText = '2026. 10 · 사랑으로 자라는 날들';
+        let customMilestoneText = '2026. 11 · 사랑으로 자라는 날들';
         let customDescText = '';
         let selectedBlessingMonth = String(new Date().getMonth() + 1);
         let lastActiveBlessingMonth = String(new Date().getMonth() + 1);
@@ -790,7 +798,7 @@
         let selectedLogoScale = 1.2; // 하단 로고 크기 배율 (0.75 ~ 1.60)
 
         let isMobilePreviewCompact = false;
-        let autoFullscreenEnabled = localStorage.getItem(AUTO_FS_KEY) !== 'false';
+        let babyBirthDateStr = localStorage.getItem(BIRTHDATE_KEY) || '';
 
         const sectionFoldState = {
             text: false,
@@ -798,69 +806,180 @@
             bg: false
         };
 
-        // 모바일 첫 터치 시 자동 전체화면 전환
-        function tryAutoEnterFullscreen() {
-            if (!autoFullscreenEnabled) return;
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || window.navigator.standalone;
-            if (isStandalone) return;
-            const isFull = document.fullscreenElement || document.webkitFullscreenElement;
-            if (!isFull && window.innerWidth < 1024) {
-                const docEl = document.documentElement;
-                if (docEl.requestFullscreen) {
-                    docEl.requestFullscreen().catch(() => {});
-                } else if (docEl.webkitRequestFullscreen) {
-                    try { docEl.webkitRequestFullscreen(); } catch(e) {}
-                }
-            }
+        // 오늘 날짜 포맷 (YYYY. MM. DD)
+        function getFormattedTodayStr(includeDay = true) {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return includeDay ? `${y}. ${m}. ${d}` : `${y}. ${m}`;
         }
 
-        function toggleAutoFullscreenSetting() {
-            autoFullscreenEnabled = !autoFullscreenEnabled;
-            try {
-                localStorage.setItem(AUTO_FS_KEY, String(autoFullscreenEnabled));
-            } catch(e) {}
-            const badgeEl = document.getElementById('auto-fs-status-btn');
-            if (badgeEl) {
-                badgeEl.innerText = autoFullscreenEnabled ? '✓ 첫 터치 시 자동 전체화면: 켜짐' : '첫 터치 시 자동 전체화면: 꺼짐';
-                badgeEl.className = autoFullscreenEnabled
-                    ? 'w-full py-2.5 rounded-xl bg-emerald-700 text-white font-bold text-xs sm:text-sm hover:bg-emerald-800 transition-colors'
-                    : 'w-full py-2.5 rounded-xl bg-stone-200 text-stone-700 font-bold text-xs sm:text-sm hover:bg-stone-300 transition-colors';
-            }
-            if (autoFullscreenEnabled) {
-                toggleFullscreenMode();
-            }
-        }
+        // 구름이 생후 D+일수 및 개월수 계산 (태어난 당일을 D+1로 계산)
+        function calculateBabyDdayInfo(dateStr) {
+            if (!dateStr) return null;
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return null;
+            const birth = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+            if (isNaN(birth.getTime())) return null;
 
-        function toggleFullscreenMode() {
-            const docEl = document.documentElement;
-            const isFull = document.fullscreenElement || document.webkitFullscreenElement;
-            if (!isFull) {
-                if (docEl.requestFullscreen) {
-                    docEl.requestFullscreen().catch(() => {
-                        openModal('install-guide');
-                    });
-                } else if (docEl.webkitRequestFullscreen) {
-                    docEl.webkitRequestFullscreen();
-                } else {
-                    openModal('install-guide');
-                }
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const diffMs = today.getTime() - birth.getTime();
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+            // 주요 기념일 (백일, 200일, 첫돌)
+            const addDaysFmt = (daysToAdd) => {
+                const target = new Date(birth.getTime());
+                target.setDate(target.getDate() + daysToAdd);
+                const ty = target.getFullYear();
+                const tm = String(target.getMonth() + 1).padStart(2, '0');
+                const td = String(target.getDate()).padStart(2, '0');
+                return `${ty}.${tm}.${td}`;
+            };
+
+            if (diffDays >= 0) {
+                const dPlus = diffDays + 1; // 태어난 날 = 생후 1일(D+1)
+                const months = Math.floor(diffDays / 30.4375);
+                return {
+                    isBorn: true,
+                    dPlus,
+                    months,
+                    badgeText: `D+${dPlus}`,
+                    summaryText: `생후 D+${dPlus}일 (${months}개월)`,
+                    milestoneLine: `${getFormattedTodayStr(true)} · 생후 D+${dPlus}일의 기록`,
+                    day100: addDaysFmt(99),
+                    day200: addDaysFmt(199),
+                    day365: addDaysFmt(365)
+                };
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen().catch(() => {});
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
+                const dMinus = Math.abs(diffDays);
+                return {
+                    isBorn: false,
+                    dMinus,
+                    badgeText: `D-${dMinus}`,
+                    summaryText: `만남까지 D-${dMinus}일`,
+                    milestoneLine: `${getFormattedTodayStr(true)} · 설레는 기다림 D-${dMinus}`,
+                    day100: addDaysFmt(99),
+                    day200: addDaysFmt(199),
+                    day365: addDaysFmt(365)
+                };
             }
         }
 
-        function updateFullscreenBtnUI() {
-            const labelEl = document.getElementById('fullscreen-btn-label');
-            if (!labelEl) return;
-            const isFull = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
-            labelEl.innerText = isFull ? '화면 복귀' : '전체화면';
+        function updateHeaderDdayAndInstallUI() {
+            const ddayLabel = document.getElementById('dday-header-label');
+            const info = calculateBabyDdayInfo(babyBirthDateStr);
+            if (ddayLabel) {
+                ddayLabel.innerText = info ? `구름 ${info.badgeText}` : 'D+기념일';
+            }
+
+            const installBtnLabel = document.getElementById('pwa-install-btn-label');
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || window.navigator.standalone;
+            if (installBtnLabel) {
+                installBtnLabel.innerText = isStandalone ? '앱 안내' : '앱 설치';
+            }
         }
-        document.addEventListener('fullscreenchange', updateFullscreenBtnUI);
-        document.addEventListener('webkitfullscreenchange', updateFullscreenBtnUI);
+
+        function onBirthDateInputChange(val) {
+            babyBirthDateStr = val || '';
+            try {
+                if (babyBirthDateStr) {
+                    localStorage.setItem(BIRTHDATE_KEY, babyBirthDateStr);
+                } else {
+                    localStorage.removeItem(BIRTHDATE_KEY);
+                }
+            } catch (e) {}
+            updateHeaderDdayAndInstallUI();
+            renderModalDdaySummaryBox();
+        }
+
+        function renderModalDdaySummaryBox() {
+            const box = document.getElementById('modal-dday-result-box');
+            if (!box) return;
+            const info = calculateBabyDdayInfo(babyBirthDateStr);
+            if (!info) {
+                box.innerHTML = `<p class="text-xs text-stone-500 font-gowun">구름이의 태어난 날(또는 예정일)을 선택하면 오늘 기준 생후 일수와 100일·200일·첫돌 날짜가 자동 계산됩니다.</p>`;
+                return;
+            }
+            box.innerHTML = `
+                <div class="flex items-center justify-between bg-white px-3 py-2 rounded-xl border border-amber-200/80">
+                    <span class="text-xs font-gowun text-stone-600">오늘 기준</span>
+                    <span class="text-sm font-serif-kr font-bold text-amber-900">${info.summaryText}</span>
+                </div>
+                <div class="grid grid-cols-3 gap-1.5 text-center pt-1">
+                    <div class="bg-white p-1.5 rounded-xl border border-stone-200/80">
+                        <div class="text-[10px] text-stone-500 font-gowun">백일 (D+100)</div>
+                        <div class="text-[11px] font-bold text-stone-800 font-gowun">${info.day100}</div>
+                    </div>
+                    <div class="bg-white p-1.5 rounded-xl border border-stone-200/80">
+                        <div class="text-[10px] text-stone-500 font-gowun">200일</div>
+                        <div class="text-[11px] font-bold text-stone-800 font-gowun">${info.day200}</div>
+                    </div>
+                    <div class="bg-white p-1.5 rounded-xl border border-stone-200/80">
+                        <div class="text-[10px] text-stone-500 font-gowun">첫돌 (1주)</div>
+                        <div class="text-[11px] font-bold text-stone-800 font-gowun">${info.day365}</div>
+                    </div>
+                </div>
+                <button type="button" onclick="applyDdayFromModalToFrame()" class="w-full mt-1.5 py-2 px-3 rounded-xl bg-amber-800 hover:bg-amber-900 text-white font-gowun font-bold text-xs shadow-sm transition-colors">
+                    ✨ '${info.milestoneLine}' 문구로 적용하기
+                </button>
+            `;
+        }
+
+        function applyDdayFromModalToFrame() {
+            const info = calculateBabyDdayInfo(babyBirthDateStr);
+            if (!info) return;
+            showMilestone = true;
+            customMilestoneText = info.milestoneLine;
+            syncCustomInputsFromState();
+            closeModal();
+            if (currentStep === 4 && currentSeason) {
+                updatePreviewFrame(selectedBgUrl || currentSeason.bgOptions[0]);
+            }
+        }
+
+        function applyTodayDateMilestone() {
+            showMilestone = true;
+            const info = calculateBabyDdayInfo(babyBirthDateStr);
+            customMilestoneText = info ? info.milestoneLine : `${getFormattedTodayStr(true)} · 사랑으로 자라는 날들`;
+            syncCustomInputsFromState();
+            triggerDebouncedPreview();
+        }
+
+        function applyBabyDdayMilestone() {
+            const info = calculateBabyDdayInfo(babyBirthDateStr);
+            if (!info) {
+                openModal('install-guide');
+                return;
+            }
+            showMilestone = true;
+            customMilestoneText = info.milestoneLine;
+            syncCustomInputsFromState();
+            triggerDebouncedPreview();
+        }
+
+        async function shareAlbumAppLink() {
+            const shareUrl = window.location.href;
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: '구름이의 성장 기록관',
+                        text: '준삐와 솔태가 기록하는 구름이의 사계절 성장 앨범',
+                        url: shareUrl
+                    });
+                    return;
+                } catch (e) {}
+            }
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                const btn = document.getElementById('btn-share-album-link');
+                if (btn) {
+                    btn.innerText = '✓ 앨범 주소가 복사되었습니다!';
+                    setTimeout(() => { btn.innerText = '가족에게 앨범 링크 공유 / 주소 복사'; }, 2200);
+                }
+            } catch (e) {}
+        }
 
         // 미리보기 크기 토글 (작게 / 기본)
         function toggleMobilePreviewSize() {
@@ -1468,7 +1587,6 @@
         }
 
         function handleNavClick(targetStep) {
-            tryAutoEnterFullscreen();
             if (targetStep === 1) {
                 setStep(1);
             } else if (targetStep === 2) {
@@ -1543,7 +1661,6 @@
         }
 
         function handleSeasonSelect(seasonId) {
-            tryAutoEnterFullscreen();
             currentSeason = SEASON_DATA[seasonId];
             customTitleText = currentSeason.defaultTitle;
             customMilestoneText = currentSeason.defaultMilestone;
@@ -1559,7 +1676,6 @@
         }
 
         function handleLayoutSelect(layoutId) {
-            tryAutoEnterFullscreen();
             selectedLayout = LAYOUT_DATA.find(l => l.id === layoutId);
             applySeasonThemeToUI();
             resetFileInput();
@@ -1757,7 +1873,6 @@
         }
 
         function initStep4() {
-            tryAutoEnterFullscreen();
             if (!currentSeason) currentSeason = SEASON_DATA.spring;
             document.getElementById('download-btn').style.backgroundColor = currentSeason.textColor;
             syncCustomInputsFromState();
@@ -2412,7 +2527,6 @@
         }
 
         function handleAddPhotoClick() {
-            tryAutoEnterFullscreen();
             if (!hasPromptedUpload) {
                 openModal('upload');
             } else {
@@ -2446,94 +2560,15 @@
             return c.toDataURL('image/png');
         }
 
-        function downloadAppIconFile(size) {
-            const dataUrl = (size === 192 ? window.generatedAppIconUrl192 : window.generatedAppIconUrl) || createAppIconDataUrl(size);
-            const a = document.createElement('a');
-            a.href = dataUrl;
-            a.download = `icon-${size}.png`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        function downloadManifestFile() {
-            const manifestObj = {
-                id: "./",
-                name: "구름이의 성장 기록관",
-                short_name: "구름이 성장앨범",
-                description: "준삐와 솔태가 기록하는 구름이의 사계절 성장 앨범",
-                lang: "ko",
-                dir: "ltr",
-                start_url: "./index.html",
-                scope: "./",
-                display: "fullscreen",
-                display_override: ["fullscreen", "standalone"],
-                orientation: "portrait",
-                background_color: "#f7f4f0",
-                theme_color: "#f7f4f0",
-                categories: ["photo", "lifestyle"],
-                icons: [
-                    {
-                        src: "./icon-192.png",
-                        sizes: "192x192",
-                        type: "image/png",
-                        purpose: "any"
-                    },
-                    {
-                        src: "./icon-512.png",
-                        sizes: "512x512",
-                        type: "image/png",
-                        purpose: "any"
-                    },
-                    {
-                        src: "./icon-512.png",
-                        sizes: "512x512",
-                        type: "image/png",
-                        purpose: "maskable"
-                    }
-                ]
-            };
-            const blob = new Blob([JSON.stringify(manifestObj, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'manifest.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function downloadServiceWorkerFile() {
-            const swCode = `const CACHE_NAME = 'gureum-album-v3';
-const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
-self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).catch(() => {}));
-  self.skipWaiting();
-});
-self.addEventListener('activate', (e) => {
-  e.waitUntil(clients.claim());
-});
-self.addEventListener('fetch', (e) => {
-  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-});
-`;
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'sw.js';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function downloadAllPwaFiles() {
-            downloadManifestFile();
-            setTimeout(() => downloadServiceWorkerFile(), 250);
-            setTimeout(() => downloadAppIconFile(512), 500);
-            setTimeout(() => downloadAppIconFile(192), 750);
+        async function triggerNativePromptFromModal() {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                try {
+                    await deferredInstallPrompt.userChoice;
+                } catch (err) {}
+                deferredInstallPrompt = null;
+                closeModal();
+            }
         }
 
         function openModal(type) {
@@ -2568,36 +2603,61 @@ self.addEventListener('fetch', (e) => {
                 confirmBtn.className = 'flex-1 py-3.5 text-rose-600 font-bold font-gowun text-sm border-l border-stone-100 hover:bg-white transition-colors';
                 modalPendingAction = 'reset';
             } else if (type === 'install-guide') {
-                mTitle.innerText = '전체화면 및 앱 설치 안내';
-                const autoFsLabel = autoFullscreenEnabled ? '✓ 첫 터치 시 자동 전체화면: 켜짐' : '첫 터치 시 자동 전체화면: 꺼짐';
-                const autoFsClass = autoFullscreenEnabled
-                    ? 'w-full py-2.5 rounded-xl bg-emerald-700 text-white font-bold text-xs sm:text-sm hover:bg-emerald-800 transition-colors'
-                    : 'w-full py-2.5 rounded-xl bg-stone-200 text-stone-700 font-bold text-xs sm:text-sm hover:bg-stone-300 transition-colors';
+                mTitle.innerText = '구름이 기념일 & 앱 안내';
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || window.navigator.standalone;
+                const hasInstallPrompt = Boolean(deferredInstallPrompt);
 
                 mDesc.innerHTML = `
                     <div class="space-y-3 text-xs sm:text-sm">
-                        <div class="p-3 rounded-2xl bg-stone-100 border border-stone-200 space-y-2">
-                            <div class="font-bold text-stone-900">1. 앱 내부 자동 전체화면</div>
-                            <p class="text-stone-600 leading-snug">화면을 터치하면 상단 주소창이 자동으로 숨겨집니다.</p>
-                            <button type="button" onclick="closeModal(); toggleFullscreenMode();" class="w-full py-2 rounded-xl bg-stone-800 text-white font-bold text-xs sm:text-sm hover:bg-stone-700">지금 바로 전체화면 켜기</button>
-                            <button type="button" id="auto-fs-status-btn" onclick="toggleAutoFullscreenSetting()" class="${autoFsClass}">${autoFsLabel}</button>
-                        </div>
-
-                        <div class="p-3 rounded-2xl bg-amber-50/90 border border-amber-200 space-y-1.5">
-                            <div class="font-bold text-amber-950">2. PWABuilder APK에서 주소창 없애기</div>
-                            <p class="text-stone-700 leading-snug">PWABuilder에서 Android Package 생성 시 <b>Other Options → App behavior</b>를 <code>TWA</code> 대신 <b><code>WebView</code></b>로 선택해 APK를 만들면 상단 주소창이 영구히 나타나지 않습니다.</p>
-                        </div>
-
-                        <div class="p-3 rounded-2xl bg-blue-50/70 border border-blue-200 space-y-2">
-                            <div class="font-bold text-blue-950">3. PWABuilder 및 깃허브 필수 파일 받기</div>
-                            <p class="text-stone-700 leading-snug">PWABuilder에서 APK를 생성하려면 <code>index.html</code>과 함께 <b>아래 4개 파일</b>이 같은 깃허브 폴더에 있어야 합니다.</p>
-                            <button type="button" onclick="downloadAllPwaFiles()" class="w-full py-2.5 px-3 rounded-xl bg-blue-700 text-white font-bold text-xs sm:text-sm hover:bg-blue-800 shadow-sm">필수 파일 4개 한 번에 받기</button>
-                            <div class="grid grid-cols-2 gap-1.5 pt-0.5">
-                                <button type="button" onclick="downloadManifestFile()" class="py-1.5 px-2 rounded-xl bg-white border border-blue-200 text-blue-900 font-bold text-xs hover:bg-blue-100">manifest.json</button>
-                                <button type="button" onclick="downloadServiceWorkerFile()" class="py-1.5 px-2 rounded-xl bg-white border border-blue-200 text-blue-900 font-bold text-xs hover:bg-blue-100">sw.js</button>
-                                <button type="button" onclick="downloadAppIconFile(512)" class="py-1.5 px-2 rounded-xl bg-white border border-blue-200 text-blue-900 font-bold text-xs hover:bg-blue-100">icon-512.png</button>
-                                <button type="button" onclick="downloadAppIconFile(192)" class="py-1.5 px-2 rounded-xl bg-white border border-blue-200 text-blue-900 font-bold text-xs hover:bg-blue-100">icon-192.png</button>
+                        <!-- 1. 구름이 생일/출생일 등록 & D+ 계산기 -->
+                        <div class="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-amber-950 flex items-center gap-1.5">
+                                    <i data-lucide="cake" class="w-4 h-4 text-amber-700"></i>
+                                    구름이 태어난 날 · D+ 자동 계산
+                                </span>
+                                ${babyBirthDateStr ? `<button type="button" onclick="onBirthDateInputChange('')" class="text-[11px] text-stone-500 hover:text-rose-600 underline">초기화</button>` : ''}
                             </div>
+                            <input type="date" id="modal-birth-date-input" value="${babyBirthDateStr}" onchange="onBirthDateInputChange(this.value)"
+                                class="w-full px-3 py-2 rounded-xl border border-amber-300 bg-white text-stone-800 font-gowun font-bold text-xs sm:text-sm focus:outline-none focus:border-amber-600">
+                            <div id="modal-dday-result-box" class="space-y-1.5 pt-0.5"></div>
+                        </div>
+
+                        <!-- 2. 스마트폰 앱 설치 & 가족 공유 -->
+                        <div class="p-3.5 rounded-2xl bg-stone-100 border border-stone-200 space-y-2">
+                            <div class="font-bold text-stone-900 flex items-center gap-1.5">
+                                <i data-lucide="smartphone" class="w-4 h-4 text-stone-700"></i>
+                                스마트폰 앱 설치 · 가족 공유
+                            </div>
+                            ${isStandalone ? `
+                                <div class="px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold text-xs">
+                                    ✓ 현재 구름이 성장앨범 앱으로 실행 중입니다
+                                </div>
+                            ` : hasInstallPrompt ? `
+                                <button type="button" onclick="triggerNativePromptFromModal()" class="w-full py-2.5 px-3 rounded-xl bg-amber-800 hover:bg-amber-900 text-white font-bold text-xs sm:text-sm shadow-sm transition-colors">
+                                    📲 스마트폰에 앱 바로 설치하기
+                                </button>
+                            ` : `
+                                <p class="text-stone-600 leading-snug text-xs">
+                                    • <b>갤럭시/안드로이드</b>: 브라우저 메뉴(⋮) → <b>[앱 설치]</b> 또는 <b>[홈 화면에 추가]</b><br>
+                                    • <b>아이폰(Safari)</b>: 하단 <b>[공유]</b> 버튼 → <b>[홈 화면에 추가]</b>
+                                </p>
+                            `}
+                            <button type="button" id="btn-share-album-link" onclick="shareAlbumAppLink()" class="w-full py-2 px-3 rounded-xl bg-white border border-stone-300 hover:bg-stone-50 text-stone-800 font-bold text-xs transition-colors flex items-center justify-center gap-1.5">
+                                <i data-lucide="share-2" class="w-3.5 h-3.5 text-amber-700"></i>
+                                <span>가족에게 앨범 링크 공유 / 주소 복사</span>
+                            </button>
+                        </div>
+
+                        <!-- 3. 포토프린터 4x6 인화 꿀팁 -->
+                        <div class="p-3 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-1">
+                            <div class="font-bold text-stone-800 flex items-center gap-1.5 text-xs">
+                                <i data-lucide="printer" class="w-3.5 h-3.5 text-amber-700"></i>
+                                4×6인치 포토프린터 인화 팁
+                            </div>
+                            <p class="text-stone-600 leading-snug text-[11px] sm:text-xs">
+                                완성된 액자는 4×6인치(100×148mm) 고화질 비율로 저장됩니다. 프린터 앱에서 <b>'테두리 있음(여백 포함)'</b> 또는 <b>'원본 비율 유지'</b>를 선택하면 액자 테두리가 잘리지 않고 예쁘게 인화됩니다.
+                            </p>
                         </div>
                     </div>
                 `;
@@ -2607,6 +2667,7 @@ self.addEventListener('fetch', (e) => {
                 confirmBtn.innerText = '닫기';
                 confirmBtn.className = 'flex-1 py-3.5 text-amber-800 font-bold font-gowun text-sm hover:bg-white transition-colors';
                 modalPendingAction = null;
+                renderModalDdaySummaryBox();
             }
 
             lucide.createIcons();
@@ -2790,6 +2851,7 @@ self.addEventListener('fetch', (e) => {
                 `;
             });
 
+            updateHeaderDdayAndInstallUI();
             lucide.createIcons(); 
             checkBackup();
         };
