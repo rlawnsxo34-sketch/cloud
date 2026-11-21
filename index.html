@@ -24,7 +24,7 @@
     <!-- 모바일 최적화 폰트 및 트랜지션 설정 -->
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Serif+KR:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cute+Font&family=Do+Hyeon&family=Dongle:wght@400;700&family=Gaegu:wght@400;700&family=Gamja+Flower&family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Hahmlet:wght@400;600;700&family=Jua&family=Nanum+Brush+Script&family=Nanum+Myeongjo:wght@400;700;800&family=Nanum+Pen+Script&family=Noto+Serif+KR:wght@400;600;700&family=Poor+Story&family=Single+Day&family=Song+Myung&display=swap');
 
         html {
             font-size: 16px;
@@ -440,7 +440,54 @@
                                 </select>
                             </div>
 
-                            <!-- (5) 맞춤 문구 위치 · 정렬 조절 -->
+                            <!-- (5) 부분별 글씨체 · 글자색 꾸미기 -->
+                            <div class="bg-stone-50/90 p-3 rounded-2xl border border-stone-200/80 space-y-2.5">
+                                <div class="flex items-center justify-between gap-2 flex-wrap">
+                                    <span class="text-xs sm:text-sm font-gowun font-bold text-stone-800 flex items-center gap-1">
+                                        <i data-lucide="type" class="w-3.5 h-3.5 text-amber-700"></i> 부분별 글씨체 · 글자색
+                                    </span>
+                                    <button type="button" onclick="resetTextStyle()" class="px-2 py-0.5 rounded-lg bg-white border border-stone-300 text-[11px] font-gowun font-bold text-stone-600 hover:bg-stone-100 flex items-center gap-1">
+                                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> 스타일 초기화
+                                    </button>
+                                </div>
+
+                                <!-- 적용 대상 선택 (전체 / 메인 제목 / 기념일 / 한 줄 메시지 / 축복 문구) -->
+                                <div class="space-y-1">
+                                    <div class="text-[11px] font-gowun font-bold text-stone-600">적용할 부분 선택</div>
+                                    <div id="text-style-target-tabs" class="grid grid-cols-5 gap-1">
+                                        <!-- JS에서 동적 렌더링 -->
+                                    </div>
+                                </div>
+
+                                <!-- 글씨체 선택 콤보박스 + 실시간 미리보기 -->
+                                <div class="space-y-1.5 pt-1.5 border-t border-stone-200/70">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <label for="select-text-font" class="text-[11px] font-gowun font-bold text-stone-600">글씨체 선택 (18종)</label>
+                                        <span id="label-style-target-badge" class="text-[10px] font-gowun font-bold px-2 py-0.5 rounded-full bg-amber-100/80 text-amber-900">전체 일괄 적용</span>
+                                    </div>
+                                    <select id="select-text-font" onchange="setTextFont(this.value)"
+                                        class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs sm:text-sm font-gowun font-bold text-stone-800 bg-white focus:outline-none focus:border-amber-600 transition-colors">
+                                        <!-- JS에서 optgroup별 동적 렌더링 -->
+                                    </select>
+                                    <div id="text-style-live-preview"
+                                        class="px-3 py-2 rounded-xl bg-white border border-stone-200/90 text-center truncate text-sm sm:text-base transition-all">
+                                        구름이의 소중한 오늘을 기록해요
+                                    </div>
+                                </div>
+
+                                <!-- 글자색 선택 팔레트 + 자유 컬러 피커 -->
+                                <div class="space-y-1.5 pt-1.5 border-t border-stone-200/70">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-[11px] font-gowun font-bold text-stone-600">글자색 선택</span>
+                                        <span id="label-selected-text-color" class="text-[11px] font-gowun font-bold text-amber-900">계절 기본색</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 flex-wrap" id="text-color-swatches">
+                                        <!-- JS에서 동적 렌더링 -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- (6) 맞춤 문구 위치 · 정렬 조절 -->
                             <div class="bg-amber-50/60 p-3 rounded-2xl border border-amber-200/80 space-y-2.5">
                                 <div class="flex items-center justify-between gap-2 flex-wrap">
                                     <span class="text-xs sm:text-sm font-gowun font-bold text-stone-800 flex items-center gap-1">
@@ -1007,6 +1054,249 @@
         let textOffsetY = 0;             // -220 ~ 220 (bottom/top 모드 미세 이동)
         let textFreeX = 0.5;             // 0.08 ~ 0.92 (free 모드 중심 X 비율)
         let textFreeY = 0.78;            // 0.08 ~ 0.92 (free 모드 중심 Y 비율)
+        const TEXT_STYLE_PARTS = [
+            { key: 'all', label: '전체', fullLabel: '전체 일괄 적용' },
+            { key: 'title', label: '제목', fullLabel: '메인 제목' },
+            { key: 'milestone', label: '기념일', fullLabel: '기념일 · 디데이' },
+            { key: 'desc', label: '메시지', fullLabel: '한 줄 메시지' },
+            { key: 'blessing', label: '축복문구', fullLabel: '월별 축복 문구' }
+        ];
+        const TEXT_PART_KEYS = ['title', 'milestone', 'desc', 'blessing'];
+
+        function createDefaultTextPartStyles() {
+            return {
+                title: { fontId: 'classic', color: 'season' },
+                milestone: { fontId: 'classic', color: 'season' },
+                desc: { fontId: 'classic', color: 'season' },
+                blessing: { fontId: 'classic', color: 'season' }
+            };
+        }
+
+        let textPartStyles = createDefaultTextPartStyles();
+        let activeStyleTarget = 'all';   // 'all' | 'title' | 'milestone' | 'desc' | 'blessing'
+
+        const FONT_CATEGORIES = [
+            { id: 'serif', label: '감성 명조 · 서적체' },
+            { id: 'sans', label: '깔끔 고딕 · 둥근체' },
+            { id: 'hand', label: '손글씨 · 캘리그라피' }
+        ];
+
+        const FONT_PRESETS = [
+            // 감성 명조 · 서적체
+            {
+                id: 'classic',
+                category: 'serif',
+                label: '기본 감성 (본명조 + 고운돋움)',
+                titleFamily: '"Noto Serif KR", serif',
+                titleWeight: '600',
+                bodyFamily: '"Gowun Dodum", sans-serif',
+                bodyWeight: '400',
+                sizeScale: 1.0,
+                loadSpecs: ['600 40px "Noto Serif KR"', '400 32px "Gowun Dodum"']
+            },
+            {
+                id: 'notoserif',
+                category: 'serif',
+                label: '노토 세리프 (우아한 명조)',
+                titleFamily: '"Noto Serif KR", serif',
+                titleWeight: '700',
+                bodyFamily: '"Noto Serif KR", serif',
+                bodyWeight: '400',
+                sizeScale: 1.0,
+                loadSpecs: ['700 40px "Noto Serif KR"', '400 32px "Noto Serif KR"']
+            },
+            {
+                id: 'batang',
+                category: 'serif',
+                label: '고운바탕 (따뜻한 책 느낌)',
+                titleFamily: '"Gowun Batang", serif',
+                titleWeight: '700',
+                bodyFamily: '"Gowun Batang", serif',
+                bodyWeight: '400',
+                sizeScale: 1.0,
+                loadSpecs: ['700 40px "Gowun Batang"', '400 32px "Gowun Batang"']
+            },
+            {
+                id: 'nanummyeongjo',
+                category: 'serif',
+                label: '나눔명조 (클래식 서적체)',
+                titleFamily: '"Nanum Myeongjo", serif',
+                titleWeight: '800',
+                bodyFamily: '"Nanum Myeongjo", serif',
+                bodyWeight: '700',
+                sizeScale: 0.98,
+                loadSpecs: ['800 40px "Nanum Myeongjo"', '700 32px "Nanum Myeongjo"']
+            },
+            {
+                id: 'songmyung',
+                category: 'serif',
+                label: '송명체 (감성 타이틀 명조)',
+                titleFamily: '"Song Myung", serif',
+                titleWeight: '400',
+                bodyFamily: '"Song Myung", serif',
+                bodyWeight: '400',
+                sizeScale: 1.08,
+                loadSpecs: ['400 40px "Song Myung"']
+            },
+            {
+                id: 'hahmlet',
+                category: 'serif',
+                label: '함렛 (모던 세리프)',
+                titleFamily: '"Hahmlet", serif',
+                titleWeight: '700',
+                bodyFamily: '"Hahmlet", serif',
+                bodyWeight: '400',
+                sizeScale: 0.98,
+                loadSpecs: ['700 40px "Hahmlet"', '400 32px "Hahmlet"']
+            },
+            // 깔끔 고딕 · 둥근체
+            {
+                id: 'gowundodum',
+                category: 'sans',
+                label: '고운돋움 (단정하고 포근한 고딕)',
+                titleFamily: '"Gowun Dodum", sans-serif',
+                titleWeight: '400',
+                bodyFamily: '"Gowun Dodum", sans-serif',
+                bodyWeight: '400',
+                sizeScale: 1.0,
+                loadSpecs: ['400 40px "Gowun Dodum"']
+            },
+            {
+                id: 'modern',
+                category: 'sans',
+                label: '프리텐다드 (깔끔 모던 고딕)',
+                titleFamily: '"Pretendard", sans-serif',
+                titleWeight: '700',
+                bodyFamily: '"Pretendard", sans-serif',
+                bodyWeight: '500',
+                sizeScale: 0.96,
+                loadSpecs: ['700 40px "Pretendard"', '500 32px "Pretendard"']
+            },
+            {
+                id: 'jua',
+                category: 'sans',
+                label: '배민 주아체 (통통한 둥근체)',
+                titleFamily: '"Jua", sans-serif',
+                titleWeight: '400',
+                bodyFamily: '"Jua", sans-serif',
+                bodyWeight: '400',
+                sizeScale: 1.04,
+                loadSpecs: ['400 40px "Jua"']
+            },
+            {
+                id: 'dongle',
+                category: 'sans',
+                label: '동글체 (동글동글 귀여운체)',
+                titleFamily: '"Dongle", sans-serif',
+                titleWeight: '700',
+                bodyFamily: '"Dongle", sans-serif',
+                bodyWeight: '400',
+                sizeScale: 1.4,
+                loadSpecs: ['700 48px "Dongle"', '400 40px "Dongle"']
+            },
+            {
+                id: 'dohyeon',
+                category: 'sans',
+                label: '배민 도현체 (힘있는 레트로 고딕)',
+                titleFamily: '"Do Hyeon", sans-serif',
+                titleWeight: '400',
+                bodyFamily: '"Do Hyeon", sans-serif',
+                bodyWeight: '400',
+                sizeScale: 1.02,
+                loadSpecs: ['400 40px "Do Hyeon"']
+            },
+            {
+                id: 'gamjaflower',
+                category: 'sans',
+                label: '감자꽃 (아기자기한 동화체)',
+                titleFamily: '"Gamja Flower", cursive',
+                titleWeight: '400',
+                bodyFamily: '"Gamja Flower", cursive',
+                bodyWeight: '400',
+                sizeScale: 1.18,
+                loadSpecs: ['400 42px "Gamja Flower"']
+            },
+            // 손글씨 · 캘리그라피
+            {
+                id: 'gaegu',
+                category: 'hand',
+                label: '개구체 (발랄한 손글씨)',
+                titleFamily: '"Gaegu", cursive',
+                titleWeight: '700',
+                bodyFamily: '"Gaegu", cursive',
+                bodyWeight: '700',
+                sizeScale: 1.18,
+                loadSpecs: ['700 42px "Gaegu"']
+            },
+            {
+                id: 'nanumpen',
+                category: 'hand',
+                label: '나눔 손글씨 펜 (감성 펜글씨)',
+                titleFamily: '"Nanum Pen Script", cursive',
+                titleWeight: '400',
+                bodyFamily: '"Nanum Pen Script", cursive',
+                bodyWeight: '400',
+                sizeScale: 1.28,
+                loadSpecs: ['400 44px "Nanum Pen Script"']
+            },
+            {
+                id: 'nanumbrush',
+                category: 'hand',
+                label: '나눔 손글씨 붓 (멋스러운 붓글씨)',
+                titleFamily: '"Nanum Brush Script", cursive',
+                titleWeight: '400',
+                bodyFamily: '"Nanum Brush Script", cursive',
+                bodyWeight: '400',
+                sizeScale: 1.28,
+                loadSpecs: ['400 44px "Nanum Brush Script"']
+            },
+            {
+                id: 'poorstory',
+                category: 'hand',
+                label: '서툰이야기 (소박한 일기장체)',
+                titleFamily: '"Poor Story", cursive',
+                titleWeight: '400',
+                bodyFamily: '"Poor Story", cursive',
+                bodyWeight: '400',
+                sizeScale: 1.12,
+                loadSpecs: ['400 40px "Poor Story"']
+            },
+            {
+                id: 'singleday',
+                category: 'hand',
+                label: '싱글데이 (부드러운 손글씨)',
+                titleFamily: '"Single Day", cursive',
+                titleWeight: '400',
+                bodyFamily: '"Single Day", cursive',
+                bodyWeight: '400',
+                sizeScale: 1.12,
+                loadSpecs: ['400 40px "Single Day"']
+            },
+            {
+                id: 'cutefont',
+                category: 'hand',
+                label: '귀여운 폰트 (깜찍한 손글씨)',
+                titleFamily: '"Cute Font", cursive',
+                titleWeight: '400',
+                bodyFamily: '"Cute Font", cursive',
+                bodyWeight: '400',
+                sizeScale: 1.32,
+                loadSpecs: ['400 46px "Cute Font"']
+            }
+        ];
+
+        const TEXT_COLOR_PRESETS = [
+            { value: 'season', label: '계절 기본색' },
+            { value: '#2c221e', label: '다크 브라운' },
+            { value: '#1f2937', label: '차콜 블랙' },
+            { value: '#ffffff', label: '화이트' },
+            { value: '#9c4f66', label: '로즈 핑크' },
+            { value: '#36634d', label: '포레스트 그린' },
+            { value: '#824b35', label: '웜 코코아' },
+            { value: '#3b5998', label: '클래식 네이비' },
+            { value: '#b45309', label: '따뜻한 앰버' },
+            { value: '#7c3aed', label: '라벤더 퍼플' }
+        ];
         let lastTextHitBox = null;       // { x, y, w, h, cw, ch } 캔버스 상의 문구 영역 좌표
 
         // 꾸미기 스티커 상태
@@ -1782,6 +2072,7 @@
                 textOffsetY,
                 textFreeX,
                 textFreeY,
+                textPartStyles,
                 placedStickers
             };
             try {
@@ -1829,6 +2120,27 @@
                     textOffsetY = typeof state.textOffsetY === 'number' ? state.textOffsetY : 0;
                     textFreeX = typeof state.textFreeX === 'number' ? state.textFreeX : 0.5;
                     textFreeY = typeof state.textFreeY === 'number' ? state.textFreeY : 0.78;
+                    if (state.textPartStyles && typeof state.textPartStyles === 'object') {
+                        const defs = createDefaultTextPartStyles();
+                        textPartStyles = {};
+                        TEXT_PART_KEYS.forEach(k => {
+                            const savedPart = state.textPartStyles[k] || {};
+                            textPartStyles[k] = {
+                                fontId: savedPart.fontId || defs[k].fontId,
+                                color: savedPart.color || defs[k].color
+                            };
+                        });
+                    } else {
+                        const legacyFont = state.selectedFontId || 'classic';
+                        const legacyColor = state.selectedTextColor || 'season';
+                        textPartStyles = {
+                            title: { fontId: legacyFont, color: legacyColor },
+                            milestone: { fontId: legacyFont, color: legacyColor },
+                            desc: { fontId: legacyFont, color: legacyColor },
+                            blessing: { fontId: legacyFont, color: legacyColor }
+                        };
+                    }
+                    activeStyleTarget = 'all';
                     placedStickers = Array.isArray(state.placedStickers) ? state.placedStickers : [];
                     selectedStickerUid = placedStickers.length > 0 ? placedStickers[placedStickers.length - 1].uid : null;
                     selectedBgUrl = state.selectedBgIsNone ? 'none' : (customUploadedBgSrc || currentSeason.bgOptions[0]);
@@ -2038,8 +2350,266 @@
             }
 
             updateLogoModeButtonsUI();
+            updateTextStyleUI();
             updateTextPositionUI();
             updateStickerEditorUI();
+        }
+
+        // ==========================================
+        // 부분별 맞춤 문구 글씨체 · 글자색 제어 함수
+        // ==========================================
+        function getFontPresetById(fontId) {
+            return FONT_PRESETS.find(f => f.id === fontId) || FONT_PRESETS[0];
+        }
+
+        function hexToRgbaStr(hex, alpha) {
+            if (!hex || !hex.startsWith('#')) return hex || '#2c221e';
+            let h = hex.replace('#', '');
+            if (h.length === 3) h = h.split('').map(c => c + c).join('');
+            if (h.length !== 6) return hex;
+            const r = parseInt(h.slice(0, 2), 16);
+            const g = parseInt(h.slice(2, 4), 16);
+            const b = parseInt(h.slice(4, 6), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        function getResolvedPartColor(partKey) {
+            const seasonRef = currentSeason || SEASON_DATA.spring;
+            const raw = (textPartStyles[partKey] && textPartStyles[partKey].color) || 'season';
+            if (raw === 'season') {
+                if (partKey === 'title' || partKey === 'milestone') return seasonRef.textColor;
+                if (partKey === 'desc') return '#4b5563';
+                return '#8a8580';
+            }
+            return raw;
+        }
+
+        function getResolvedTextColors() {
+            const seasonRef = currentSeason || SEASON_DATA.spring;
+            const milestoneRaw = (textPartStyles.milestone && textPartStyles.milestone.color) || 'season';
+            return {
+                title: getResolvedPartColor('title'),
+                milestone: getResolvedPartColor('milestone'),
+                desc: getResolvedPartColor('desc'),
+                blessing: getResolvedPartColor('blessing'),
+                line: milestoneRaw === 'season' ? seasonRef.accent : hexToRgbaStr(milestoneRaw, 0.52)
+            };
+        }
+
+        function getTargetKeys() {
+            return activeStyleTarget === 'all' ? TEXT_PART_KEYS : [activeStyleTarget];
+        }
+
+        function getDisplayedFontIdForTarget() {
+            if (activeStyleTarget !== 'all') {
+                return (textPartStyles[activeStyleTarget] && textPartStyles[activeStyleTarget].fontId) || 'classic';
+            }
+            const first = textPartStyles.title.fontId;
+            const allSame = TEXT_PART_KEYS.every(k => textPartStyles[k].fontId === first);
+            return allSame ? first : 'mixed';
+        }
+
+        function getDisplayedColorForTarget() {
+            if (activeStyleTarget !== 'all') {
+                return (textPartStyles[activeStyleTarget] && textPartStyles[activeStyleTarget].color) || 'season';
+            }
+            const first = String(textPartStyles.title.color || 'season').toLowerCase();
+            const allSame = TEXT_PART_KEYS.every(k => String(textPartStyles[k].color || 'season').toLowerCase() === first);
+            return allSame ? (textPartStyles.title.color || 'season') : 'mixed';
+        }
+
+        function setTextStyleTarget(targetKey) {
+            activeStyleTarget = targetKey || 'all';
+            updateTextStyleUI();
+        }
+
+        async function loadUsedFontsForCanvas() {
+            if (!document.fonts) return;
+            const specSet = new Set();
+            TEXT_PART_KEYS.forEach(k => {
+                const preset = getFontPresetById(textPartStyles[k].fontId);
+                if (preset && preset.loadSpecs) {
+                    preset.loadSpecs.forEach(s => specSet.add(s));
+                }
+            });
+            try {
+                await Promise.all(Array.from(specSet).map(spec => document.fonts.load(spec)));
+            } catch (e) {}
+        }
+
+        async function setTextFont(fontId) {
+            if (!fontId || fontId === 'mixed') return;
+            getTargetKeys().forEach(k => {
+                textPartStyles[k].fontId = fontId;
+            });
+            updateTextStyleUI();
+            const preset = getFontPresetById(fontId);
+            if (document.fonts && preset.loadSpecs) {
+                try {
+                    await Promise.all(preset.loadSpecs.map(spec => document.fonts.load(spec)));
+                } catch (e) {}
+            }
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function setTextColor(colorVal) {
+            const val = colorVal || 'season';
+            getTargetKeys().forEach(k => {
+                textPartStyles[k].color = val;
+            });
+            updateTextStyleUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function onCustomTextColorPickerInput(hexVal) {
+            const val = hexVal || 'season';
+            getTargetKeys().forEach(k => {
+                textPartStyles[k].color = val;
+            });
+            updateTextStyleUI();
+            triggerDebouncedPreview();
+        }
+
+        function resetTextStyle() {
+            textPartStyles = createDefaultTextPartStyles();
+            activeStyleTarget = 'all';
+            updateTextStyleUI();
+            updatePreviewFrame(selectedBgUrl || (currentSeason && currentSeason.bgOptions[0]));
+        }
+
+        function updateTextStyleUI() {
+            const seasonRef = currentSeason || SEASON_DATA.spring;
+
+            // 1) 부분 선택 탭 렌더링
+            const tabWrap = document.getElementById('text-style-target-tabs');
+            if (tabWrap) {
+                tabWrap.innerHTML = TEXT_STYLE_PARTS.map(part => {
+                    const isActive = (part.key === activeStyleTarget);
+                    const dotColor = part.key === 'all' ? null : getResolvedPartColor(part.key);
+                    const isCustomPart = part.key !== 'all' && (
+                        textPartStyles[part.key].fontId !== 'classic' || textPartStyles[part.key].color !== 'season'
+                    );
+                    return `
+                        <button type="button" onclick="setTextStyleTarget('${part.key}')"
+                            class="py-1.5 px-1 rounded-xl border text-[11px] font-gowun font-bold transition-all flex items-center justify-center gap-1 ${
+                                isActive
+                                    ? 'border-amber-600 bg-amber-100/90 text-amber-950 shadow-sm'
+                                    : 'border-stone-200 bg-white text-stone-600 hover:bg-stone-100'
+                            }">
+                            ${dotColor ? `<span class="w-2 h-2 rounded-full shrink-0 border border-black/15" style="background-color: ${dotColor};"></span>` : ''}
+                            <span class="truncate">${part.label}</span>
+                            ${isCustomPart && !isActive ? '<span class="w-1 h-1 rounded-full bg-amber-500 shrink-0"></span>' : ''}
+                        </button>
+                    `;
+                }).join('');
+            }
+
+            // 2) 현재 대상 배지
+            const badgeEl = document.getElementById('label-style-target-badge');
+            const activePartMeta = TEXT_STYLE_PARTS.find(p => p.key === activeStyleTarget) || TEXT_STYLE_PARTS[0];
+            if (badgeEl) {
+                badgeEl.textContent = activePartMeta.fullLabel;
+            }
+
+            // 3) 글씨체 콤보박스 (<select>) 렌더링
+            const selectEl = document.getElementById('select-text-font');
+            const displayedFontId = getDisplayedFontIdForTarget();
+            if (selectEl) {
+                const mixedOpt = displayedFontId === 'mixed'
+                    ? `<option value="mixed" selected disabled>부분별 다르게 적용됨 (선택 시 전체 통일)</option>`
+                    : '';
+                const groupsHtml = FONT_CATEGORIES.map(cat => {
+                    const opts = FONT_PRESETS.filter(f => f.category === cat.id).map(f => {
+                        const sel = (f.id === displayedFontId) ? 'selected' : '';
+                        return `<option value="${f.id}" ${sel}>${f.label}</option>`;
+                    }).join('');
+                    return `<optgroup label="${cat.label}">${opts}</optgroup>`;
+                }).join('');
+                selectEl.innerHTML = mixedOpt + groupsHtml;
+            }
+
+            // 4) 실시간 미리보기 박스 업데이트
+            const previewEl = document.getElementById('text-style-live-preview');
+            if (previewEl) {
+                const samplePartKey = activeStyleTarget === 'all' ? 'title' : activeStyleTarget;
+                const samplePreset = getFontPresetById(textPartStyles[samplePartKey].fontId);
+                const sampleColor = getResolvedPartColor(samplePartKey);
+                const isTitleStyle = (samplePartKey === 'title');
+                let sampleText = '구름이의 소중한 오늘을 기록해요';
+                if (samplePartKey === 'title' && customTitleText && customTitleText.trim()) {
+                    sampleText = customTitleText.trim();
+                } else if (samplePartKey === 'milestone' && customMilestoneText && customMilestoneText.trim()) {
+                    sampleText = customMilestoneText.trim();
+                } else if (samplePartKey === 'desc' && customDescText && customDescText.trim()) {
+                    sampleText = customDescText.trim();
+                } else if (samplePartKey === 'blessing' && selectedBlessingMonth && selectedBlessingMonth !== 'none') {
+                    sampleText = MONTHLY_BLESSINGS[selectedBlessingMonth] || sampleText;
+                }
+
+                const isWhiteCol = String(sampleColor).toLowerCase() === '#ffffff';
+                previewEl.textContent = sampleText;
+                previewEl.style.fontFamily = isTitleStyle ? samplePreset.titleFamily : samplePreset.bodyFamily;
+                previewEl.style.fontWeight = isTitleStyle ? samplePreset.titleWeight : samplePreset.bodyWeight;
+                previewEl.style.color = sampleColor;
+                previewEl.style.backgroundColor = isWhiteCol ? '#3f3a36' : '#ffffff';
+            }
+
+            // 5) 글자색 팔레트 & 자유 컬러 피커
+            const swatchWrap = document.getElementById('text-color-swatches');
+            const colorLabel = document.getElementById('label-selected-text-color');
+            const displayedColor = getDisplayedColorForTarget();
+
+            if (colorLabel) {
+                if (displayedColor === 'mixed') {
+                    colorLabel.textContent = '부분별 다름';
+                } else {
+                    const matched = TEXT_COLOR_PRESETS.find(c => c.value.toLowerCase() === String(displayedColor).toLowerCase());
+                    colorLabel.textContent = matched ? matched.label : `사용자 지정 (${String(displayedColor).toUpperCase()})`;
+                }
+            }
+
+            if (swatchWrap) {
+                const isCustomColor = displayedColor !== 'mixed' && !TEXT_COLOR_PRESETS.some(c => c.value.toLowerCase() === String(displayedColor).toLowerCase());
+                const pickerVal = (displayedColor && String(displayedColor).startsWith('#')) ? displayedColor : seasonRef.textColor;
+
+                swatchWrap.innerHTML = TEXT_COLOR_PRESETS.map(c => {
+                    const isSelected = displayedColor !== 'mixed' && String(displayedColor).toLowerCase() === c.value.toLowerCase();
+                    if (c.value === 'season') {
+                        return `
+                            <button type="button" onclick="setTextColor('season')" title="계절 테마 기본색"
+                                class="px-2.5 py-1 rounded-full text-[11px] font-gowun font-bold border transition-all flex items-center gap-1 ${
+                                    isSelected
+                                        ? 'border-amber-600 bg-amber-50 text-amber-950 shadow-sm'
+                                        : 'border-stone-300 bg-white text-stone-600 hover:bg-stone-100'
+                                }">
+                                <span class="w-3 h-3 rounded-full inline-block border border-black/15" style="background-color: ${seasonRef.textColor};"></span>
+                                <span>기본</span>
+                            </button>
+                        `;
+                    }
+                    const isWhite = c.value.toLowerCase() === '#ffffff';
+                    return `
+                        <button type="button" onclick="setTextColor('${c.value}')" title="${c.label}"
+                            class="w-7 h-7 rounded-full transition-transform active:scale-90 flex items-center justify-center ${
+                                isSelected ? 'ring-2 ring-offset-2 ring-amber-600 scale-105' : 'hover:scale-105'
+                            } ${isWhite ? 'border-2 border-stone-300' : 'border border-black/15'}"
+                            style="background-color: ${c.value};">
+                            ${isSelected ? `<i data-lucide="check" class="w-3.5 h-3.5 ${isWhite ? 'text-stone-800' : 'text-white'}"></i>` : ''}
+                        </button>
+                    `;
+                }).join('') + `
+                    <label title="원하는 색 직접 고르기" class="cursor-pointer px-2.5 py-1 rounded-full text-[11px] font-gowun font-bold border transition-all flex items-center gap-1 ${
+                        isCustomColor
+                            ? 'border-amber-600 bg-amber-50 text-amber-950 shadow-sm'
+                            : 'border-stone-300 bg-white text-stone-700 hover:bg-stone-100'
+                    }">
+                        <span class="w-3.5 h-3.5 rounded-full inline-block border border-black/20" style="background: ${isCustomColor ? pickerVal : 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)'};"></span>
+                        <span>직접 선택</span>
+                        <input type="color" value="${pickerVal}" oninput="onCustomTextColorPickerInput(this.value)" class="sr-only">
+                    </label>
+                `;
+                lucide.createIcons();
+            }
         }
 
         // ==========================================
@@ -2385,6 +2955,8 @@
             showTitle = true;
             showMilestone = true;
             showDesc = true;
+            textPartStyles = createDefaultTextPartStyles();
+            activeStyleTarget = 'all';
             syncCustomInputsFromState();
             triggerDebouncedPreview();
         }
@@ -2920,6 +3492,7 @@
             }
 
             try {
+                await loadUsedFontsForCanvas();
                 await document.fonts.ready;
                 
                 const isBgHidden = (selectedBgUrl === 'none');
@@ -3190,25 +3763,33 @@
                         ctx.fillText(txt, x, y);
                     };
 
+                    const titleFontPreset = getFontPresetById(textPartStyles.title.fontId);
+                    const mileFontPreset = getFontPresetById(textPartStyles.milestone.fontId);
+                    const descFontPreset = getFontPresetById(textPartStyles.desc.fontId);
+                    const blessingFontPreset = getFontPresetById(textPartStyles.blessing.fontId);
+                    const resolvedColors = getResolvedTextColors();
+
                     let cursorY = baseTopY;
                     ctx.textAlign = textAlignMode;
 
                     if (activeTitle) {
                         cursorY += (isLandscape ? 52 : 66);
-                        ctx.font = `600 ${titleSize}px "Noto Serif KR", serif`;
-                        drawStyledTextLine(titleText, anchorX, cursorY, currentSeason.textColor);
+                        const finalTitleSize = Math.round(titleSize * (titleFontPreset.sizeScale || 1.0));
+                        ctx.font = `${titleFontPreset.titleWeight} ${finalTitleSize}px ${titleFontPreset.titleFamily}`;
+                        drawStyledTextLine(titleText, anchorX, cursorY, resolvedColors.title);
                         cursorY += (isLandscape ? 14 : 16);
                     }
 
                     if (activeMilestone) {
                         cursorY += (isLandscape ? 34 : 42);
-                        ctx.font = `400 ${mileSize}px "Gowun Dodum", sans-serif`;
+                        const finalMileSize = Math.round(mileSize * (mileFontPreset.sizeScale || 1.0));
+                        ctx.font = `${mileFontPreset.bodyWeight} ${finalMileSize}px ${mileFontPreset.bodyFamily}`;
                         const textWidth = ctx.measureText(milestoneText).width;
 
                         if (textAlignMode === 'center') {
                             const lineHalf = Math.min(cw * 0.34, (textWidth / 2) + 75);
                             ctx.save();
-                            ctx.strokeStyle = currentSeason.accent;
+                            ctx.strokeStyle = resolvedColors.line;
                             ctx.lineWidth = 2;
                             ctx.beginPath();
                             ctx.moveTo(anchorX - lineHalf, cursorY - 9);
@@ -3219,21 +3800,23 @@
                             ctx.restore();
                         }
 
-                        drawStyledTextLine(milestoneText, anchorX, cursorY, currentSeason.textColor);
+                        drawStyledTextLine(milestoneText, anchorX, cursorY, resolvedColors.milestone);
                         cursorY += (isLandscape ? 12 : 14);
                     }
 
                     if (activeDesc) {
                         cursorY += (isLandscape ? 36 : 44);
-                        ctx.font = `400 ${bodySize}px "Gowun Dodum", sans-serif`;
-                        drawStyledTextLine(descText, anchorX, cursorY, '#4b5563');
+                        const finalBodySize = Math.round(bodySize * (descFontPreset.sizeScale || 1.0));
+                        ctx.font = `${descFontPreset.bodyWeight} ${finalBodySize}px ${descFontPreset.bodyFamily}`;
+                        drawStyledTextLine(descText, anchorX, cursorY, resolvedColors.desc);
                         cursorY += (isLandscape ? 12 : 14);
                     }
 
                     if (activeBlessing) {
                         cursorY += (isLandscape ? 32 : 38);
-                        ctx.font = `400 ${subSize}px "Gowun Dodum", sans-serif`;
-                        drawStyledTextLine(blessingText, anchorX, cursorY, '#8a8580');
+                        const finalSubSize = Math.round(subSize * (blessingFontPreset.sizeScale || 1.0));
+                        ctx.font = `${blessingFontPreset.bodyWeight} ${finalSubSize}px ${blessingFontPreset.bodyFamily}`;
+                        drawStyledTextLine(blessingText, anchorX, cursorY, resolvedColors.blessing);
                         cursorY += (isLandscape ? 10 : 14);
                     }
                     ctx.restore();
@@ -3775,6 +4358,8 @@
             textOffsetY = 0;
             textFreeX = 0.5;
             textFreeY = 0.78;
+            textPartStyles = createDefaultTextPartStyles();
+            activeStyleTarget = 'all';
             placedStickers = [];
             selectedStickerUid = null;
             updatePhotoSelectionUI();
